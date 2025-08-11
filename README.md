@@ -36,10 +36,12 @@ Top team wins a prize and bragging rights.
 ---
 
 ### 📅 How to Join
-Form a team (max 5 members) and sign up here: [Insert link]
+Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v79
 
 
 ---
 ### Frequently Asked Questions 
 
 - **Do I have to stay the whole 24 hours?** Yes!
+
+- More details coming soon!
