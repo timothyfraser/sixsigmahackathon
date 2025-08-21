@@ -62,7 +62,19 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 - **How should my team share our final product?** On a public GitHub repository! At least 1 team member must have a working GitHub ID, and that my team will publish our code to GitHub at the end of the event for review by our judges. 
 *For example, Tim Fraser's GitHub ID is timothyfraser. Note: this is NOT a Cornell GitHub ID. Go get a normal GitHub account.*
 
+- **What coding language should I use?** Plan to use R, Python, or some combination! Code must be fully reproducible and shared on GitHub.
 
+- **What kind of skills would be helpful for my team?** Any of the following could be helpful, but depends on the kind of product your team chooses to make!
+   - Building Functions in R/Python
+   - Building a Package in R/Python
+   - Using GitHub to Commit, Pull, and Push code
+   - Statistical Analysis
+   - Machine Learning
+   - Reliability Analysis
+   - Six Sigma Techniques
+   - Querying an API
+   - Building a small API
+   - Building a ShinyApp dashboard 
 
 
 
