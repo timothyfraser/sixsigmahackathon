@@ -2,10 +2,11 @@
 Six Sigma Hackathon data, code, and prompts!
 
 ## 🎯 Six Sigma Hackathon
-When: October 17–18, 2025
-Time: Starts Friday 4:00 PM → Ends Saturday 4:00 PM
-Where: Clark Hall
-Who: Systems Engineering on campus MEng students — up to 5 per team
+
+- When: October 17–18, 2025
+- Time: Starts Friday 4:00 PM → Ends Saturday 4:00 PM
+- Where: Clark Hall
+- Who: Systems Engineering on campus MEng students — up to 5 per team
 
 ---
 
