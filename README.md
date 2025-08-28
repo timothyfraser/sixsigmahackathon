@@ -77,6 +77,6 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
    - Building a small API
    - Building a ShinyApp dashboard 
 
-
+- **How will our final products be evaluated?** Products will be evaluated based on a combination of (1) how well they fit and answer the prompt (to be released), (2) quality of concept, (3) completeness of implementation, and (4) level of polish. Further details to be released closer to date.
 
 - More details coming soon!
