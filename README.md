@@ -51,6 +51,7 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 - **Can I *ever* step out?** Yes, but please keep it to a minimum. At least 1 team member must be physically present at the Hackathon for the full 24 hour duration.
 *Eg. Anna steps out to get coffee, but Daphne stays until Anna gets back, etc.*
 
+- **Can I ever sleep?** You do you. Just make sure to stay in compliance with the *at least 1 person per group should always be present.* Historically, Hackathons are events that people stay awake for 24 hours, but your health is important. Consider, for example, staggering which team members take breaks when.
 
 - **Can one of my team members not attend in person?** No. All team members must attend the Hackathon in-person to compete.
 *Eg. Anna, Daphne, Sam, and Bob all attend the Hackathon, in-person.*
