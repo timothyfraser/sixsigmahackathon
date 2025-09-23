@@ -46,12 +46,14 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 - **Who can participate?** All Hackathon team members must be (1) on-campus, enrolled Cornell students and (2a) part of the Systems Engineering Masters of Engineering program OR (2b) enrolled in SYSEN 5300/MAE 5390.
 *Eg. Anna is in SYSEN 5300 and Daphne is a SYSEN MEng student.*
 
-- **Do I have to stay the whole 24 hours?** Yes! (see below)
+- **Do I have to participate the whole 24 hours?** A successful team will work for most of the 24 hours.
 
-- **Can I *ever* step out?** Yes, but please keep it to a minimum. At least 1 team member must be physically present at the Hackathon for the full 24 hour duration.
+- **Can I *ever* step out?** Yes, of course, but please keep it to a minimum.
 *Eg. Anna steps out to get coffee, but Daphne stays until Anna gets back, etc.*
 
-- **Can I ever sleep?** You do you. Just make sure to stay in compliance with the *at least 1 person per group should always be present.* Historically, Hackathons are events that people stay awake for 24 hours, but your health is important. Consider, for example, staggering which team members take breaks when.
+- **Can I ever sleep?** You do you. Historically, Hackathons are events that people stay awake for 24 hours, but your health is important. Consider, for example, staggering which team members take breaks when.
+
+- **Can we relocate to a coffeeshop and work there instead?** Sure. You do you.
 
 - **Can one of my team members not attend in person?** No. All team members must attend the Hackathon in-person to compete.
 *Eg. Anna, Daphne, Sam, and Bob all attend the Hackathon, in-person.*
