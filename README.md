@@ -17,6 +17,31 @@ Over 24 hours, your team will tackle one of several real-world quality control p
 - Apply statistics and Six Sigma analytics to monitor and control system performance
 - Build something functional and demo-ready
 
+In this Hackathon, you will build a tool to implement quality control analytics to solve a real-world problem.
+
+Your solution must include:
+
+1. A publicly available tool, formatted as either:
+   - An R package or Python library
+   - A REST API
+   - A Dashboard
+2. 2-3 Test Datasets that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
+3. A codebook and README for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
+
+Things to remember:
+
+- This project is limited and short-term. Be sure to closely define the limits and scope of your product, so that you finish on time.
+- A small product that works is better than a big complex product that doesn't.
+- Your team has multiple members; delegate and specialize in different tasks!
+
+
+### Example Prompts
+
+Prompts to be released day of. See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
+
+> - Design a system to monitor resource use (beds, staff hours) and detect when utilization exceeds safe thresholds. Provide synthetic hospital admission datasets.
+
+
 ---
 
 ### 🔧 Example Techniques
@@ -87,52 +112,7 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 
 ### 🏆 Evaluation Criteria
 
-In this Hackathon, you will build a tool to implement quality control analytics to solve a real-world problem.
-
-Your solution must include:
-
-1. A publicly available tool, formatted as either:
-   - An R package or Python library
-   - A REST API
-   - A Dashboard
-2. 2-3 Test Datasets that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
-3. A codebook and README for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
-
-The winning project will have the following traits:
-
-- An effective tool
-- Performance valid analyses
-- Fully reproducible code
-- Excellent, easy-to-follow documentation for the tool
-- Be publicly available on GitHub
-- Requires a minimal, reasonable number of inputs or requirements from the user/customer. 
-- For example, requiring the customer to know traits and values about their product that they are unlikely to be able to measure is not helpful and should be avoided.
-- The product should have a clear user in mind.
-- The product should have a clear use case in mind.
-- Accurate working test datasets
-- A clear demonstration of the tool
-- Closely matches one of the prompts.
-
-Things to remember:
-
-- This project is limited and short-term. Be sure to closely define the limits and scope of your product, so that you finish on time.
-- A small product that works is better than a big complex product that doesn't.
-- Your team has multiple members; delegate and specialize in different tasks!
-
-Prompts to be released day of.
-
-### Example Prompts
-
-See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
-
-- Design a system to monitor resource use (beds, staff hours) and detect when utilization exceeds safe thresholds. Provide synthetic hospital admission datasets.
-
-
-### Product Evaluation Criteria
-
-All projects will receive a score from the event staff, based on the following criteria:
-
-Successful projects will have the following traits:
+All projects will receive a score of 0 to 100 from the event staff, based on the following criteria:
 
 #### Tool Implementation (50 pts)
 How well does this tool perform its intended function?
@@ -152,8 +132,7 @@ How polished and ready is this tool for public use?
 
 - (10 pts) 2-3 accurate, working test datasets
 - (10 pts) A clear demonstration of the tool, using the test datasets.
--  5 pts) Excellent, easy-to-follow documentation for the tool - how does each function work, what are the inputs, parameters, etc.
--  5 pts) A codebook and README for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
+- (5 pts) Excellent, easy-to-follow documentation for the tool - how does each function work, what are the inputs, parameters, etc.
+- (5 pts) A codebook and README for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
 - (5 pts) Fully reproducible code, posted publicly to a Github Repository,
  
-
