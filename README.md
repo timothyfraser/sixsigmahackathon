@@ -11,6 +11,7 @@ Six Sigma Hackathon data, code, and prompts!
 ---
 
 ### 💡 The Challenge
+
 Over 24 hours, your team will tackle one of several real-world quality control problems drawn from industrial engineering, healthcare systems, and energy systems.
 
 - 3 prompts released at kickoff — each tied to a real dataset
@@ -34,10 +35,12 @@ Things to remember:
 - A small product that works is better than a big complex product that doesn't.
 - Your team has multiple members; delegate and specialize in different tasks!
 
+### 🗨️ Prompts 
 
-### Example Prompts
+Prompts will be released at the start of the Hackathon at this link:
+https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md
 
-Prompts to be released day of. See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
+See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
 
 > - Design a system to monitor resource use (beds, staff hours) and detect when utilization exceeds safe thresholds. Provide synthetic hospital admission datasets.
 
@@ -116,6 +119,7 @@ Don't have a team but want to participate? Sign up anyways and we will match you
 - More details coming soon!
 
 ---
+
 
 ### 🏆 Evaluation Criteria
 
