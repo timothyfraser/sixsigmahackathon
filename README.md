@@ -72,6 +72,10 @@ Don't have a team but want to participate? Sign up anyways and we will match you
 - **Who can participate?** All Hackathon team members must be (1) on-campus, enrolled Cornell students and (2a) part of the Systems Engineering Masters of Engineering program OR (2b) enrolled in SYSEN 5300/MAE 5390.
 *Eg. Anna is in SYSEN 5300 and Daphne is a SYSEN MEng student.*
 
+- **Do I have to have Six Sigma Experience?** No! Many resources and trainings will be provided to you during the event, and many of the possible analyses you could do can be learned in a few minutes.
+
+- **Do I have to be a coding wizard to participate?** No! As long as you have *some* prior coding experience in Python or R, you can use either programming language to code. A winning project does not necessarily require fabulous code, but rather a smart, intuitive design that solves a quality control problem! Plus, participating can be a fun way to gain coding experience.
+
 - **Do I have to participate the whole 24 hours?** You do you. A successful team will work for most of the 24 hours.
 
 - **Can I *ever* step out?** Yes, of course, but please keep it to a minimum.
