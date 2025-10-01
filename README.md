@@ -76,6 +76,8 @@ Don't have a team but want to participate? Sign up anyways and we will match you
 
 - **Do I have to be a coding wizard to participate?** No! As long as you have *some* prior coding experience in Python or R, you can use either programming language to code. A winning project does not necessarily require fabulous code, but rather a smart, intuitive design that solves a quality control problem! Plus, participating can be a fun way to gain coding experience.
 
+- **What if I can't find team members?** Sign up anyways! If you don't have a team, we will match you with team members. A fun way to meet others in the systems engineering program!
+
 - **Do I have to participate the whole 24 hours?** You do you. A successful team will work for most of the 24 hours.
 
 - **Can I *ever* step out?** Yes, of course, but please keep it to a minimum.
