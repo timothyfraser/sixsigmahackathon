@@ -5,8 +5,8 @@ Six Sigma Hackathon data, code, and prompts!
 
 - When: October 17–18, 2025
 - Time: Starts Friday 4:00 PM → Ends Saturday 4:00 PM
-- Where: Clark Hall
-- Who: Systems Engineering on campus MEng students — up to 5 per team
+- Where: Upson Hall
+- Who: Systems Engineering on campus MEng / MS students — up to 5 per team
 
 ---
 
@@ -64,6 +64,7 @@ Top team wins a prize and bragging rights.
 ### 📅 How to Join
 Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v79
 
+Don't have a team but want to participate? Sign up anyways and we will match you with a team!
 
 ---
 ### Frequently Asked Questions 
@@ -71,16 +72,16 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 - **Who can participate?** All Hackathon team members must be (1) on-campus, enrolled Cornell students and (2a) part of the Systems Engineering Masters of Engineering program OR (2b) enrolled in SYSEN 5300/MAE 5390.
 *Eg. Anna is in SYSEN 5300 and Daphne is a SYSEN MEng student.*
 
-- **Do I have to participate the whole 24 hours?** A successful team will work for most of the 24 hours.
+- **Do I have to participate the whole 24 hours?** You do you. A successful team will work for most of the 24 hours.
 
 - **Can I *ever* step out?** Yes, of course, but please keep it to a minimum.
-*Eg. Anna steps out to get coffee, but Daphne stays until Anna gets back, etc.*
+*Eg. Anna steps out to get coffee, but Daphne stays until Anna gets back, etc.* OR *Eg. Daphne and Anna go to work at a coffeeshop/someone's apartment, then check in at the Hackathon again later.*
 
 - **Can I ever sleep?** You do you. Historically, Hackathons are events that people stay awake for 24 hours, but your health is important. Consider, for example, staggering which team members take breaks when.
 
 - **Can we relocate to a coffeeshop and work there instead?** Sure. You do you.
 
-- **Can one of my team members not attend in person?** No. All team members must attend the Hackathon in-person to compete.
+- **Can one of my team members not attend in person?** No. All team members must attend the Hackathon in-person to compete. i.e. A virtual participant in California is not allowed at this time.
 *Eg. Anna, Daphne, Sam, and Bob all attend the Hackathon, in-person.*
 
 - **What so I need to make in this Hackathon?** Your team will need to demo a working prototype coding solution at the end of the Hackathon.
