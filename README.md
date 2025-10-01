@@ -22,30 +22,22 @@ In this Hackathon, you will build a tool to implement quality control analytics 
 
 Your solution must include:
 
-1. A publicly available tool, formatted as either:
-   - An R package or Python library
-   - A REST API
-   - A Dashboard
-2. 2-3 Test Datasets that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
-3. A codebook and README for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
+1.  🚀 **A publicly available tool**, formatted as one of these possible outputs:
+   - R package or Python library
+   - REST API
+   - Dashboard
+2. 💾 **2-3 Test Datasets** that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
+3. 📑 **A codebook and README** for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
 
-Things to remember:
+Learn more about the challenge here!
+https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md
 
-- This project is limited and short-term. Be sure to closely define the limits and scope of your product, so that you finish on time.
-- A small product that works is better than a big complex product that doesn't.
-- Your team has multiple members; delegate and specialize in different tasks!
 
 ### 🗨️ Prompts 
-
-Prompts will be released at the start of the Hackathon at this link:
-https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md
 
 See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
 
 > - Design a system to monitor resource use (beds, staff hours) and detect when utilization exceeds safe thresholds. Provide synthetic hospital admission datasets.
-
-
----
 
 ### 🔧 Example Techniques
 - Mean Time to Failure (MTTF)
@@ -53,11 +45,6 @@ See example prompt below. Notice how the question is solution-neutral; you could
 - System Reliability Modeling
 - Statistical Process Control (SPC)
 - Fault Tree Analysis
-
-### 🚀 Possible Outputs
-- R or Python package
-- Shiny App
-- Public API
 
 ### 🏆 The Prize
 Top team wins a prize and bragging rights.
@@ -70,7 +57,7 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 Don't have a team but want to participate? Sign up anyways and we will match you with a team!
 
 ---
-### Frequently Asked Questions 
+### ⁉️ Frequently Asked Questions 
 
 - **Who can participate?** All Hackathon team members must be (1) on-campus, enrolled Cornell students and (2a) part of the Systems Engineering Masters of Engineering program OR (2b) enrolled in SYSEN 5300/MAE 5390.
 *Eg. Anna is in SYSEN 5300 and Daphne is a SYSEN MEng student.*
