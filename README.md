@@ -123,8 +123,9 @@ All projects will receive a score of 0 to 100 from the event staff. Read more ab
 
 --- 
 
-### Sign Up to Mentor
+### 📚 Sign Up to Mentor
 
 Faculty, postdocs, PhD students, and developers are encouraged to sign up if interested in serving as a mentor for the event. For details, read more here!
+https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
 
 
