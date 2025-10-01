@@ -1,8 +1,12 @@
-# About Mentors
+# Mentors
 
 ---
 
 *Select faculty, researchers, and PhD students have been invited to serve as mentors for our Six Sigma Hackathon.*
+
+---
+
+## About Mentors
 
 In this event, SYSEN MEng / MS students work in teams for 24 hours to build statistical tools for quality control and reliability analysis, in Python or R,  Students pick between several prompts on Industrial Engineering, Health Systems, or Energy Systems.
 
