@@ -120,3 +120,11 @@ Don't have a team but want to participate? Sign up anyways and we will match you
 ### 🏆 Evaluation Criteria
 
 All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
+
+--- 
+
+### Sign Up to Mentor
+
+Faculty, postdocs, PhD students, and developers are encouraged to sign up if interested in serving as a mentor for the event. For details, read more here!
+
+
