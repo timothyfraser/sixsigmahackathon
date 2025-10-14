@@ -1,6 +1,7 @@
-# Mentors
-
+![](images/banner_thin.png)
 ---
+
+# Mentors
 
 *Select faculty, researchers, and PhD students have been invited to serve as mentors for our Six Sigma Hackathon.*
 
@@ -33,3 +34,8 @@ Thank you very much for your time and consideration. I hope to see you there!
 - **How do I mentor a team?** Sit at a table and talk with a team about their proposed tool. Listen to their pitch. Offer feedback and encouragement. Point out potential issues and help them troubleshoot. The goal is to make feasible, functional, minimum viable products that answer the prompt, in a limited time. Often, your feedback will help them figure out what functionalities to focus on and what functionalities not to pursue.
 - **How many teams will I be mentoring?** You'll be assigned on the day of to check in with several teams (~3) whose work feels topically related to yours.
 - **Where can I learn more about the Hackathon?** All Hackathon details are available on GitHub here: https://github.com/timothyfraser/sixsigmahackathon/tree/main
+
+
+---
+
+![](images/banner_icons.png)
