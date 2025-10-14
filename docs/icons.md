@@ -64,6 +64,14 @@ Need some thematic icons for your READMEs? Try these!
 
 💡 (idea — insight, brainstorming)
 
+---
+
+
+<p align="center">
+  <b><a href="https://github.com/timothyfraser/sixsigmahackathon/tree/main">🏠 Return to Home Page</a></b>
+</p>
+
+
 🔢 (numbers — quantitative focus)
 
 🔍 (magnifying glass — root cause analysis)
