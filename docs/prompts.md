@@ -20,12 +20,12 @@ In this Hackathon, you will build a tool to implement quality control analytics 
 
 ### ⚙️ Requirements
 
-1. A publicly available tool, formatted as either:
+1. 🚀 **Possible Outputs**: A publicly available tool, formatted as either:
    - An R package or Python library
-   - A REST API
-   - A Dashboard
-2. 2-3 Test Datasets that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
-3. A codebook and README for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
+   - A Public REST API
+   - A Dashboard (eg. a ShinyApp)
+2. 📈 **2-3 Test Datasets** that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
+3. 📑 **A codebook and README** for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
 --- 
 
 ### 🗨️ Prompts 
@@ -47,12 +47,6 @@ See example prompt below. Notice how the question is solution-neutral; you could
 - System Reliability Modeling
 - Statistical Process Control (SPC)
 - Fault Tree Analysis
-
-### 🚀 Possible Outputs
-
-- R or Python package
-- Shiny App
-- Public API
 
 ### 👍 Advice
 
