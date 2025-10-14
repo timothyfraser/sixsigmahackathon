@@ -28,17 +28,42 @@ In this Hackathon, you will build a tool to implement quality control analytics 
 3. 📑 **A codebook and README** for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
 --- 
 
-### 🗨️ Prompts 
+#### 🗨️ Example Promot
 
-Prompts will be released at the start of the Hackathon on this page.
-
-#### Example Promot
-
+Prompts will be released at the start of the Hackathon on this page. 
 See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
 
 > - Design a system to monitor resource use (beds, staff hours) and detect when utilization exceeds safe thresholds. Provide synthetic hospital admission datasets.
 
 ---
+
+### 💡 Prompts 
+
+Please pick from 1 of the following prompts below and create a tool to solve the problem discussed.
+
+*It is not necessary to have prior knowledge of the system in your prompt. Use what you know already and what you can find out quickly to build out a sensible, useful tool.*
+
+When building your tool, please refer to the [**🔢 Evaluation Criteria**](https://github.com/timothyfraser/sixsigmahackathon )!
+
+#### Prompt 1: Industrial Engineering
+
+...
+
+#### Prompt 2: Energy Systems
+
+...
+
+#### Prompt 2: Health Systems
+
+...
+
+#### Frequently Asked Questions
+
+- **I signed up for one topic in the Signup survey. Can I pick a different topic?** Yes.
+- **How long do I have to pick a topic? You should pick your topic within the first 15 minutes of the Hackathon, and then stick to it.** You will need as much time as you can get to build your tool?
+
+
+
 
 ### 🔧 Example Techniques
 
