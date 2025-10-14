@@ -5,7 +5,7 @@ Six Sigma Hackathon data, code, and prompts!
 
 - When: October 17–18, 2025
 - Time: Starts Friday 4:00 PM → Ends Saturday 4:00 PM
-- Where: Upson Hall
+- Where: Upson Hall 116 (Glass Lounge by Duffield)
 - Who: Systems Engineering on campus MEng / MS students — up to 5 per team
 
 ---
@@ -17,10 +17,11 @@ Six Sigma Hackathon data, code, and prompts!
 ### Quick Links
 
 - [🗓️ Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
-- [💬 Prompts (to updated on 10/17 @ 4:00 PM)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
+- [💬 Prompts & Challenge Details (to updated on 10/17 @ 4:00 PM)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
 - [🔢 Evaluation Criteria](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md)
-- [👥 Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
 - [⁉️ Frequently Asked Questions](https://github.com/timothyfraser/sixsigmahackathon/tree/main?tab=readme-ov-file#%EF%B8%8F-frequently-asked-questions)
+- [👥 Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
+
 
 ### 💡 The Challenge
 
