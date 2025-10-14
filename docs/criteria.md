@@ -1,6 +1,6 @@
-# 🏆  Evaluation Criteria
+![Hackathon Banner](images/banner_thin.png)
 
-![](docs/images/banner_thin.png)
+# 🏆  Evaluation Criteria
 
 All projects will receive a score of 0 to 100 from the event staff, based on the following criteria:
 
