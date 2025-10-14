@@ -1,6 +1,9 @@
-# Prompts
+![](images/banner_thin.png)
+---
 
-This document will be updated on the day of the event to contain 5-10 short prompts for the Hackathon.
+# 🗨️ Prompts
+
+[**The current document**](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md) will be updated at the start of the Hackathon event to contain 5-10 short prompts for the Hackathon.
 teams will be asked to pick 1 prompt and design a tool around it. Please check back at the start of the hackathon for details! 
 
 ---
@@ -27,8 +30,7 @@ In this Hackathon, you will build a tool to implement quality control analytics 
 
 ### 🗨️ Prompts 
 
-Prompts will be released at the start of the Hackathon at this link:
-https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md
+Prompts will be released at the start of the Hackathon on this page.
 
 #### Example Promot
 
@@ -57,3 +59,8 @@ See example prompt below. Notice how the question is solution-neutral; you could
 - This project is limited and short-term. Be sure to closely define the limits and scope of your product, so that you finish on time.
 - A small product that works is better than a big complex product that doesn't.
 - Your team has multiple members; delegate and specialize in different tasks!
+
+
+---
+
+![](images/banner_icons.png)
