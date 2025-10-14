@@ -19,6 +19,8 @@ teams will be asked to pick 1 prompt and design a tool around it. Please check b
 - 👍 [Advice](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-advice)
 - [🏠 Homepage](https://github.com/timothyfraser/sixsigmahackathon/tree/main)
 
+---
+
 ### 💡 The Challenge
 
 Over 24 hours, your team will tackle one of several real-world quality control problems drawn from industrial engineering, healthcare systems, and energy systems.
