@@ -65,7 +65,7 @@ When building your tool, please refer to the [**🔢 Evaluation Criteria**](http
 
 ...
 
-#### Prompt 2: Health Systems
+#### Prompt 3: Health Systems
 
 ...
 
