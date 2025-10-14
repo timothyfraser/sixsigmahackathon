@@ -13,6 +13,9 @@ Six Sigma Hackathon data, code, and prompts!
 ### Quick Links
 
 - [Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
+- [Prompts (to released on 10/17 @ 4:00 PM)](https://docs.google.com/document/d/1FoXVNA9Il1ZnDrb5PN0-jLN5DJEsbbWLOsuNp9tPtg8/edit?usp=sharing)
+- [Evaluation Criteria](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md)
+- [Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
 
 
 ### 💡 The Challenge
@@ -60,6 +63,18 @@ Top team wins a prize and bragging rights.
 Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v79
 
 Don't have a team but want to participate? Sign up anyways and we will match you with a team!
+
+
+### 🏆 Evaluation Criteria
+
+All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
+
+--- 
+
+### 📚 Sign Up to Mentor
+
+Faculty, postdocs, PhD students, and developers are encouraged to sign up if interested in serving as a mentor for the event. For details, read more here!
+https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
 
 ---
 ### ⁉️ Frequently Asked Questions 
@@ -111,17 +126,4 @@ Don't have a team but want to participate? Sign up anyways and we will match you
 - More details coming soon!
 
 ---
-
-
-### 🏆 Evaluation Criteria
-
-All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
-
---- 
-
-### 📚 Sign Up to Mentor
-
-Faculty, postdocs, PhD students, and developers are encouraged to sign up if interested in serving as a mentor for the event. For details, read more here!
-https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
-
 
