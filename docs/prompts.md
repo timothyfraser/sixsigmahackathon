@@ -94,4 +94,4 @@ When building your tool, please refer to the [**🔢 Evaluation Criteria**](http
 
 ![](images/banner_icons.png)
 
-<p align="center">**[Return to Home Page](https://github.com/timothyfraser/sixsigmahackathon/tree/main)**</p>
+<p align="center"><b>[Return to Home Page](https://github.com/timothyfraser/sixsigmahackathon/tree/main)</b></p>
