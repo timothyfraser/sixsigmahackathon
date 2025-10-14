@@ -14,7 +14,7 @@ teams will be asked to pick 1 prompt and design a tool around it. Please check b
 - ⚙️ [Requirements](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-requirements)
 - 🗨️ [Example Prompt](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-example-prompt)
 - ⏰ [Prompts](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-prompts)
-- 💬 [Frequently Asked Questions (FAQs)]
+- 💬 [Frequently Asked Questions (FAQs)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-frequently-asked-questions-faqs)
 - 🔧 [Example Techniques](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-example-techniques)
 - 👍 [Advice](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-advice)
 - [🏠 Homepage](https://github.com/timothyfraser/sixsigmahackathon/tree/main)
