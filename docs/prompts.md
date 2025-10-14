@@ -89,9 +89,9 @@ When building your tool, please refer to the [**🔢 Evaluation Criteria**](http
 - A small product that works is better than a big complex product that doesn't.
 - Your team has multiple members; delegate and specialize in different tasks!
 
-> **[Return to Home Page](https://github.com/timothyfraser/sixsigmahackathon/tree/main)**
-
 
 ---
 
 ![](images/banner_icons.png)
+
+> **[Return to Home Page](https://github.com/timothyfraser/sixsigmahackathon/tree/main)**
