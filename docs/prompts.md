@@ -54,6 +54,8 @@ See example prompt below. Notice how the question is solution-neutral; you could
 - A small product that works is better than a big complex product that doesn't.
 - Your team has multiple members; delegate and specialize in different tasks!
 
+<span style="text-align: center;">[Return to Home Page](https://github.com/timothyfraser/sixsigmahackathon/tree/main)</span>
+
 
 ---
 
