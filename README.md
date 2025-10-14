@@ -11,7 +11,7 @@ Six Sigma Hackathon data, code, and prompts!
 ---
 
 
-!(blob/main/docs/banner.png)
+![Six Sigma Hackathon Banner](docs/banner.png)
 
 ### Quick Links
 
