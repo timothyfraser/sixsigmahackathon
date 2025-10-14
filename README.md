@@ -1,7 +1,4 @@
-# sixsigmahackathon
-Six Sigma Hackathon data, code, and prompts!
-
-## 🎯 Six Sigma Hackathon
+# 🎯 Six Sigma Hackathon
 
 - When: October 17–18, 2025
 - Time: Starts Friday 4:00 PM → Ends Saturday 4:00 PM
