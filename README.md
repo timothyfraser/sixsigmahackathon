@@ -10,8 +10,7 @@ Six Sigma Hackathon data, code, and prompts!
 
 ---
 
-
-![Six Sigma Hackathon Banner](docs/banner.png)
+![](https://github.com/timothyfraser/sixsigmahackathon/blob/020cb69b17b7f11660c7fa8f4b8e2a1035c37ded/docs/banner.png)
 
 ### Quick Links
 
