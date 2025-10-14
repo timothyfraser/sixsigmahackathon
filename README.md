@@ -10,7 +10,7 @@ Six Sigma Hackathon data, code, and prompts!
 
 ---
 
-![](https://github.com/timothyfraser/sixsigmahackathon/blob/020cb69b17b7f11660c7fa8f4b8e2a1035c37ded/docs/banner.png)
+![](docs/images/banner_thin.png)
 
 ---
 
@@ -103,3 +103,6 @@ Faculty, postdocs, PhD students, and developers are encouraged to sign up if int
 https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
 
 ---
+
+![](docs/images/banner_icons.png)
+
