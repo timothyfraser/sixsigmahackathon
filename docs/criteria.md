@@ -1,5 +1,7 @@
 # 🏆  Evaluation Criteria
 
+![](docs/images/banner_thin.png)
+
 All projects will receive a score of 0 to 100 from the event staff, based on the following criteria:
 
 ---
