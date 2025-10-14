@@ -8,6 +8,17 @@ teams will be asked to pick 1 prompt and design a tool around it. Please check b
 
 ---
 
+## Quick Links
+
+- 💡 The Challenge
+- ⚙️ Requirements
+- 🗨️ Example Prompt
+- ⏰ Prompts
+- 💬 Frequently Asked Questions (FAQs)
+- 🔧 Example Techniques
+- 👍 Advice
+- [📑 Homepage](https://github.com/timothyfraser/sixsigmahackathon/tree/main)
+
 ### 💡 The Challenge
 
 Over 24 hours, your team will tackle one of several real-world quality control problems drawn from industrial engineering, healthcare systems, and energy systems.
@@ -26,9 +37,8 @@ In this Hackathon, you will build a tool to implement quality control analytics 
    - A Dashboard (eg. a ShinyApp)
 2. 📈 **2-3 Test Datasets** that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
 3. 📑 **A codebook and README** for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
---- 
 
-#### 🗨️ Example Promot
+### 🗨️ Example Promot
 
 Prompts will be released at the start of the Hackathon on this page. 
 See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
@@ -57,13 +67,13 @@ When building your tool, please refer to the [**🔢 Evaluation Criteria**](http
 
 ...
 
-#### Frequently Asked Questions
+
+---
+
+### 💬 Frequently Asked Questions (FAQs)
 
 - **I signed up for one topic in the Signup survey. Can I pick a different topic?** Yes.
 - **How long do I have to pick a topic? You should pick your topic within the first 15 minutes of the Hackathon, and then stick to it.** You will need as much time as you can get to build your tool?
-
-
-
 
 ### 🔧 Example Techniques
 
