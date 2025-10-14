@@ -13,9 +13,10 @@ Six Sigma Hackathon data, code, and prompts!
 ### Quick Links
 
 - [Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
-- [Prompts (to released on 10/17 @ 4:00 PM)](https://docs.google.com/document/d/1FoXVNA9Il1ZnDrb5PN0-jLN5DJEsbbWLOsuNp9tPtg8/edit?usp=sharing)
+- [Prompts (to updated on 10/17 @ 4:00 PM)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
 - [Evaluation Criteria](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md)
 - [Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
+- [Frequently Asked Questions](https://github.com/timothyfraser/sixsigmahackathon/tree/main?tab=readme-ov-file#%EF%B8%8F-frequently-asked-questions)
 
 
 ### 💡 The Challenge
@@ -24,35 +25,17 @@ Over 24 hours, your team will tackle one of several real-world quality control p
 
 - 3 prompts released at kickoff — each tied to a real dataset
 - Apply statistics and Six Sigma analytics to monitor and control system performance
-- Build something functional and demo-ready
-
-In this Hackathon, you will build a tool to implement quality control analytics to solve a real-world problem.
-
-Your solution must include:
-
-1.  🚀 **A publicly available tool**, formatted as one of these possible outputs:
-   - R package or Python library
-   - REST API
-   - Dashboard
-2. 💾 **2-3 Test Datasets** that can be used to demonstrate the tool’s effectiveness. These data sets do not need to be ‘real’ data, but they should accurately represent what your data would look like when collected in real time. 
-3. 📑 **A codebook and README** for your datasets, describing what each file and variable means, and any other background information necessary for collecting this data.
+- Build something functional and demo-ready to solve a real-world problem - an R package, Python Library, REST API, or Dashboard!
+- 🔧 Use metrics/techniques like the Mean Time to Failure (MTTF), System Reliability Modeling, Statistical Process Control, or others!
 
 Learn more about the challenge here!
 https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md
 
+--- 
 
-### 🗨️ Prompts 
+### 🏆 Evaluation Criteria
 
-See example prompt below. Notice how the question is solution-neutral; you could create many different tools to address this issue.
-
-> - Design a system to monitor resource use (beds, staff hours) and detect when utilization exceeds safe thresholds. Provide synthetic hospital admission datasets.
-
-### 🔧 Example Techniques
-- Mean Time to Failure (MTTF)
-- Probability of Failure
-- System Reliability Modeling
-- Statistical Process Control (SPC)
-- Fault Tree Analysis
+All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
 
 ### 🏆 The Prize
 Top team wins a prize and bragging rights.
@@ -64,11 +47,6 @@ Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v7
 
 Don't have a team but want to participate? Sign up anyways and we will match you with a team!
 
-
-### 🏆 Evaluation Criteria
-
-All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
-
 --- 
 
 ### 📚 Sign Up to Mentor
@@ -77,6 +55,7 @@ Faculty, postdocs, PhD students, and developers are encouraged to sign up if int
 https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
 
 ---
+
 ### ⁉️ Frequently Asked Questions 
 
 - **Who can participate?** All Hackathon team members must be (1) on-campus, enrolled Cornell students and (2a) part of the Systems Engineering Masters of Engineering program OR (2b) enrolled in SYSEN 5300/MAE 5390.
