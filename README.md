@@ -1,13 +1,11 @@
+![](docs/images/banner_thin.png)
+
 # 🎯 Six Sigma Hackathon
 
 - When: October 17–18, 2025
 - Time: Starts Friday 4:00 PM → Ends Saturday 4:00 PM
 - Where: Upson Hall 116 (Glass Lounge by Duffield)
 - Who: Systems Engineering on campus MEng / MS students — up to 5 per team
-
----
-
-![](docs/images/banner_thin.png)
 
 ---
 
