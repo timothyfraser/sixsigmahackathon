@@ -48,3 +48,9 @@ During this phase, take your mentors feedback and develop your finished product.
    - 10/18 4:15 PM - Links to All Hackathon Submissions published for Teams to see
    - 10/18 7:00 PM - 10/18 8:00 PM: Closing Ceremony and Awards
       - Winning teams will be invited to present their tools in brief 3 minute lightning talks.
+
+---
+
+![](images/banner_icons.png)
+
+
