@@ -3,7 +3,7 @@
 
 # 🗨️ Prompts
 
-[**The current document**](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md) will be updated at the start of the Hackathon event to contain 5-10 short prompts for the Hackathon.
+[**The current document**](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md) will be updated at the start of the Hackathon event to contain 3-4 short prompts for the Hackathon.
 teams will be asked to pick 1 prompt and design a tool around it. Please check back at the start of the hackathon for details! 
 
 ---
