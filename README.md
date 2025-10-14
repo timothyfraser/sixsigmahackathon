@@ -10,6 +10,9 @@ Six Sigma Hackathon data, code, and prompts!
 
 ---
 
+
+!(blob/main/docs/banner.png)
+
 ### Quick Links
 
 - [Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
