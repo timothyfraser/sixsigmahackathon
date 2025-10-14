@@ -12,51 +12,31 @@ Six Sigma Hackathon data, code, and prompts!
 
 ![](https://github.com/timothyfraser/sixsigmahackathon/blob/020cb69b17b7f11660c7fa8f4b8e2a1035c37ded/docs/banner.png)
 
+---
+
 ### Quick Links
 
-- [Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
-- [Prompts (to updated on 10/17 @ 4:00 PM)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
-- [Evaluation Criteria](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md)
-- [Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
-- [Frequently Asked Questions](https://github.com/timothyfraser/sixsigmahackathon/tree/main?tab=readme-ov-file#%EF%B8%8F-frequently-asked-questions)
-
+- [🗓️ Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
+- [💬 Prompts (to updated on 10/17 @ 4:00 PM)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
+- [🔢 Evaluation Criteria](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md)
+- [👥 Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
+- [⁉️ Frequently Asked Questions](https://github.com/timothyfraser/sixsigmahackathon/tree/main?tab=readme-ov-file#%EF%B8%8F-frequently-asked-questions)
 
 ### 💡 The Challenge
 
 Over 24 hours, your team will tackle one of several real-world quality control problems drawn from industrial engineering, healthcare systems, and energy systems.
 
-- 3 prompts released at kickoff — each tied to a real dataset
-- Apply statistics and Six Sigma analytics to monitor and control system performance
-- Build something functional and demo-ready to solve a real-world problem - an R package, Python Library, REST API, or Dashboard!
+- 🧩 3 prompts released at kickoff — each tied to a real dataset
+- 🧰 Apply statistics and Six Sigma analytics to monitor and control system performance
+- 🧱 Build something functional and demo-ready to solve a real-world problem - an R package, Python Library, REST API, or Dashboard!
 - 🔧 Use metrics/techniques like the Mean Time to Failure (MTTF), System Reliability Modeling, Statistical Process Control, or others!
+- 🔢 Evaluation Criteria: All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
+- 🏆 The Prize: Top team wins a prize and bragging rights.
 
-Learn more about the challenge here!
-https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md
-
---- 
-
-### 🏆 Evaluation Criteria
-
-All projects will receive a score of 0 to 100 from the event staff. Read more about the evaluation criteria here: https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md
-
-### 🏆 The Prize
-Top team wins a prize and bragging rights.
+[Learn more about the challenge here!](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
 
 ---
 
-### 👥 How to Join
-Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v79
-
-Don't have a team but want to participate? Sign up anyways and we will match you with a team!
-
---- 
-
-### 📚 Sign Up to Mentor
-
-Faculty, postdocs, PhD students, and developers are encouraged to sign up if interested in serving as a mentor for the event. For details, read more here!
-https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
-
----
 
 ### ⁉️ Frequently Asked Questions 
 
@@ -108,3 +88,17 @@ https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
 
 ---
 
+
+### 👥 How to Join
+Form a team (max 5 members) and sign up here: https://forms.gle/hBMzNpqAWxUod4v79
+
+Don't have a team but want to participate? Sign up anyways and we will match you with a team!
+
+--- 
+
+### 📚 Sign Up to Mentor
+
+Faculty, postdocs, PhD students, and developers are encouraged to sign up if interested in serving as a mentor for the event. For details, read more here!
+https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/mentors.md
+
+---
