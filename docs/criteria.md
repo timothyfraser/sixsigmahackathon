@@ -33,3 +33,7 @@ How polished and ready is this tool for public use?
 ![Hackathon Banner](images/banner_icons\.png)
 
  
+
+<p align="center">
+  <b><a href="https://github.com/timothyfraser/sixsigmahackathon/tree/main">🏠 Return to Home Page</a></b>
+</p>
