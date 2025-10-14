@@ -17,7 +17,7 @@ teams will be asked to pick 1 prompt and design a tool around it. Please check b
 - 💬 Frequently Asked Questions (FAQs)
 - 🔧 Example Techniques
 - 👍 Advice
-- [📑 Homepage](https://github.com/timothyfraser/sixsigmahackathon/tree/main)
+- [🏠 Homepage](https://github.com/timothyfraser/sixsigmahackathon/tree/main)
 
 ### 💡 The Challenge
 
@@ -89,9 +89,10 @@ When building your tool, please refer to the [**🔢 Evaluation Criteria**](http
 - A small product that works is better than a big complex product that doesn't.
 - Your team has multiple members; delegate and specialize in different tasks!
 
-
 ---
 
 ![](images/banner_icons.png)
 
-<p align="center"><b>[Return to Home Page](https://github.com/timothyfraser/sixsigmahackathon/tree/main)</b></p>
+<p align="center">
+  <b><a href="https://github.com/timothyfraser/sixsigmahackathon/tree/main">🏠 Return to Home Page</a></b>
+</p>
