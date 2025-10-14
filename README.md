@@ -17,6 +17,7 @@
 - [⁉️ Frequently Asked Questions](https://github.com/timothyfraser/sixsigmahackathon/tree/main?tab=readme-ov-file#%EF%B8%8F-frequently-asked-questions)
 - [👥 Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
 
+---
 
 ### 💡 The Challenge
 
