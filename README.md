@@ -14,6 +14,7 @@
 - [🗓️ Schedule of Events](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/schedule.md)
 - [💬 Prompts & Challenge Details (to updated on 10/17 @ 4:00 PM)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md)
 - [🔢 Evaluation Criteria](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/criteria.md)
+- 📚 [Resources for Building Your Tool](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/resources.md)
 - [⁉️ Frequently Asked Questions](https://github.com/timothyfraser/sixsigmahackathon/tree/main?tab=readme-ov-file#%EF%B8%8F-frequently-asked-questions)
 - [👥 Signup for Hackathon (now closed)](https://forms.gle/hBMzNpqAWxUod4v79)
 
