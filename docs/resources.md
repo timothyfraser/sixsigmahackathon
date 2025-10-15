@@ -15,10 +15,12 @@ Here's a short list of suggested resources to use when developing your tool!
 
 ## Six Sigma Techniques
 
-Check out the SYSEN 5300 Systems Engineering and Six Sigma course textbook online for detailed R and Python tutorials, including:
+Check out the [SYSEN 5300 Systems Engineering and Six Sigma course textbook online](https://timothyfraser.com/sigma/) for detailed R and Python tutorials, including:
 
-
-
+- [System Reliability in R](https://timothyfraser.com/sigma/system-reliability.html)
+- [System Reliability in Python](https://timothyfraser.com/sigma/system-reliability-in-python.html)
+- [Statistical Process Control in R]()
+- [Statistical Process Control in Python]()
 
 
 ## Building R Packages
