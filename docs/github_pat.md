@@ -2,7 +2,7 @@
 
 Estimated Time: 10 minutes
 
-In this activity, you are asked to follow the necessary steps to allow you to commit, pull, and push changes on GitHub repositories. Please be sure to complete the previous activity first: Activity: Code It - Create a GitHub Repository.
+In this activity, you are asked to follow the necessary steps to allow you to commit, pull, and push changes on GitHub repositories. Please be sure to create a GitHub Repository first.
 
 ## Prerequisites 
 - Must have already made a GitHub Account
