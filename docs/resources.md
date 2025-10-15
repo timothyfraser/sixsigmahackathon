@@ -31,11 +31,12 @@ Check out the [SYSEN 5300 Systems Engineering and Six Sigma course textbook onli
 ## Building REST APIs
 
 - 🛜 [Build a REST API in R with Plumber](https://posit.co/blog/creating-apis-for-data-science-with-plumber/)
-- [Documentation: Plumber R package](https://www.rplumber.io/)
+- 📃 [Documentation: Plumber R package](https://www.rplumber.io/)
 
 ## Building Dashboards
 
-
+- 📈 [Build a ShinyApp Dashboard in R](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/)
+- 📉 [Build a ShinyApp Dashboard in Python](https://shiny.posit.co/py/get-started/)
 
 ---
 
