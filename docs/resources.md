@@ -19,8 +19,8 @@ Check out the [SYSEN 5300 Systems Engineering and Six Sigma course textbook onli
 
 - [System Reliability in R](https://timothyfraser.com/sigma/system-reliability.html)
 - [System Reliability in Python](https://timothyfraser.com/sigma/system-reliability-in-python.html)
-- [Statistical Process Control in R]()
-- [Statistical Process Control in Python]()
+- [Statistical Process Control in R](https://timothyfraser.com/sigma/statistical-process-control-in-r.html)
+- [Statistical Process Control in Python](https://timothyfraser.com/sigma/statistical-process-control-in-python.html)
 
 
 ## Building R Packages
