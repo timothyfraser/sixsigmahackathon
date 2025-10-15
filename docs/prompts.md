@@ -16,6 +16,7 @@ teams will be asked to pick 1 prompt and design a tool around it. Please check b
 - ⏰ [Prompts](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-prompts)
 - 💬 [Frequently Asked Questions (FAQs)](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-frequently-asked-questions-faqs)
 - 🔧 [Example Techniques](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-example-techniques)
+- 📚 [Resources for Building Your Tool](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/resources.md)
 - 👍 [Advice](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/prompts.md#-advice)
 - [🏠 Homepage](https://github.com/timothyfraser/sixsigmahackathon/tree/main)
 
@@ -55,8 +56,7 @@ Please pick from 1 of the following prompts below and create a tool to solve the
 
 *It is not necessary to have prior knowledge of the system in your prompt. Use what you know already and what you can find out quickly to build out a sensible, useful tool.*
 
-When building your tool, please refer to the [**🔢 Evaluation Criteria**](https://github.com/timothyfraser/sixsigmahackathon )!
-
+When building your tool, please refer to the [**🔢 Evaluation Criteria**](https://github.com/timothyfraser/sixsigmahackathon )! For help, refer to 📚 [**Resources for Building Your Tool**](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/resources.md)
 #### Prompt 1: Industrial Engineering
 
 ...
@@ -76,6 +76,7 @@ When building your tool, please refer to the [**🔢 Evaluation Criteria**](http
 
 - **I signed up for one topic in the Signup survey. Can I pick a different topic?** Yes.
 - **How long do I have to pick a topic? You should pick your topic within the first 15 minutes of the Hackathon, and then stick to it.** You will need as much time as you can get to build your tool?
+- **Where do I find tutorials on how to make a tool?** 📚 [Resources for Building Your Tool](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/resources.md)
 
 ### 🔧 Example Techniques
 
