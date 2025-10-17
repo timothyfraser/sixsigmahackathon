@@ -1,6 +1,6 @@
 # `icons`
 
-Need some thematic icons for your READMEs? Try these!
+Need some thematic icons for your READMEs? Try the icons below!
 
 ---
 
@@ -63,6 +63,13 @@ Need some thematic icons for your READMEs? Try these!
 💡 Innovation & Metrics
 
 💡 (idea — insight, brainstorming)
+
+---
+
+## More Icons
+
+Find more unicode icons at [w3schools.com](https://www.w3schools.com/charsets/ref_utf_misc_symbols.asp)!
+
 
 ---
 
