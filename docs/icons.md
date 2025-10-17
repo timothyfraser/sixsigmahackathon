@@ -72,6 +72,9 @@ Need some thematic icons for your READMEs? Try the icons below!
 
 🌞 Sun
 
+🌐 Internet
+
+🌍 Globe
 
 ---
 
