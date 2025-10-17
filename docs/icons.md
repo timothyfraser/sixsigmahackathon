@@ -76,6 +76,16 @@ Need some thematic icons for your READMEs? Try the icons below!
 
 🌍 Globe
 
+💻 Computer
+
+💾 Floppy Disk
+
+💰 Money
+
+💨 Dash
+
+💭 Thought Bubble
+
 ---
 
 ## Funny Icons
@@ -86,6 +96,7 @@ Need some thematic icons for your READMEs? Try the icons below!
 
 🐙 Octopus
 
+💩 Poop
 
 ---
 
