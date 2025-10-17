@@ -13,6 +13,10 @@ Here's a short list of suggested resources to use when developing your tool!
 
 - 🔑 [How to Get a Personal Access Token from Github](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/github_pat.md)
 
+# Making Good Documentation and READMEs
+
+- 📃 [Making Good READMEs](https://github.com/timothyfraser/sixsigmahackathon/tree/main/docs/demos/readmes/README_making_good_readmes.md)
+
 ## Six Sigma Techniques
 
 Check out the [SYSEN 5300 Systems Engineering and Six Sigma course textbook online](https://timothyfraser.com/sigma/) for detailed R and Python tutorials, including:
