@@ -20,6 +20,10 @@ Need some thematic icons for your READMEs? Try the icons below!
 
 📑 (bookmark tabs — reports or documentation)
 
+📚 Books
+
+📝 Memo
+
 ⚙️ Process & Quality
 
 ⚙️ (gear — process improvement)
