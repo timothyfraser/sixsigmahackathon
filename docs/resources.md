@@ -7,13 +7,21 @@
 Hackathons are great chances to build new skills.
 Here's a short list of suggested resources to use when developing your tool!
 
+## Using Posit Cloud
+
+- [Using Posit Cloud for coding in R](https://posit.co/products/cloud/cloud/)
+- [Using Posit Cloud for coding in Python](https://posit.co/use-cases/python/) 
+- [Using Posit Cloud Spaces for **simultaneous coding on the same virtual machine**](https://docs.posit.co/cloud/guide/collaborate/)
+<img width="1894" height="943" alt="image" src="https://github.com/user-attachments/assets/df646018-0785-403d-bd59-03f4b1fe98ba" />
+
+
 ## 🐙 Using GitHub 
 
 - ⬇️ [How to Clone a Git Repository](https://youtu.be/JeDWlcFsFAA?si=ilCx1ApTAbQMO7vt)
 
 - 🔑 [How to Get a Personal Access Token from Github](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/github_pat.md)
 
-# Making Good Documentation and READMEs
+## Making Good Documentation and READMEs
 
 - 📃 [Making Good READMEs]([https://github.com/timothyfraser/sixsigmahackathon/tree/main/docs/demos/readmes/README_making_good_readmes.md](https://github.com/timothyfraser/sixsigmahackathon/blob/main/demos/making_readmes/README_making_good_readmes.md)
 - 📈 [Drawing Diagrams in Github READMEs with Mermaid](https://mermaid.live)
