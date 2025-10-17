@@ -59,15 +59,24 @@ Please pick from 1 of the following prompts below and create a tool to solve the
 When building your tool, please refer to the [**🔢 Evaluation Criteria**](https://github.com/timothyfraser/sixsigmahackathon )! For help, refer to 📚 [**Resources for Building Your Tool**](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/resources.md)
 #### Prompt 1: Industrial Engineering
 
-...
+**Data centers** are key infrastructure in the AI economy, providing servers equipped with high numbers of GPUs needed for high speed model training and serving. Given the recent surge in GPU demand, data centers are struggling to keep up, and hardware failures need to be addressed swiftly. 
+**Develop a quality control system to track quality and/or failure in GPU usage across data centers** for a system like Google Cloud or Amazon Web Services. 
 
 #### Prompt 2: Energy Systems
 
-...
+**Utility scale solar power plants** are found all throughout New York state, due to significant promotion policies over the last decade. Utility scale solar can be made up of hundreds or even thousands of solar panels, each of which requires routine maintenance. Your team has been commissioned by the New York State Energy Research & Development Authority (NYSERDA), whose staff hope to better understand the lifespan remaining for existing utility-scale solar farms. 
+**Design a quality control system to track and mitigate solar panel failure.**
+
 
 #### Prompt 3: Health Systems
 
-...
+**Hospitals** require the coordination of many nurses and doctors on each floor for good communication and treatment of patients. However, in your hospital system, patients note wide and irregular gaps and how often nurses and doctors come to check on them during their inpatient care, impacting perceived and actual quality of treatment, and sometimes extending the stay of patients unnecessarily. Your hospital system has commissioned your team to **develop a quality control system for tracking and mitigating wait times for inpatient care while on the hospital floor.**
+
+#### Prompt 4: Health Systems
+
+**Nursing home patients** are prescribed a significant amount of medication due to health conditions exacerbated by age, and most nursing homes are well set up to automatically refill patients' prescriptions to ensure that they get their medication. However, patients may not always complete their prescriptions, due to new alternative medication being prescribed, temporary transfers throughout nursing homes and local hospital systems, and end-of-life care. This may lead to medication waste. **Design a quality control system to track and mitigate prescription medicine waste in nursing homes.**
+
+
 
 
 ---
