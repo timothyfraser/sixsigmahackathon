@@ -26,7 +26,7 @@ teams will be asked to pick 1 prompt and design a tool around it. Please check b
 
 Over 24 hours, your team will tackle one of several real-world quality control problems drawn from industrial engineering, healthcare systems, and energy systems.
 
-- 3 prompts released at kickoff — each tied to a real dataset
+- 4 prompts released at kickoff — each tied to a hypothetical dataset that you will build
 - Apply statistics and Six Sigma analytics to monitor and control system performance
 - Build something functional and demo-ready
 
