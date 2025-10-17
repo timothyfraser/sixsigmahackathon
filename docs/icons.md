@@ -64,6 +64,24 @@ Need some thematic icons for your READMEs? Try the icons below!
 
 💡 (idea — insight, brainstorming)
 
+🏥 Hospital
+
+🏠 House
+
+🌞 Sun
+
+
+---
+
+## Funny Icons
+
+🐍 Python
+
+🐧 Penguin
+
+🐙 Octopus
+
+
 ---
 
 ## More Icons
