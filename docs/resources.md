@@ -21,11 +21,11 @@ Here's a short list of suggested resources to use when developing your tool!
 
 - 🔑 [How to Get a Personal Access Token from Github](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/github_pat.md)
 
-## 📃 Making Good Documentation and READMEs
+## 📚 Making Good Documentation and READMEs
 
 - 📃 [Making Good READMEs]([https://github.com/timothyfraser/sixsigmahackathon/tree/main/docs/demos/readmes/README_making_good_readmes.md](https://github.com/timothyfraser/sixsigmahackathon/blob/main/demos/making_readmes/README_making_good_readmes.md)
 - 📈 [Drawing Diagrams in Github READMEs with Mermaid](https://mermaid.live)
-- 📃 [Icons for your Github READMEs](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/icons.md)
+- 💩 [Icons for your Github READMEs](https://github.com/timothyfraser/sixsigmahackathon/blob/main/docs/icons.md)
 
 ## 🧰 Six Sigma Techniques
 
