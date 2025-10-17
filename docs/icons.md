@@ -4,6 +4,8 @@ Need some thematic icons for your READMEs? Try the icons below!
 
 ---
 
+## Basic Icons
+
 📊 Data & Analytics
 
 📈 (upward trend chart)
