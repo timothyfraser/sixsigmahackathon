@@ -30,7 +30,7 @@ Groups may attend or send a delegate to any of the Optional Trainings, and/or co
 During this phase, teams are encouraged to build a minimum viable product version of their tool.
    - 10/17 8:00 PN - 10:00 PM: Staff available onsite to advise
    - 10/17 10:00 PM - 10/18 8:00 AM: Staff offsite
-   - 10/18 8:00 AM - 10:00 AM: Staff available onsite to advise
+   - 10/18 9:00 AM - 10:00 AM: Staff available onsite to advise
 
 ## Phase V: **Mentor Hour**
    - 10/18 10:00 AM - 11:00 AM: Mentoring Sessions
