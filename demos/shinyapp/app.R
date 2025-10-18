@@ -9,6 +9,7 @@
 
 library(shiny)
 
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -18,8 +19,11 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
+          
+          # input = list(bins = 30)
+          # input$bins --> 30
+            sliderInput(inputId = "bins", 
+                        label = "Number of bins:",
                         min = 1,
                         max = 50,
                         value = 30)
@@ -27,15 +31,20 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotOutput("distPlot")
+          # output$distPlot
+          # textOutput("distPlot") <- "text"
+          # verbatimTextOutput("distPlot") <- "text"
+          # tableOutput("distPlot") <-- data.frame
+           plotOutput("distPlot"), # <-- ggplot object
+           textOutput("textthing")
         )
     )
 )
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server = function(input, output) {
 
-    output$distPlot <- renderPlot({
+    output$distPlot = renderPlot({
         # generate bins based on input$bins from ui.R
         x    <- faithful[, 2]
         bins <- seq(min(x), max(x), length.out = input$bins + 1)
@@ -45,7 +54,14 @@ server <- function(input, output) {
              xlab = 'Waiting time to next eruption (in mins)',
              main = 'Histogram of waiting times')
     })
+    
+    output$textthing = renderText({
+      input$bins
+    })
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+
+
