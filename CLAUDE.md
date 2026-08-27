@@ -69,6 +69,7 @@ demos/
   shinyapp/            R Shiny dashboard starter
   rpackage/            R package starter
   making_readmes/      how to write a README judges can follow
+posit-dlc/             the Posit Connect deployment life cycle (see below)
 .claude/skills/        skills your agent should load — see below
 ```
 
@@ -105,6 +106,13 @@ APIs is half the menu.
 See the `connect-publish` skill for the actual commands and the manifest hygiene
 rules that cause most first-time deploy failures.
 
+For anything that will be deployed more than once — by more than one person, or
+from CI — use [`posit-dlc/`](posit-dlc/README.md). It is the harness-neutral
+deployment life cycle for Posit Connect: target conventions, credential
+guardrails, manifest hygiene, publish-then-verify, and three human approval
+gates. **`posit-dlc/core/` is the single copy of those rules**; this file and the
+skill only point at it.
+
 ## Skills
 
 Load the relevant one *before* you start building, not after.
@@ -112,6 +120,7 @@ Load the relevant one *before* you start building, not after.
 | Skill | Load it when |
 |---|---|
 | [`connect-publish`](.claude/skills/connect-publish/SKILL.md) | deploying anything to Posit Connect |
+| [`posit-dlc`](.claude/skills/posit-dlc/SKILL.md) | deploying more than once, from CI, or with credentials on a shared server — the guarded life cycle. Points at [`posit-dlc/`](posit-dlc/README.md) |
 | [`fastapi-react-scaffold`](.claude/skills/fastapi-react-scaffold/SKILL.md) | Python API + React front end |
 | [`plumber-react-scaffold`](.claude/skills/plumber-react-scaffold/SKILL.md) | R API + React front end |
 | [`stats-first-steering`](.claude/skills/stats-first-steering/SKILL.md) | **always** — how to keep the statistics correct and central while an agent writes the code |
