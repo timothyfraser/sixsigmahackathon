@@ -3,3 +3,9 @@
 .RData
 .Ruserdata
 .env
+.posit/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+rsconnect/
