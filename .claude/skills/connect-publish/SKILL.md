@@ -60,8 +60,11 @@ source("deployme.R")      # rsconnect::deployApp(appDir = ".")
 2. **Pin your dependencies.** `requirements.txt` with `==` versions for Python;
    a clean `renv.lock` or a loadable library set for R. "It works on my laptop"
    is a statement about your laptop.
-3. **Regenerate the manifest after every dependency change.** A stale
-   `manifest.json` is the single most common cause of "it deployed but 500s".
+3. **Regenerate the manifest after every dependency change — on a developer
+   machine, never on a CI runner.** A stale `manifest.json` is the single most
+   common cause of "it deployed but 500s"; a manifest regenerated in CI is the
+   single most common cause of "it deploys from my laptop and fails in Actions"
+   (see [GitHub Actions](#github-actions) below).
 4. **Match the Python/R version** to what the server offers. If the deploy log
    complains about an unavailable interpreter version, that is what it means.
 5. **Never bundle data you cannot publish**, secrets, or `.env`. Everything in
@@ -91,7 +94,47 @@ An Actions-based deploy path exists and works, but the credentials handed out at
 the event are for local publishing. Set up Actions only if your team has spare
 time — at hour 22 the local path is the one that gets you a URL.
 
+If you do set it up, **start from the worked example rather than from scratch**:
+
+> **[timothyfraser/fastapi-connect-demo](https://github.com/timothyfraser/fastapi-connect-demo)** —
+> a minimal FastAPI plus a workflow that has deployed green repeatedly, with the
+> classic failure named and countered step by step in the file. MIT.
+
+The one thing to know before you try it, because it costs teams hours:
+
+> **`manifest.json` is not a build config. It is an environment fingerprint of
+> the machine that generated it** — `locale`, `python.version`, the pip version,
+> and an MD5 per file. `rsconnect deploy` **regenerates** it from whatever
+> machine it runs on. On a CI runner that records the *runner* instead of your
+> app, and Connect is then asked to satisfy a fingerprint describing the wrong
+> computer. That is the whole of "it deploys from my laptop and fails in
+> Actions."
+
+So the recipe is:
+
+1. **Commit `manifest.json`.** Generate it once on a developer machine, and let
+   CI only *verify* it.
+2. **Do not install `rsconnect-python` in the deploy job at all.** Publish with
+   three plain `curl` calls against the Connect API — `POST
+   /__api__/v1/content/{guid}/bundles`, `POST /__api__/v1/content/{guid}/deploy`,
+   then poll `GET /__api__/v1/tasks/{id}`. That is exactly what `rsconnect` does
+   internally, minus the ability to rewrite your manifest.
+3. **Commit `.python-version`**, have `actions/setup-python` read it with
+   `python-version-file:`, and assert in CI that the manifest agrees with it.
+4. **Commit `.gitattributes` with `* text=auto eol=lf`**, so the manifest's
+   per-file checksums are stable across Windows and Linux checkouts.
+5. **Stream Connect's own task output into the Actions log**, so the server's
+   real error is visible instead of swallowed by the CLI.
+6. **Gate on `/health`.** "The bundle was accepted" is not "the app is running".
+
+Rule 2 is the load-bearing one; the rest is defence in depth. The demo repo's
+README walks through each with the measured evidence from a real run.
+
 ## Further reading
+
+- **[timothyfraser/fastapi-connect-demo](https://github.com/timothyfraser/fastapi-connect-demo)**
+  (MIT) — the Actions → Connect recipe above, as a repo you can copy: committed
+  manifest, fingerprint assertions, `curl` publish script, `/health` gate.
 
 - [posit-dev/skills](https://github.com/posit-dev/skills) (MIT) — Posit's own
   maintained skills for R package development and deploying to Connect.
