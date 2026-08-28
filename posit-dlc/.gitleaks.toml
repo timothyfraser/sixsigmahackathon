@@ -1,0 +1,40 @@
+# posit-dlc secret-scan config.
+#
+#   gitleaks detect --config posit-dlc/.gitleaks.toml --no-banner
+#
+# Run it before every push. A leaked publisher key is the one mistake a revert
+# does not fix -- the commit stays in the reflog, in every fork, and in every
+# clone anyone made. See posit-dlc/core/02-publisher-credentials.md.
+
+title = "posit-dlc"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "posit-connect-api-key"
+description = "Posit Connect API key (32 hex characters) assigned to a variable"
+regex = '''(?i)(connect[_-]?api[_-]?key|rsconnect[_-]?api[_-]?key)['"]?\s*[:=]\s*['"]?([0-9a-f]{32})['"]?'''
+secretGroup = 2
+keywords = ["connect_api_key", "connect-api-key", "rsconnect"]
+
+[[rules]]
+id = "posit-connect-auth-header"
+description = "Connect Authorization header with a literal key"
+regex = '''(?i)authorization:\s*key\s+([0-9a-zA-Z]{16,})'''
+secretGroup = 1
+keywords = ["authorization: key", "Authorization: Key"]
+
+[allowlist]
+description = "Bundle documentation, sentinels, and env-var NAMES are not secrets."
+paths = [
+  '''posit-dlc/core/.*\.md''',
+  '''posit-dlc/README\.md''',
+  '''posit-dlc/connect-target\.example\.yaml''',
+  '''\.claude/skills/posit-dlc/SKILL\.md''',
+]
+regexes = [
+  '''PUT_[A-Z_]+_HERE''',
+  '''CONNECT_API_KEY=\.\.\.''',
+  '''\$\{?CONNECT_API_KEY''',
+]

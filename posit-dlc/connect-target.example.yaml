@@ -1,0 +1,40 @@
+# connect-target.yaml — the designated Posit Connect server for this project.
+#
+# NON-SECRET. This file is committed. The API key is NOT here and never will be
+# (see posit-dlc/core/02-publisher-credentials.md); it comes from the environment
+# or a gitignored .env at the moment of use.
+#
+# Copy to your project root as `connect-target.yaml` and fill in.
+
+# Base URL of the Connect server, no trailing slash.
+# e.g. https://connect.example.org
+server_url: "PUT_SERVER_URL_HERE"
+
+# Do not change. A missing /__api__/v1 prefix 404s and reads as a permissions
+# problem. See core/01-connect-target.md.
+api_prefix: "/__api__/v1"
+
+content:
+  # Provisioned ONCE, BY HAND, by a human who created the content item on the
+  # server. Automation never invents a GUID. Every script in this bundle
+  # hard-fails while this is still the sentinel.
+  guid: "PUT_GUID_HERE"
+
+  # lowercase-hyphenated, prefixed by team or project.
+  title: "PUT_CONTENT_TITLE_HERE"
+
+  # acl | logged_in | all — the most restrictive one that lets your audience in.
+  access_type: "acl"
+
+  # The route verify.sh polls. Every scaffold in this bundle ships one.
+  health_path: "/health"
+
+runtime:
+  # Must match .python-version. See core/03-manifest-hygiene.md RULE 2.
+  python_version: "3.12"
+  # For R content instead: r_version: "4.4"
+
+# Names only — never values. Read from the environment at time of use.
+credentials:
+  server_env: "CONNECT_SERVER"
+  api_key_env: "CONNECT_API_KEY"
