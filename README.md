@@ -85,8 +85,12 @@ Every deployable template follows the same **four-script contract**:
 ### ⁉️ Frequently Asked Questions
 
 - **Who can participate?** All team members must be (1) on-campus, enrolled
-  Cornell students and (2a) in the Systems Engineering MEng program OR (2b)
-  enrolled in SYSEN 5300 / MAE 5390.
+  Cornell students AND (2a) in the Systems Engineering MEng program OR (2b)
+  enrolled in SYSEN 5300 / MAE 5390 OR (2c) SYSEN 5900.
+
+- **Dates**? Hackathon runs from October 16 @ 3 PM to October 17 @ 3 PM EST.
+  - **Submission Deadline**: submissions are due at October 17, 1 PM EST sharp.
+  - **Presentation Session**: October 17, 2-3 PM. Must attend!
 
 - **Do I need Six Sigma experience?** No. Trainings are provided during the
   event, and many of the analyses can be learned in a few minutes. The
