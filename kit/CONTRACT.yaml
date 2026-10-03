@@ -1,0 +1,102 @@
+# CONTRACT.yaml - the task ledger for <tool name>.
+# SPEC.md says what the tool IS. This file says what is being DONE.
+#
+# Rules (for humans and agents alike):
+#   1. Nothing gets built that is not a task here. No task? Add one first.
+#   2. Check OUT before starting:  status: in_progress, owner, started_at.
+#   3. Check IN when finished:     status: done + a one-line result, in the
+#      SAME commit as the work.
+#   4. definition_of_done is a command that passes, a file that exists or a
+#      URL that answers. Run it and quote what it printed. Not a vibe.
+#   5. Write only inside the task's owns paths.
+#   6. Quote any string that contains a colon. No tabs.
+#
+# These example tasks follow the rubric (docs/criteria.md). Rename paths to
+# match your stack (R or Python) and delete what you do not need.
+
+spec: SPEC.md
+updated: "<YYYY-MM-DD>"
+
+tasks:
+  - id: H-01
+    title: Fill in SPEC.md (user, use case, inputs, method, outputs, out of scope)
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["SPEC.md"]
+    definition_of_done: >
+      grep -c "<" SPEC.md prints 0, and every teammate can say the method
+      sentence in section 4 without reading it.
+    result: ""
+
+  - id: H-02
+    title: Two or three small test datasets plus a codebook
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["data/"]
+    definition_of_done: >
+      data/ holds 2-3 CSVs (e.g. in control, planted shift, edge case) and
+      data/README.md describes every file and every column with units.
+    result: ""
+
+  - id: H-03
+    title: Core QC function, plain inputs, no framework
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["R/", "src/", "tests/"]
+    definition_of_done: >
+      The test suite (pytest or testthat) passes, including one test that
+      reproduces a known answer (textbook example or hand calculation) and
+      one degenerate case (constant data).
+    result: ""
+
+  - id: H-04
+    title: Expose the function (API endpoint or package export)
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["api/", "testme.sh", "testme.R"]
+    definition_of_done: >
+      The testme script starts the tool with one command, and a request using
+      data/ returns the same numbers as the H-03 test.
+    result: ""
+
+  - id: H-05
+    title: One front-end view a user can read in 10 seconds
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["frontend/"]
+    definition_of_done: >
+      The view loads one test dataset, shows the result with units and a
+      one-line "how to read this", and works at phone width.
+    result: ""
+
+  - id: H-06
+    title: Deploy to a public URL
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["manifest.json", ".github/workflows/deploy.yml", "deployme.sh", "deployme.R"]
+    notes: >
+      Copy ONE workflow for your stack from the hackathon repo's
+      demos/positconnect/workflows/ into .github/workflows/, add the
+      CONNECT_SERVER and CONNECT_API_KEY repo secrets, commit manifest.json.
+    definition_of_done: >
+      The public URL answers HTTP 200 from a logged-out browser and returns
+      the H-03 numbers for one test dataset.
+    result: ""
+
+  - id: H-07
+    title: README, function docs and a demo walk-through
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["README.md", "docs/"]
+    definition_of_done: >
+      README.md says what the tool does, for whom, every input and parameter,
+      how to run it in one command, and walks through a demo on each test
+      dataset. A teammate who did not write the code follows it and it works.
+    result: ""

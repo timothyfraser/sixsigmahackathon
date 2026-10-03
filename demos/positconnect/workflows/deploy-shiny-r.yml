@@ -1,0 +1,107 @@
+# =============================================================================
+# Deploy an R Shiny app to Posit Connect.
+# =============================================================================
+# WHAT IT DEPLOYS: the Shiny app in APP_DIR, shipped EXACTLY as your committed
+#   manifest.json describes it. Layout (same as demos/shinyapp):
+#     APP_DIR/app.R           your Shiny app (or ui.R + server.R)
+#     APP_DIR/manifest.json   written on YOUR machine, then committed. In R:
+#                             rsconnect::writeManifest(appDir = ".")
+#   Re-write and re-commit the manifest every time you add or update a package.
+# REPO SECRETS (Settings > Secrets and variables > Actions):
+#   CONNECT_SERVER, CONNECT_API_KEY -- handed out at the event. Never commit them.
+# WHAT TO EDIT: only the `env:` block below, if your app is not at the repo root.
+# HOW TO USE: copy this file to .github/workflows/ and both scripts from
+#   demos/positconnect/scripts/ to .github/scripts/, then push to main.
+#
+# No R is installed on the runner: the manifest already names every package
+# and version, and Connect installs them. Run the app locally first.
+# Pattern adapted from timothyfraser/fastapi-connect-demo (MIT).
+# Every `uses:` is pinned to a full commit SHA; the tag is in the comment.
+# =============================================================================
+name: Deploy Shiny (R) app to Posit Connect
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.R'
+      - '**/manifest.json'
+      - '**/www/**'
+      - '.github/workflows/deploy-shiny-r.yml'
+      - '.github/scripts/connect-publish-async.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-shiny-r
+  cancel-in-progress: false
+
+env:
+  APP_DIR: '.'                       # folder holding app.R + manifest.json
+  CONTENT_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}-shiny
+  CONTENT_TITLE: ${{ github.event.repository.name }} dashboard
+  HEALTH_PATH: '/'                   # the app's front page must answer 200
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check the committed manifest (never regenerated here)
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          set -euo pipefail
+          test -f manifest.json || { echo "::error::No manifest.json in ${APP_DIR}. In R, from that folder, run rsconnect::writeManifest() and commit the result."; exit 1; }
+          MODE=$(jq -r '.metadata.appmode' manifest.json)
+          RVER=$(jq -r '.platform // ""' manifest.json)
+          NPKG=$(jq -r '.packages // {} | length' manifest.json)
+          echo "manifest: appmode=${MODE} R=${RVER} packages=${NPKG}"
+          [ "$MODE" = "shiny" ] || { echo "::error::manifest appmode is '${MODE}', expected shiny. Is app.R in ${APP_DIR}? Re-write the manifest from that folder."; exit 1; }
+          jq -e '.files | has("app.R") or has("server.R")' manifest.json >/dev/null \
+            || { echo "::error::manifest.json lists neither app.R nor server.R. Re-write it from the folder that holds app.R."; exit 1; }
+          if grep -q $'\r' manifest.json; then
+            echo "::error::manifest.json has Windows line endings. Add a .gitattributes file containing: * text=auto eol=lf  -- then re-write and re-commit the manifest."
+            exit 1
+          fi
+          echo "Connect will need R ${RVER}. If its log says that version is unavailable, write the manifest with a version the server offers."
+
+      - name: Check the two repo secrets exist
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+        run: |
+          [ -n "$CONNECT_SERVER" ]  || { echo "::error::Repo secret CONNECT_SERVER is not set (Settings > Secrets and variables > Actions)."; exit 1; }
+          [ -n "$CONNECT_API_KEY" ] || { echo "::error::Repo secret CONNECT_API_KEY is not set (Settings > Secrets and variables > Actions)."; exit 1; }
+          echo "Both secrets are present."
+
+      - name: Publish to Posit Connect
+        id: publish
+        timeout-minutes: 10
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          BUNDLE_DIR: ${{ env.APP_DIR }}
+          POLL_BUDGET_SECONDS: '120'
+        run: bash .github/scripts/connect-publish-async.sh
+
+      - name: Check the app answers (green is not live)
+        env:
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          CONTENT_URL: ${{ steps.publish.outputs.content_url }}
+        run: |
+          set -euo pipefail
+          URL="${CONTENT_URL%/}${HEALTH_PATH}"
+          echo "Checking ${URL}"
+          for i in $(seq 1 20); do
+            CODE=$(curl -sS -L -o /dev/null -w '%{http_code}' -H "Authorization: Key ${CONNECT_API_KEY}" "$URL" || echo 000)
+            echo "  attempt ${i}: HTTP ${CODE}"
+            if [ "$CODE" = "200" ]; then echo "LIVE: ${URL}"; exit 0; fi
+            sleep 15
+          done
+          echo "::error::${HEALTH_PATH} never answered 200. Open the app's Logs tab in Connect and read the last error."
+          exit 1

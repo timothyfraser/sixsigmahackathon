@@ -1,0 +1,119 @@
+# =============================================================================
+# Build a Vite (React) front end and deploy it to Posit Connect as a STATIC site.
+# =============================================================================
+# WHAT IT DEPLOYS: the built `dist/` folder of the Vite app in APP_DIR. Layout
+#   (same as demos/reactfront):
+#     APP_DIR/package.json        with a "build" script (vite build)
+#     APP_DIR/package-lock.json   commit it -- `npm ci` refuses to run without it
+#     APP_DIR/index.html, src/    your app
+#   No manifest.json to commit: a static site carries no R or Python
+#   fingerprint, so the script writes one for dist/ on every run.
+# REPO SECRETS (Settings > Secrets and variables > Actions):
+#   CONNECT_SERVER, CONNECT_API_KEY -- handed out at the event. Never commit them.
+# WHAT TO EDIT: the `env:` block below. APP_DIR is the folder holding
+#   package.json (e.g. web or demos/reactfront). VITE_API_BASE is your
+#   deployed API's URL, baked into the build; leave it empty if you have none.
+# HOW TO USE: copy this file to .github/workflows/ and BOTH scripts from
+#   demos/positconnect/scripts/ to .github/scripts/, then push to main.
+#
+# The build runs with --base=./ so every asset path is relative: Connect serves
+# content under a sub-path, and Vite's default absolute /assets/ paths would
+# give a blank page there.
+# Pattern adapted from timothyfraser/fastapi-connect-demo (MIT).
+# Every `uses:` is pinned to a full commit SHA; the tag is in the comment.
+# =============================================================================
+name: Deploy React (static) to Posit Connect
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/src/**'
+      - '**/public/**'
+      - '**/index.html'
+      - '**/package.json'
+      - '**/package-lock.json'
+      - '**/vite.config.*'
+      - '.github/workflows/deploy-react-static.yml'
+      - '.github/scripts/connect-publish-static-async.sh'
+      - '.github/scripts/connect-publish-async.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-react-static
+  cancel-in-progress: false
+
+env:
+  APP_DIR: '.'                       # folder holding package.json
+  CONTENT_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}-web
+  CONTENT_TITLE: ${{ github.event.repository.name }} website
+  NODE_VERSION: '22'
+  VITE_API_BASE: ''                  # e.g. your API's Connect URL; empty = none
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check the app folder
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          test -f package.json      || { echo "::error::No package.json in ${APP_DIR}. Set APP_DIR at the top of this file."; exit 1; }
+          test -f package-lock.json || { echo "::error::No package-lock.json in ${APP_DIR}. Run npm install on your machine and commit package-lock.json."; exit 1; }
+          jq -e '.scripts.build' package.json >/dev/null || { echo "::error::package.json has no \"build\" script."; exit 1; }
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
+
+      - name: Build (npm ci && npm run build)
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run build -- --base=./
+          test -f dist/index.html || { echo "::error::The build did not produce dist/index.html."; exit 1; }
+
+      - name: Check the two repo secrets exist
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+        run: |
+          [ -n "$CONNECT_SERVER" ]  || { echo "::error::Repo secret CONNECT_SERVER is not set (Settings > Secrets and variables > Actions)."; exit 1; }
+          [ -n "$CONNECT_API_KEY" ] || { echo "::error::Repo secret CONNECT_API_KEY is not set (Settings > Secrets and variables > Actions)."; exit 1; }
+          echo "Both secrets are present."
+
+      - name: Publish dist/ to Posit Connect
+        id: publish
+        timeout-minutes: 10
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          BUNDLE_DIR: ${{ env.APP_DIR }}/dist
+          POLL_BUDGET_SECONDS: '120'
+        run: bash .github/scripts/connect-publish-static-async.sh
+
+      - name: Check the site answers (green is not live)
+        env:
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          CONTENT_URL: ${{ steps.publish.outputs.content_url }}
+        run: |
+          set -euo pipefail
+          echo "Checking ${CONTENT_URL}"
+          for i in $(seq 1 12); do
+            CODE=$(curl -sS -L -o /dev/null -w '%{http_code}' -H "Authorization: Key ${CONNECT_API_KEY}" "$CONTENT_URL" || echo 000)
+            echo "  attempt ${i}: HTTP ${CODE}"
+            if [ "$CODE" = "200" ]; then echo "LIVE: ${CONTENT_URL}"; exit 0; fi
+            sleep 10
+          done
+          echo "::error::The site never answered 200. Open it in Connect and read its Logs tab."
+          exit 1

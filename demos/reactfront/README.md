@@ -1,48 +1,78 @@
 # React Front End Demo
 
-A React front end is one way to put a face on your API. It is optional — a
-FastAPI `/docs` page or a plumber `/__docs__/` page is already a working demo
-surface, and Shiny gets you a dashboard with no npm at all.
+A one-screen quality-control app: paste measurements, see an individuals
+(I-MR) control chart with the center line, the +/-3 sigma limits, and any
+points outside them in red. Plain Vite + React, a hand-drawn SVG chart, no UI
+kit. It works on a phone.
 
-Build one only if your statistics are already verified.
+The statistics live in `src/spc.js` and are tested in `src/spc.test.js`. The
+chart and the page are in `src/App.jsx`. The API address lives in `src/api.js`
+and nowhere else.
 
-## Scaffold it
+A front end is optional. FastAPI's `/docs` page is already a working demo.
+Build this only once your statistics are verified.
+
+## Run it
+
+You need Node.js 20 or newer.
 
 ```bash
-npm create vite@latest web -- --template react
-cd web && npm install && npm run dev
+npm install
+npm run dev        # open the http://localhost:5173 link it prints
 ```
 
-## Shape
+## Point it at your API
+
+The app pings `GET /` on the API in [`../fastapi/`](../fastapi/) and shows
+whether it is reachable. The address defaults to `http://127.0.0.1:8000`. To
+change it, create a file named `.env.local` in this folder:
 
 ```
-web/
-  src/config.js     <- API base URL lives HERE and only here
-  src/App.jsx       <- fetch from the API, render results
-  package.json
-  testme.sh         <- npm run dev
-  manifestme.sh     <- build, then write a Connect manifest for dist/
-  deployme.sh       <- publish dist/ to Posit Connect
+VITE_API_URL=https://your-api-address
 ```
 
-`src/config.js`:
+then restart `npm run dev` (or rebuild). Your API needs CORS turned on, or the
+browser blocks the call: see the
+[`fastapi-react-scaffold`](../../.claude/skills/fastapi-react-scaffold/SKILL.md) skill.
 
-```js
-export const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:8000";
+The demo API has no control-chart route, so the limits are computed in the
+browser. When your API has one, `limitsOnServer()` in `src/api.js` shows where
+it slots in.
+
+## Build and test
+
+```bash
+npm run build      # writes dist/, a static site that works under any URL path
+npm test           # runs the statistics tests
 ```
 
-One place to change means the switch from localhost to your Connect URL at hour
-23 is a one-line edit, not a grep across the codebase.
+## Deploy to Posit Connect
 
-## Deploy
+Easiest: copy
+[`demos/positconnect/workflows/deploy-react-static.yml`](../positconnect/workflows/deploy-react-static.yml)
+into your repo's `.github/workflows/`, add the two repository secrets it names,
+and push. It runs `npm ci && npm run build` and publishes `dist/` as static
+content.
 
-Front end and API are two separate pieces of content on Posit Connect. Deploy
-the API first, put its URL in `config.js`, `npm run build`, then publish `dist/`
-as a static bundle. See `.claude/skills/connect-publish/SKILL.md`.
+Manual: run `npm run build`, then publish the `dist/` folder as static content
+(see the [`connect-publish`](../../.claude/skills/connect-publish/SKILL.md) skill).
+Deploy the API first and set `VITE_API_URL` to its address before you build:
+Vite bakes the value into `dist/`.
 
-Never commit `node_modules/` or `dist/` — both are gitignored.
+Never commit `node_modules/` or `dist/` (both are in `.gitignore`). Do commit
+`package-lock.json`, so `npm ci` installs the same versions everywhere.
 
-## Your API needs CORS
+## Extend it with your AI agent
 
-A front end served from a different origin is blocked without it. See the
-`fastapi-react-scaffold` or `plumber-react-scaffold` skill for the snippet.
+Keep the statistics in `src/spc.js`, and make the agent prove every change
+with a test before it touches the page. Prompts that work:
+
+- "Add an X-bar and R chart for subgroups of size 5 to `src/spc.js`, using the
+  A2, D3 and D4 table constants. Add a test that reproduces a worked textbook
+  example before you change `App.jsx`."
+- "Add Western Electric rules 2 to 4 to `outOfControl()` in `src/spc.js`. Write
+  one test per rule with a planted pattern and check each flags exactly the
+  points I planted. Do not change how the limits are computed."
+- "Move `imrLimits()` into our FastAPI app as `POST /spc/imr`, with a pytest
+  that matches `src/spc.test.js`, then call it from `App.jsx` through
+  `limitsOnServer()` in `src/api.js`, keeping the browser version as a fallback."

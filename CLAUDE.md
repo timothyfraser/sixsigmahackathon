@@ -11,8 +11,13 @@ authoritative where the two disagree.
 
 ## What the event is
 
-A **24-hour team sprint**. Your team picks one prompt, invents the data, and
-ships a working tool that solves a quality-control or reliability problem.
+The **Cornell Six Sigma Hackathon**, on two tracks that share the same prompts
+and criteria: a **24-hour on-campus sprint** and a **7-day Virtual DL
+Challenge** for distance-learning students and anyone who can't attend in
+person. Dates, deadlines and registration (Devpost, required) are in
+[`README.md`](README.md) and [`docs/schedule.md`](docs/schedule.md). Your team
+picks one prompt, invents the data, and ships a working tool that solves a
+quality-control or reliability problem.
 
 **The graded core is the statistics.** Statistical process control, process
 capability, reliability modeling, failure analysis — that is what is being
@@ -57,8 +62,10 @@ CLAUDE.md / AGENTS.md  this file (agent context), and its mirror
 docs/
   criteria.md          the scoring rubric — read this first
   prompts.md           placeholder until the event starts
-  schedule.md          run of show (phases; exact times announced at the event)
+  schedule.md          run of show — on-campus 24-hour and 7-day DL tracks
   resources.md         tutorials, textbook links, template pointers
+  agents.md            popular AI coding agents, and how to pick one
+  tools.md             Wispr Flow (voice) and Open Design
   mentors.md           mentor signup
   github_pat.md        personal access tokens
   icons.md             emoji/icons for your README
@@ -67,11 +74,28 @@ demos/
   plumber/             R REST API starter           (four-script contract)
   reactfront/          React front end starter      (four-script contract)
   shinyapp/            R Shiny dashboard starter
+  pypackage/           Python package starter
   rpackage/            R package starter
+  positconnect/        one GitHub Actions deploy workflow per stack
   making_readmes/      how to write a README judges can follow
+kit/                   SPEC.md, CONTRACT.yaml, CLAUDE.md, AGENTS.md — copy into your team repo
 posit-dlc/             the Posit Connect deployment life cycle (see below)
 .claude/skills/        skills your agent should load — see below
 ```
+
+## Starter kit — where to begin
+
+1. **Pick a stack** from [`demos/`](demos/README.md) (FastAPI, plumber,
+   React, Shiny, Python or R package).
+2. **Write the SPEC and CONTRACT first.** Copy [`kit/`](kit/README.md) into
+   your team repo: `SPEC.md` says what you are building and for whom;
+   `CONTRACT.yaml` is the task ledger every teammate and every agent checks
+   tasks out of and back into. Load the `contract-ledger` skill to work it.
+3. **Deploy with one workflow** from
+   [`demos/positconnect/`](demos/positconnect/README.md).
+
+Picking or setting up an agent: [`docs/agents.md`](docs/agents.md). Voice input
+and design tooling: [`docs/tools.md`](docs/tools.md).
 
 ## The four-script contract
 
@@ -93,12 +117,14 @@ it, a judge will not see it running either.
 
 **The course Posit Connect server.** Publisher credentials are handed out at the
 event — there are no credentials in this repo and you do not need any before you
-arrive. Deploys are done **locally** with `rsconnect` / `rsconnect-python` from
-your own machine.
+arrive. The same publisher key works for both deploy routes:
 
-A GitHub Actions deploy path also exists and is a fine thing to set up if your
-team wants it, but the credentials you are given at the event are for the local
-path. Start local; automate later if you have time to spare (you won't).
+- **GitHub Actions (recommended):** copy ONE workflow for your stack from
+  [`demos/positconnect/`](demos/positconnect/README.md) into your repo's
+  `.github/workflows/`, add the `CONNECT_SERVER` and `CONNECT_API_KEY` repo
+  secrets, commit your `manifest.json`, and every push redeploys.
+- **Locally** with `rsconnect` / `rsconnect-python` from your own machine — the
+  quickest first deploy (each demo's `deployme` script).
 
 **Posit Connect Cloud is not the target** — it cannot host APIs, and hosting
 APIs is half the menu.
@@ -124,6 +150,9 @@ Load the relevant one *before* you start building, not after.
 | [`fastapi-react-scaffold`](.claude/skills/fastapi-react-scaffold/SKILL.md) | Python API + React front end |
 | [`plumber-react-scaffold`](.claude/skills/plumber-react-scaffold/SKILL.md) | R API + React front end |
 | [`stats-first-steering`](.claude/skills/stats-first-steering/SKILL.md) | **always** — how to keep the statistics correct and central while an agent writes the code |
+| [`contract-ledger`](.claude/skills/contract-ledger/SKILL.md) | working from `SPEC.md` + `CONTRACT.yaml` (from [`kit/`](kit/README.md)) — checking tasks out and in |
+| [`od-setup`](.claude/skills/od-setup/SKILL.md) | setting up Open Design for your team (see [`docs/tools.md`](docs/tools.md)) |
+| [`od-pull`](.claude/skills/od-pull/SKILL.md) | pulling a design from Open Design into your code |
 
 External bundles worth installing rather than re-inventing:
 
