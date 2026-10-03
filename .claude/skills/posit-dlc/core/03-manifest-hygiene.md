@@ -97,7 +97,7 @@ A file listed in the manifest but missing on disk is an **error**. Not a warning
 not something to skip past.
 
 ```bash
-./posit-dlc/scripts/check-manifest.sh
+./.claude/skills/posit-dlc/scripts/check-manifest.sh
 # → ERROR: manifest lists 3 file(s) that do not exist on disk:
 # →   app/routes/legacy.py
 # → Regenerate the manifest on a representative machine, then commit it.

@@ -34,7 +34,7 @@ pdlc_yaml_get() {
 
 pdlc_load_target() {
   [ -f "$PDLC_TARGET_FILE" ] || pdlc_die \
-    "no $PDLC_TARGET_FILE here. Copy posit-dlc/connect-target.example.yaml and fill it in."
+    "no $PDLC_TARGET_FILE here. Copy .claude/skills/posit-dlc/connect-target.example.yaml and fill it in."
 
   API_PREFIX="$(pdlc_yaml_get api_prefix)"
   CONTENT_GUID="$(pdlc_yaml_get guid)"
@@ -51,7 +51,7 @@ pdlc_load_target() {
       pdlc_die "content.guid is still the sentinel.
   A human must create the content item on Connect ONCE, then paste its GUID
   into $PDLC_TARGET_FILE. Automation does not invent GUIDs.
-  See posit-dlc/core/01-connect-target.md." ;;
+  See .claude/skills/posit-dlc/core/01-connect-target.md." ;;
   esac
   case "$TARGET_SERVER_URL" in
     ""|PUT_SERVER_URL_HERE)

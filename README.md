@@ -38,15 +38,19 @@ link plus a demo. Full run of show: [🗓️ Schedule](docs/schedule.md).
 | a dashboard | [`demos/shinyapp/`](demos/shinyapp/) |
 | a reusable library | [`demos/pypackage/`](demos/pypackage/) or [`demos/rpackage/`](demos/rpackage/) |
 
-**2. Write your SPEC and CONTRACT first.** Copy [`kit/`](kit/README.md) into
-your repo: a `SPEC.md` (what you are building and for whom), a `CONTRACT.yaml`
-task list your team and your agents check tasks in and out of, and a
-`CLAUDE.md` / `AGENTS.md` so your AI assistant starts oriented.
+**2. Fill in the pre-filled SPEC and CONTRACT at the root.**
+[`SPEC.md`](SPEC.md) (what you are building and for whom) and
+[`CONTRACT.yaml`](CONTRACT.yaml) (the task list your team and your agents check
+tasks in and out of) are already here and already started for you. Your agent
+reads them first, so finish them before it writes code. Blank copies live in
+[`.claude/templates/`](.claude/templates/README.md).
 
-**3. Deploy with one workflow.** Drop the matching workflow from
-[`demos/positconnect/`](demos/positconnect/README.md) into your repo and it
-publishes your tool to the course **Posit Connect** server. Publisher
-credentials are handed out at the event.
+**3. Deploy with one workflow.** Copy the matching workflow from
+[`.claude/skills/connect-publish/workflows/`](.claude/skills/connect-publish/workflows/)
+into your repo's `.github/workflows/` and it publishes your tool to the course
+**Posit Connect** server. Which file fits your app, and which script goes with
+it: [`.claude/skills/connect-publish/README.md`](.claude/skills/connect-publish/README.md).
+Publisher credentials are handed out at the event.
 
 ---
 

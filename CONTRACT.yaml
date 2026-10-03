@@ -1,0 +1,156 @@
+# CONTRACT.yaml - the task ledger for your hackathon project.
+# SPEC.md says what the tool IS. This file says what is being DONE.
+# It is pre-filled: these eight tasks are the whole rubric (docs/criteria.md),
+# in the order you should build them. Each names the points it earns.
+#
+# How to use it (humans and agents alike; the contract-ledger skill has details):
+#   1. Nothing gets built that is not a task here. Need something else? Add a
+#      task (H-09, H-10, ...) and get a teammate to agree first.
+#   2. One task in_progress per person or agent at a time.
+#   3. Check OUT before starting:  status: in_progress, owner, started_at.
+#   4. Check IN when finished:     status: done + a one-line result, in the
+#      SAME commit as the work.
+#   5. definition_of_done is a runnable check: a command that passes, a file
+#      that exists or a URL that answers. Run it and quote what it printed.
+#      If it fails, the task is not done. "Should work" is not a result.
+#   6. Write only inside the task's owns paths.
+#   7. Quote any string that contains a colon. No tabs.
+#      Check it parses:  python -c "import yaml; yaml.safe_load(open('CONTRACT.yaml'))"
+#
+# Paths assume one demo copied from demos/ into app/ (SPEC section 5). Python
+# teams use the .py paths and pytest; R teams use the .R paths and testthat.
+# Delete the paths you do not use.
+
+spec: SPEC.md
+updated: ""
+
+tasks:
+  - id: H-01
+    title: Fill in every FILL IN line in SPEC.md
+    points: "15 - Tool Design: scope matches a prompt (5), clear user and use case (5), minimal inputs (5)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["SPEC.md"]
+    notes: >
+      Do this together, out loud, right after kickoff. The prompts are in
+      docs/prompts.md once the event starts. Keep inputs to what the user can
+      actually measure.
+    definition_of_done: >
+      grep -c "FILL IN" SPEC.md prints 0, and every teammate can say the
+      method sentence in SPEC section 4 without reading it.
+    result: ""
+
+  - id: H-02
+    title: Two or three test datasets plus a codebook
+    points: "10 - Tool Documentation: 2-3 working test datasets (5), codebook and README for the data (5)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["data/"]
+    definition_of_done: >
+      ls data/*.csv lists 2 or 3 files (e.g. in control, planted shift, edge
+      case), and data/README.md names every one of them and describes every
+      column with units and how the data would be collected for real.
+    result: ""
+
+  - id: H-03
+    title: Core QC statistic as one plain, tested function
+    points: "25 - Tool Implementation: valid analyses relevant to quality control in R or Python"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/qc.py", "app/qc.R", "tests/"]
+    notes: >
+      Load the stats-first-steering skill before writing any statistics. Plain
+      inputs (a data frame or vector), plain outputs (numbers), no framework.
+    definition_of_done: >
+      pytest tests (Python) or Rscript -e "testthat::test_dir('tests')" (R)
+      passes, including one test that reproduces the SPEC section 4
+      known-answer check and one degenerate case (constant data or n = 1).
+    result: ""
+
+  - id: H-04
+    title: Working tool - one demo copied to app/ and wired to the H-03 function
+    points: "25 - Tool Implementation: an effective, working tool (does it run?)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/"]
+    notes: >
+      Copy ONE folder from demos/ (the one named in SPEC section 5) to app/.
+      Everything in app/ except the H-03 files. Load fastapi-react-scaffold or
+      plumber-react-scaffold for an API plus React front end.
+    definition_of_done: >
+      The testme script in app/ starts the tool with one command, and a call
+      on one data/ file (endpoint, function call or app upload) returns the
+      same numbers as the H-03 known-answer test.
+    result: ""
+
+  - id: H-05
+    title: Demonstration of the tool on every test dataset
+    points: "10 - Tool Design: a clear demonstration of the tool, using test datasets"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["demo/", "app/frontend/"]
+    definition_of_done: >
+      demo/README.md walks through each data/ CSV with the exact command or
+      URL to run, the numbers or chart the tool shows, and a one-line "how to
+      read this"; a teammate who did not write it follows it and gets the same
+      numbers.
+    result: ""
+
+  - id: H-06
+    title: Deploy to the course Posit Connect server
+    points: "protects the 25 working-tool points - judges must be able to open it"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: [".github/workflows/", ".github/scripts/", "app/manifest.json", "app/.python-version"]
+    notes: >
+      Load the connect-publish skill. Copy ONE workflow for your stack from
+      .claude/skills/connect-publish/workflows/ to .github/workflows/ and the
+      script(s) it names from .claude/skills/connect-publish/scripts/ to
+      .github/scripts/; set APP_DIR to 'app' in its env block. Add the
+      CONNECT_SERVER and CONNECT_API_KEY repo secrets (handed out at the
+      event, never in a file). Write manifest.json on your own machine with
+      the demo's manifestme script and commit it. Needs your own repo (H-08).
+    definition_of_done: >
+      The workflow run is green, and the public URL answers HTTP 200 from a
+      logged-out browser and returns the H-03 numbers for one test dataset.
+    result: ""
+
+  - id: H-07
+    title: README and function documentation
+    points: "10 - Tool Documentation: excellent, easy-to-follow documentation"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["README.md", "app/README.md"]
+    notes: >
+      Replace the hackathon README.md with your tool's README; the event
+      pages stay in docs/. See demos/making_readmes/.
+    definition_of_done: >
+      README.md says what the tool does, for whom, every input and parameter,
+      how each function or endpoint works, how to run it in one command, the
+      live URL, and links demo/README.md. A teammate who did not write the
+      code follows it from a fresh clone and it works.
+    result: ""
+
+  - id: H-08
+    title: Reproducible public repo, submitted on Devpost
+    points: "5 - Tool Documentation: fully reproducible code, posted publicly to GitHub"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: [".gitignore"]
+    notes: >
+      Make this clone your own public repo early (a new GitHub repo, then
+      git remote set-url origin to it) - H-06 needs it. Submit on Devpost
+      before your track's deadline (docs/schedule.md).
+    definition_of_done: >
+      git clone of the public repo into an empty folder, then the app/
+      testme script and the H-03 tests both pass with no extra steps; git
+      grep -i "api_key" finds no real key; the Devpost entry links the repo.
+    result: ""

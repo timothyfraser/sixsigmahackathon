@@ -49,9 +49,10 @@ npm test           # runs the statistics tests
 ## Deploy to Posit Connect
 
 Easiest: copy
-[`demos/positconnect/workflows/deploy-react-static.yml`](../positconnect/workflows/deploy-react-static.yml)
-into your repo's `.github/workflows/`, add the two repository secrets it names,
-and push. It runs `npm ci && npm run build` and publishes `dist/` as static
+[`.claude/skills/connect-publish/workflows/deploy-react-static.yml`](../../.claude/skills/connect-publish/workflows/deploy-react-static.yml)
+into your repo's `.github/workflows/` and both scripts in
+[`.claude/skills/connect-publish/scripts/`](../../.claude/skills/connect-publish/scripts/)
+into `.github/scripts/`, add the two repository secrets it names, and push. It runs `npm ci && npm run build` and publishes `dist/` as static
 content.
 
 Manual: run `npm run build`, then publish the `dist/` folder as static content

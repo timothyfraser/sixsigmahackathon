@@ -5,8 +5,9 @@ description: Work one task at a time from CONTRACT.yaml - check a task out befor
 
 # contract-ledger
 
-`CONTRACT.yaml` is the team's task ledger; `SPEC.md` says what the tool IS. Templates for both are in
-[`kit/`](../../../kit/README.md). Copy them to your repo root first.
+[`CONTRACT.yaml`](../../../CONTRACT.yaml) at the repo root is the team's task ledger;
+[`SPEC.md`](../../../SPEC.md), also at the root, says what the tool IS. Both come pre-filled: read them first.
+Blank copies (for a second project, or to start over) are in [`.claude/templates/`](../../templates/README.md).
 
 ## Before any work: is there a task?
 

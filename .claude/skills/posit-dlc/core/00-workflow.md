@@ -93,4 +93,4 @@ human invokes on purpose, rather than a monolith nobody reads.
 - **deploy-hardening** — [`04-deploy-verify.md`](04-deploy-verify.md) §"Hardening"
 - **data-handling** — do not bundle data you cannot publish; everything in the
   folder goes up ([`03-manifest-hygiene.md`](03-manifest-hygiene.md))
-- **secret-scanning** — `posit-dlc/.gitleaks.toml`, run before every push
+- **secret-scanning** — `.claude/skills/posit-dlc/.gitleaks.toml`, run before every push

@@ -10,8 +10,8 @@
 # REPO SECRETS (Settings > Secrets and variables > Actions):
 #   CONNECT_SERVER, CONNECT_API_KEY -- handed out at the event. Never commit them.
 # WHAT TO EDIT: only the `env:` block below, if your app is not at the repo root.
-# HOW TO USE: copy this file to .github/workflows/ and both scripts from
-#   demos/positconnect/scripts/ to .github/scripts/, then push to main.
+# HOW TO USE: copy this file to .github/workflows/ and connect-publish-async.sh
+#   from .claude/skills/connect-publish/scripts/ to .github/scripts/, then push.
 #
 # No R is installed on the runner: the manifest already names every package
 # and version, and Connect installs them. Run the app locally first.

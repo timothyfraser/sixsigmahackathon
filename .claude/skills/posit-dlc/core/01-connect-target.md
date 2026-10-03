@@ -9,7 +9,7 @@ not a credential. The API key is, and it lives somewhere else entirely — see
 
 ## The declaration
 
-Copy `posit-dlc/connect-target.example.yaml` to `connect-target.yaml` at your
+Copy `.claude/skills/posit-dlc/connect-target.example.yaml` to `connect-target.yaml` at your
 project root and fill it in.
 
 ```yaml

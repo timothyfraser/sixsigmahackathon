@@ -6,7 +6,7 @@
 #
 # WHY: a wrong GUID does not fail harmlessly. It OVERWRITES whatever content it
 # does point at, with no confirmation and no undo.
-# See posit-dlc/core/02-publisher-credentials.md.
+# See .claude/skills/posit-dlc/core/02-publisher-credentials.md.
 #
 # Makes exactly one GET. Writes nothing. Prints no credential.
 

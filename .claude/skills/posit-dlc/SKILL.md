@@ -6,26 +6,26 @@ description: The deployment life cycle for Posit Connect - server/target convent
 # posit-dlc
 
 **This skill is a pointer, not a copy.** The methodology lives in exactly one
-place — `posit-dlc/core/` at the repo root — so that this file and `AGENTS.md`
+place — `core/`, next to this file — so that this file and `AGENTS.md`
 cannot drift from it. Read the core files; do not paraphrase them from here.
 
 ## Start here
 
-**[`posit-dlc/core/00-workflow.md`](../../../posit-dlc/core/00-workflow.md)** —
+**[`core/00-workflow.md`](core/00-workflow.md)** —
 the five stages and the three approval gates. Read it before anything else.
 
 ## The six components
 
 | Component | File |
 |---|---|
-| connect-target | [`posit-dlc/core/01-connect-target.md`](../../../posit-dlc/core/01-connect-target.md) |
-| publisher-credentials | [`posit-dlc/core/02-publisher-credentials.md`](../../../posit-dlc/core/02-publisher-credentials.md) |
-| manifest-hygiene | [`posit-dlc/core/03-manifest-hygiene.md`](../../../posit-dlc/core/03-manifest-hygiene.md) |
-| deploy-verify | [`posit-dlc/core/04-deploy-verify.md`](../../../posit-dlc/core/04-deploy-verify.md) |
-| content-scaffolds | [`posit-dlc/core/05-content-scaffolds.md`](../../../posit-dlc/core/05-content-scaffolds.md) |
-| generation-discipline | [`posit-dlc/core/06-generation-discipline.md`](../../../posit-dlc/core/06-generation-discipline.md) |
+| connect-target | [`core/01-connect-target.md`](core/01-connect-target.md) |
+| publisher-credentials | [`core/02-publisher-credentials.md`](core/02-publisher-credentials.md) |
+| manifest-hygiene | [`core/03-manifest-hygiene.md`](core/03-manifest-hygiene.md) |
+| deploy-verify | [`core/04-deploy-verify.md`](core/04-deploy-verify.md) |
+| content-scaffolds | [`core/05-content-scaffolds.md`](core/05-content-scaffolds.md) |
+| generation-discipline | [`core/06-generation-discipline.md`](core/06-generation-discipline.md) |
 
-Overview and install: [`posit-dlc/README.md`](../../../posit-dlc/README.md).
+Overview and install: [`README.md`](README.md).
 
 ## The three gates, restated because they bind you
 

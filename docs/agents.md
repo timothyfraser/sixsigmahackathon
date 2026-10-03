@@ -1,7 +1,8 @@
 # Popular AI coding agents
 
-Bring whichever one you already have. They all work with the [starter kit](../kit/README.md): Claude Code
-reads `CLAUDE.md`, most others read `AGENTS.md`.
+Bring whichever one you already have. They all work with this repo as it is: Claude Code
+reads [`CLAUDE.md`](../CLAUDE.md), most others read [`AGENTS.md`](../AGENTS.md), and both send the agent to
+[`SPEC.md`](../SPEC.md) and [`CONTRACT.yaml`](../CONTRACT.yaml) first.
 
 > **Prices and student offers as of 2 October 2026. They change often; check the linked page before you rely on one.**
 
@@ -18,7 +19,7 @@ costs nothing extra. The tips below matter more than which agent you pick.
 
 ## Steering an agent toward correct statistics on a budget
 
-1. **Spec first.** Fill in [`kit/SPEC.md`](../kit/SPEC.md) before the agent writes code. Most wasted
+1. **Spec first.** Finish the pre-filled [`SPEC.md`](../SPEC.md) before the agent writes code. Most wasted
    tokens come from the agent guessing what you meant.
 2. **One small task per prompt.** "Do H-03 only" beats "build the app". Small tasks are cheap to throw away.
 3. **Make it state the method before it codes.** Ask: "In one sentence, which statistic and which formula
