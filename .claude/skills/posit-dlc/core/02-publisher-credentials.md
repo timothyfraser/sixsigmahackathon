@@ -23,11 +23,11 @@ Never echoed into a log, a PR description, or a chat message.
 rsconnect/
 ```
 
-Run the secret scan before you push. `posit-dlc/.gitleaks.toml` is configured for
+Run the secret scan before you push. `.claude/skills/posit-dlc/.gitleaks.toml` is configured for
 Connect key shapes:
 
 ```bash
-gitleaks detect --config posit-dlc/.gitleaks.toml --no-banner
+gitleaks detect --config .claude/skills/posit-dlc/.gitleaks.toml --no-banner
 ```
 
 **A leaked publisher key is the one mistake a revert does not fix.** The commit
@@ -71,7 +71,7 @@ that prints the title of what is there, before a single byte of bundle is
 uploaded.
 
 ```bash
-./posit-dlc/scripts/preflight.sh
+./.claude/skills/posit-dlc/scripts/preflight.sh
 # → target GUID   : 7f3c...
 # → target title  : team-07-spc-api
 # → owner         : tfraser

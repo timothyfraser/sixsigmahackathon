@@ -1,7 +1,7 @@
 # connect-target.yaml — the designated Posit Connect server for this project.
 #
 # NON-SECRET. This file is committed. The API key is NOT here and never will be
-# (see posit-dlc/core/02-publisher-credentials.md); it comes from the environment
+# (see .claude/skills/posit-dlc/core/02-publisher-credentials.md); it comes from the environment
 # or a gitignored .env at the moment of use.
 #
 # Copy to your project root as `connect-target.yaml` and fill in.

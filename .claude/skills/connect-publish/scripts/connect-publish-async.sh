@@ -58,7 +58,7 @@ emit() { if [ -n "${GITHUB_OUTPUT:-}" ]; then printf '%s\n' "$1" >> "$GITHUB_OUT
 
 command -v jq >/dev/null || fail "jq is required"
 [ -f "${BUNDLE_DIR}/manifest.json" ] \
-  || fail "no manifest.json in '${BUNDLE_DIR}'. Write it on YOUR machine and commit it (see demos/positconnect/README.md step 3)."
+  || fail "no manifest.json in '${BUNDLE_DIR}'. Write it on YOUR machine and commit it (see .claude/skills/connect-publish/README.md step 3)."
 
 # Connect content names allow only letters, digits, '-' and '_' (max 64).
 CONTENT_NAME=$(printf '%s' "$CONTENT_NAME" | tr -c 'A-Za-z0-9_-' '-' | cut -c1-64)

@@ -3,7 +3,7 @@
 #
 # THIS is the definition of done, not a green check. A successful upload means
 # the bundle was accepted, not that the app came up.
-# See posit-dlc/core/04-deploy-verify.md.
+# See .claude/skills/posit-dlc/core/04-deploy-verify.md.
 
 set -euo pipefail
 . "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_common.sh"

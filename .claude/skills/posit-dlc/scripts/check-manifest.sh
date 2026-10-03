@@ -3,7 +3,7 @@
 #
 # A file listed in manifest.json but missing on disk is an ERROR, not a warning.
 # Also prints the environment fingerprint fields so you can SEE what machine
-# this manifest was generated on. See posit-dlc/core/03-manifest-hygiene.md.
+# this manifest was generated on. See .claude/skills/posit-dlc/core/03-manifest-hygiene.md.
 #
 # Reads only. Never regenerates. Regenerating is a human action on a
 # representative machine — never in CI.

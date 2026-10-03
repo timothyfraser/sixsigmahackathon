@@ -14,7 +14,7 @@
 #   package.json (e.g. web or demos/reactfront). VITE_API_BASE is your
 #   deployed API's URL, baked into the build; leave it empty if you have none.
 # HOW TO USE: copy this file to .github/workflows/ and BOTH scripts from
-#   demos/positconnect/scripts/ to .github/scripts/, then push to main.
+#   .claude/skills/connect-publish/scripts/ to .github/scripts/, then push.
 #
 # The build runs with --base=./ so every asset path is relative: Connect serves
 # content under a sub-path, and Vite's default absolute /assets/ paths would

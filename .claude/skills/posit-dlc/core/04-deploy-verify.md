@@ -70,7 +70,7 @@ function() { list(status = "ok", version = VERSION) }
 Then:
 
 ```bash
-./posit-dlc/scripts/verify.sh
+./.claude/skills/posit-dlc/scripts/verify.sh
 # → GET https://connect.example.org/content/7f3c.../health
 # → 200 {"status":"ok","version":"1.0.0"}
 # → VERIFIED

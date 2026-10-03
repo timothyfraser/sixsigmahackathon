@@ -11,8 +11,9 @@
 #   5. Write only inside the task's owns paths.
 #   6. Quote any string that contains a colon. No tabs.
 #
-# These example tasks follow the rubric (docs/criteria.md). Rename paths to
-# match your stack (R or Python) and delete what you do not need.
+# BLANK TEMPLATE for a new repo. The example tasks below are a typical
+# stats-tool build; rename paths to match your stack and delete what you do
+# not need. (Inside the hackathon repo, use its pre-filled root CONTRACT.yaml.)
 
 spec: SPEC.md
 updated: "<YYYY-MM-DD>"
@@ -81,9 +82,8 @@ tasks:
     started_at: ""
     owns: ["manifest.json", ".github/workflows/deploy.yml", "deployme.sh", "deployme.R"]
     notes: >
-      Copy ONE workflow for your stack from the hackathon repo's
-      demos/positconnect/workflows/ into .github/workflows/, add the
-      CONNECT_SERVER and CONNECT_API_KEY repo secrets, commit manifest.json.
+      Put your deploy workflow in .github/workflows/, keep the server URL
+      and API key in repo secrets (never in a file), commit manifest.json.
     definition_of_done: >
       The public URL answers HTTP 200 from a logged-out browser and returns
       the H-03 numbers for one test dataset.

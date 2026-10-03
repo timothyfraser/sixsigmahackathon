@@ -22,6 +22,10 @@ own content item.
 
 ## 1. Copy the files into YOUR repo
 
+The workflows are in `.claude/skills/connect-publish/workflows/` and the
+scripts in `.claude/skills/connect-publish/scripts/` (next to this README).
+They go here:
+
 ```
 your-repo/
   .github/

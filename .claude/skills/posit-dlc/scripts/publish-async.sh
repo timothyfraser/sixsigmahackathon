@@ -103,4 +103,4 @@ case "$STATUS" in
              exit 1 ;;
 esac
 echo
-echo "GREEN IS NOT LIVE. Verify with: ./posit-dlc/scripts/verify.sh"
+echo "GREEN IS NOT LIVE. Verify with: ./.claude/skills/posit-dlc/scripts/verify.sh"

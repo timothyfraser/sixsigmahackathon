@@ -8,7 +8,7 @@ each harness adds only a thin surface layer.
 ## The rule
 
 ```
-posit-dlc/core/*.md          ← the methodology. ONE copy. Harness-neutral.
+.claude/skills/posit-dlc/core/*.md          ← the methodology. ONE copy. Harness-neutral.
         │
         ├── .claude/skills/posit-dlc/SKILL.md   ← thin surface: frontmatter + pointers
         ├── AGENTS.md                            ← thin surface: one row + pointer
@@ -46,7 +46,7 @@ say so in the generated file's header. Do not hand-edit a generated file.
 ## Adding a new harness
 
 1. Create the surface file where that harness looks for it.
-2. Put the trigger condition and a link to `posit-dlc/core/00-workflow.md` in it.
+2. Put the trigger condition and a link to `.claude/skills/posit-dlc/core/00-workflow.md` in it.
 3. Add nothing else.
 
 ## Approval gates are part of the methodology, not a policy bolted on

@@ -30,7 +30,7 @@ How polished and ready is this tool for public use?
 - (5 pts) Fully reproducible code, posted publicly to a Github Repository,
 
 ---
-![Hackathon Banner](images/banner_icons\.png)
+![Hackathon Banner](images/banner_icons.png)
 
  
 

@@ -64,12 +64,12 @@ Join the kickoff, read the [prompts](prompts.md), and confirm your team's
 prompt early. Then stick to it.
 
 ### Phase II — Plan
-Write your SPEC and CONTRACT first (copy [`kit/`](../kit/README.md)), design
+Finish the pre-filled [`SPEC.md`](../SPEC.md) and [`CONTRACT.yaml`](../CONTRACT.yaml) first, design
 your test data, and divide the work.
 
 ### Phase III — Build
 Build a minimum viable version, then deploy it early (see
-[`demos/positconnect/`](../demos/positconnect/README.md)). A tool that is live
+[`.claude/skills/connect-publish/`](../.claude/skills/connect-publish/README.md)). A tool that is live
 by mid-week leaves time to fix what breaks.
 
 ### Phase IV — Refine and polish

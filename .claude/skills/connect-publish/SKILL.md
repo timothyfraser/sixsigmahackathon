@@ -93,11 +93,12 @@ until you have read the log.
 Local publishing gets you the first URL fastest. Once that works, Actions lets
 every push to `main` redeploy on its own.
 
-**Use the ready-made workflows in [`demos/positconnect/`](../../../demos/positconnect/README.md)
-— never write one from scratch.** One file per stack (FastAPI, plumber, Shiny
+**Use the ready-made workflows in [`workflows/`](workflows/) next to this file
+(how-to: [`README.md`](README.md)) — never write one from scratch.** One file per stack (FastAPI, plumber, Shiny
 R, Shiny for Python, React/Vite static) plus two publish scripts. A team copies
-the one workflow into `.github/workflows/`, the script(s) into
-`.github/scripts/`, adds repo secrets `CONNECT_SERVER` and `CONNECT_API_KEY`,
+the one workflow from `.claude/skills/connect-publish/workflows/` into
+`.github/workflows/`, the script(s) from `.claude/skills/connect-publish/scripts/`
+into `.github/scripts/`, adds repo secrets `CONNECT_SERVER` and `CONNECT_API_KEY`,
 commits its manifest, and pushes. Its README has the table of which file fits
 which app and the three most common failures. When helping a team, point them
 there and edit only the `env:` block at the top of the workflow (`APP_DIR`,

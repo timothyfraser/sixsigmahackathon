@@ -8,7 +8,7 @@ then the code. Keep it to one page. Replace every `<...>`.
 
 ## 2. Use case
 <The one decision this tool helps them make, and when they make it. One or two sentences.>
-Prompt we chose: <prompt number and title>
+Problem or brief this answers: <one line, or a link>
 
 ## 3. Inputs (keep these few)
 Only things this user can actually measure or already knows.
@@ -34,4 +34,4 @@ Say the method in words before any code exists.
 <2-3 small CSVs and what each one demonstrates, e.g. in control / planted shift / edge case.>
 
 ## 8. Out of scope
-<What we will NOT build in 24 hours, so nobody (human or agent) builds it by accident.>
+<What we will NOT build in this round, so nobody (human or agent) builds it by accident.>

@@ -8,7 +8,8 @@ server **efficiently** (you are not rediscovering the manifest rules at hour 22)
 and **safely** (you are not overwriting somebody else's app or committing a key).
 
 It is deliberately not hackathon-specific. The Connect server is *configuration*,
-not code. Copy `posit-dlc/` into any repo that publishes to any Connect.
+not code. Copy `.claude/skills/posit-dlc/` to the same place in any repo that
+publishes to any Connect.
 
 ## Why it exists
 
@@ -42,7 +43,8 @@ The workflow that strings them together, with its approval gates, is
 ## File map
 
 ```
-posit-dlc/
+.claude/skills/posit-dlc/
+  SKILL.md                      the Claude Code surface: pointers into core/
   README.md                     this file
   connect-target.example.yaml   the committed, non-secret target declaration
   .gitleaks.toml                secret-scan config — run it before you push
@@ -68,12 +70,13 @@ key, and none of them writes one to disk.**
 ## Install
 
 ```bash
-# 1. copy the core into your project
-cp -r posit-dlc/ /path/to/your-project/
+# 1. copy the bundle into your project, at the same path
+mkdir -p /path/to/your-project/.claude/skills
+cp -r .claude/skills/posit-dlc/ /path/to/your-project/.claude/skills/
 
 # 2. declare your target (non-secret, committed)
 cd /path/to/your-project
-cp posit-dlc/connect-target.example.yaml connect-target.yaml
+cp .claude/skills/posit-dlc/connect-target.example.yaml connect-target.yaml
 $EDITOR connect-target.yaml        # fill in server_url, leave guid as the sentinel
 
 # 3. put credentials in a gitignored .env (never committed)
