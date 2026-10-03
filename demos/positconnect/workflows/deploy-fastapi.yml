@@ -1,0 +1,133 @@
+# =============================================================================
+# Deploy a Python FastAPI app to Posit Connect.
+# =============================================================================
+# WHAT IT DEPLOYS: the FastAPI app in APP_DIR, shipped EXACTLY as your committed
+#   manifest.json describes it. Layout (same as demos/fastapi):
+#     APP_DIR/app.py            your FastAPI app (`app = FastAPI()`)
+#     APP_DIR/requirements.txt  pinned with == versions
+#     APP_DIR/manifest.json     written on YOUR machine, then committed:
+#                               rsconnect write-manifest fastapi . --entrypoint app:app
+#     APP_DIR/.python-version   e.g. 3.12 -- must match the manifest
+# REPO SECRETS (Settings > Secrets and variables > Actions):
+#   CONNECT_SERVER, CONNECT_API_KEY -- handed out at the event. Never commit them.
+# WHAT TO EDIT: only the `env:` block below, if your app is not at the repo root.
+# HOW TO USE: copy this file to .github/workflows/ and both scripts from
+#   demos/positconnect/scripts/ to .github/scripts/, then push to main.
+#
+# Pattern adapted from timothyfraser/fastapi-connect-demo (MIT): the manifest
+# is verified, never regenerated, and rsconnect is never installed here.
+# Every `uses:` is pinned to a full commit SHA; the tag is in the comment.
+# =============================================================================
+name: Deploy FastAPI to Posit Connect
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - '**/requirements.txt'
+      - '**/manifest.json'
+      - '**/.python-version'
+      - '.github/workflows/deploy-fastapi.yml'
+      - '.github/scripts/connect-publish-async.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-fastapi
+  cancel-in-progress: false
+
+env:
+  APP_DIR: '.'                       # folder holding app.py + manifest.json
+  CONTENT_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}-fastapi
+  CONTENT_TITLE: ${{ github.event.repository.name }} API
+  HEALTH_PATH: '/docs'               # any route that answers 200; /health if you add one
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check the committed manifest (never regenerated here)
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          set -euo pipefail
+          test -f manifest.json    || { echo "::error::No manifest.json in ${APP_DIR}. On your machine run: rsconnect write-manifest fastapi . --entrypoint app:app  -- then commit it."; exit 1; }
+          test -f requirements.txt || { echo "::error::No requirements.txt in ${APP_DIR}."; exit 1; }
+          test -f .python-version  || { echo "::error::No .python-version in ${APP_DIR}. Create it holding the Python version in manifest.json, e.g. 3.12"; exit 1; }
+          MODE=$(jq -r '.metadata.appmode' manifest.json)
+          ENTRY=$(jq -r '.metadata.entrypoint // ""' manifest.json)
+          MPY=$(jq -r '.python.version // ""' manifest.json)
+          WANT=$(tr -d ' \r\n' < .python-version)
+          echo "manifest: appmode=${MODE} entrypoint=${ENTRY} python=${MPY} (.python-version=${WANT})"
+          # `rsconnect write-manifest api` writes python-api (a WSGI app, e.g. Flask);
+          # FastAPI is ASGI and needs python-fastapi.
+          [ "$MODE" = "python-fastapi" ] || { echo "::error::manifest appmode is '${MODE}', expected python-fastapi. Re-write it with: rsconnect write-manifest fastapi . --entrypoint app:app"; exit 1; }
+          [ -n "$ENTRY" ] || { echo "::error::manifest has no entrypoint. Re-write it with --entrypoint app:app"; exit 1; }
+          case "$MPY" in
+            "$WANT"|"$WANT".*) ;;
+            *) echo "::error::manifest says Python ${MPY} but .python-version says ${WANT}. Make them agree, then re-write the manifest on your machine."; exit 1 ;;
+          esac
+          if grep -q $'\r' manifest.json; then
+            echo "::error::manifest.json has Windows line endings. Add a .gitattributes file containing: * text=auto eol=lf  -- then re-write and re-commit the manifest."
+            exit 1
+          fi
+          case "$(jq -r '.locale // ""' manifest.json)" in
+            ""|C|C.UTF-8|POSIX) echo "::warning::manifest locale looks like a CI runner's. Write the manifest on your own machine, not in Actions." ;;
+          esac
+          echo "ENTRY=${ENTRY}" >> "$GITHUB_ENV"
+
+      - name: Set up Python (version from .python-version)
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: ${{ env.APP_DIR }}/.python-version
+          cache: pip
+          cache-dependency-path: ${{ env.APP_DIR }}/requirements.txt
+
+      - name: Smoke test -- install requirements and import the app
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          set -euo pipefail
+          python -X utf8 -m pip install -r requirements.txt
+          python -X utf8 -c "import importlib, sys; m, o = sys.argv[1].split(':'); getattr(importlib.import_module(m), o); print('imported', sys.argv[1])" "$ENTRY"
+
+      - name: Check the two repo secrets exist
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+        run: |
+          [ -n "$CONNECT_SERVER" ]  || { echo "::error::Repo secret CONNECT_SERVER is not set (Settings > Secrets and variables > Actions)."; exit 1; }
+          [ -n "$CONNECT_API_KEY" ] || { echo "::error::Repo secret CONNECT_API_KEY is not set (Settings > Secrets and variables > Actions)."; exit 1; }
+          echo "Both secrets are present."
+
+      - name: Publish to Posit Connect
+        id: publish
+        timeout-minutes: 10
+        env:
+          CONNECT_SERVER: ${{ secrets.CONNECT_SERVER }}
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          BUNDLE_DIR: ${{ env.APP_DIR }}
+          POLL_BUDGET_SECONDS: '120'
+        run: bash .github/scripts/connect-publish-async.sh
+
+      - name: Check the app answers (green is not live)
+        env:
+          CONNECT_API_KEY: ${{ secrets.CONNECT_API_KEY }}
+          CONTENT_URL: ${{ steps.publish.outputs.content_url }}
+        run: |
+          set -euo pipefail
+          URL="${CONTENT_URL%/}${HEALTH_PATH}"
+          echo "Checking ${URL}"
+          for i in $(seq 1 20); do
+            CODE=$(curl -sS -L -o /dev/null -w '%{http_code}' -H "Authorization: Key ${CONNECT_API_KEY}" "$URL" || echo 000)
+            echo "  attempt ${i}: HTTP ${CODE}"
+            if [ "$CODE" = "200" ]; then echo "LIVE: ${URL}"; exit 0; fi
+            sleep 15
+          done
+          echo "::error::${HEALTH_PATH} never answered 200. Open the app's Logs tab in Connect and read the last error."
+          exit 1

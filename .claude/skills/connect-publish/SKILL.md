@@ -40,7 +40,7 @@ locally fails on the server, where the logs are further away.
 
 ```bash
 ./testme.sh        # uvicorn app:app --host 0.0.0.0 --port 8000
-./manifestme.sh    # rsconnect write-manifest api . --entrypoint app:app
+./manifestme.sh    # rsconnect write-manifest fastapi . --entrypoint app:app
 ./deployme.sh      # rsconnect deploy fastapi --entrypoint app:app .
 ```
 
@@ -90,17 +90,24 @@ until you have read the log.
 
 ## GitHub Actions
 
-An Actions-based deploy path exists and works, but the credentials handed out at
-the event are for local publishing. Set up Actions only if your team has spare
-time — at hour 22 the local path is the one that gets you a URL.
+Local publishing gets you the first URL fastest. Once that works, Actions lets
+every push to `main` redeploy on its own.
 
-If you do set it up, **start from the worked example rather than from scratch**:
+**Use the ready-made workflows in [`demos/positconnect/`](../../../demos/positconnect/README.md)
+— never write one from scratch.** One file per stack (FastAPI, plumber, Shiny
+R, Shiny for Python, React/Vite static) plus two publish scripts. A team copies
+the one workflow into `.github/workflows/`, the script(s) into
+`.github/scripts/`, adds repo secrets `CONNECT_SERVER` and `CONNECT_API_KEY`,
+commits its manifest, and pushes. Its README has the table of which file fits
+which app and the three most common failures. When helping a team, point them
+there and edit only the `env:` block at the top of the workflow (`APP_DIR`,
+`CONTENT_NAME`, `HEALTH_PATH`).
 
-> **[timothyfraser/fastapi-connect-demo](https://github.com/timothyfraser/fastapi-connect-demo)** —
-> a minimal FastAPI plus a workflow that has deployed green repeatedly, with the
-> classic failure named and countered step by step in the file. MIT.
+Those files adapt
+**[timothyfraser/fastapi-connect-demo](https://github.com/timothyfraser/fastapi-connect-demo)**
+(MIT), a workflow that has deployed green repeatedly.
 
-The one thing to know before you try it, because it costs teams hours:
+The one thing to know, because it costs teams hours:
 
 > **`manifest.json` is not a build config. It is an environment fingerprint of
 > the machine that generated it** — `locale`, `python.version`, the pip version,

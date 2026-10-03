@@ -1,15 +1,52 @@
 ![](docs/images/banner_thin.png)
 
-# 🎯 Six Sigma Hackathon
+# 🎯 Cornell Six Sigma Hackathon
 
-A **24-hour team sprint** for Cornell Systems Engineering students. Your team
-picks a prompt, invents the data, and ships a working quality-control tool.
+*Tackle real-world quality control problems drawn from industrial engineering,
+healthcare systems, and energy systems!*
 
-- **Who:** on-campus Cornell students in the Systems Engineering MEng/MS program
-  or enrolled in SYSEN 5300 / MAE 5390 — up to 5 per team
-- **Where / when:** announced with registration
-- **Submissions:** on **[Devpost](https://devpost.com/)** — the event page and
-  submission instructions are shared at the event
+Your team picks a prompt, invents the data, and ships a working quality-control
+tool. **👉 [Register on Devpost](https://six-sigma-hackathon.devpost.com/)**
+(required, even if you don't have a team yet).
+
+---
+
+### 📍 When & where
+
+| | 🏫 On-campus (24 hours) | 🌐 Virtual DL Challenge (7 days) |
+|---|---|---|
+| **Who** | on-campus students (required unless excused) | distance-learning students, and anyone who can't attend in person |
+| **Runs** | Fri Oct 16, 3 PM → Sat Oct 17, 3 PM ET | Fri Oct 16, 3 PM → Fri Oct 23, 3 PM ET |
+| **Where** | Upson Hall 116 | online |
+| **Submissions due** | Sat Oct 17, **1 PM ET** sharp | Fri Oct 23, **3 PM ET** |
+| **Showcase** | Sat Oct 17, 2-3 PM (must attend) | — |
+
+Submit on **[Devpost](https://six-sigma-hackathon.devpost.com/)**: your repo
+link plus a demo. Full run of show: [🗓️ Schedule](docs/schedule.md).
+
+---
+
+### 🚀 Start here in 3 steps
+
+**1. Pick your stack.** Copy one template folder into your own repo.
+
+| You want to build… | Start from |
+|---|---|
+| a Python API | [`demos/fastapi/`](demos/fastapi/) |
+| an R API | [`demos/plumber/`](demos/plumber/) |
+| a web front end | [`demos/reactfront/`](demos/reactfront/) |
+| a dashboard | [`demos/shinyapp/`](demos/shinyapp/) |
+| a reusable library | [`demos/pypackage/`](demos/pypackage/) or [`demos/rpackage/`](demos/rpackage/) |
+
+**2. Write your SPEC and CONTRACT first.** Copy [`kit/`](kit/README.md) into
+your repo: a `SPEC.md` (what you are building and for whom), a `CONTRACT.yaml`
+task list your team and your agents check tasks in and out of, and a
+`CLAUDE.md` / `AGENTS.md` so your AI assistant starts oriented.
+
+**3. Deploy with one workflow.** Drop the matching workflow from
+[`demos/positconnect/`](demos/positconnect/README.md) into your repo and it
+publishes your tool to the course **Posit Connect** server. Publisher
+credentials are handed out at the event.
 
 ---
 
@@ -27,8 +64,7 @@ picks a prompt, invents the data, and ships a working quality-control tool.
 
 ### 💡 The Challenge
 
-Over 24 hours your team tackles one real-world quality control and reliability
-problem, drawn from industry, healthcare, energy, or infrastructure.
+Your team tackles one real-world quality control and reliability problem.
 
 - 🧩 Prompts are released **at kickoff** — each tied to a dataset you design and
   build yourself
@@ -37,27 +73,25 @@ problem, drawn from industry, healthcare, energy, or infrastructure.
   delivery vehicle for the analysis, not the point
 - 🧱 Ship **one** of: an R package or Python library, a public REST API
   (FastAPI or plumber), or a dashboard / web app (React or Shiny)
-- 🚀 Deploy it live to the course **Posit Connect** server — publisher
-  credentials are handed out at the event
+- 🚀 Deploy it live to the course **Posit Connect** server
 - 🔢 Every project is scored 0-100 by the event staff.
   [Read the criteria](docs/criteria.md)
-- 🏆 Top team wins a prize and bragging rights
 
 ---
 
 ### 🤖 Build with AI — bring your own agent
 
 AI-assisted development is **expected and encouraged**. Use whatever you already
-have: Claude Code, Cursor, Copilot, Codex, Gemini CLI. The skill being tested is
-steering a capable assistant toward statistically correct work — which is
-exactly the skill this course is about.
+have. The skill being tested is steering a capable assistant toward
+statistically correct work — which is exactly the skill this course is about.
 
-This repo ships an agent context bundle so your assistant starts oriented:
-
+- [🧠 AI coding agents](docs/agents.md) — the popular ones, and how to pick
+- [🎙️ Tools](docs/tools.md) — Wispr Flow (talk to your agent) and Open Design
 - [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md) — what the event is, the
   repo map, the deploy target, the four-script contract
 - [`.claude/skills/`](.claude/skills/) — `connect-publish`,
-  `fastapi-react-scaffold`, `plumber-react-scaffold`, and
+  `fastapi-react-scaffold`, `plumber-react-scaffold`, `contract-ledger`,
+  `od-setup`, `od-pull`, and
   [`stats-first-steering`](.claude/skills/stats-first-steering/SKILL.md)
 
 Two rules: everything you ship is **public and reproducible**, and you must be
@@ -65,32 +99,23 @@ able to **explain every number your tool prints**.
 
 ---
 
-### 🧰 Starter Templates
-
-| Template | What it is |
-|---|---|
-| [`demos/fastapi/`](demos/fastapi/) | Python REST API (FastAPI) |
-| [`demos/plumber/`](demos/plumber/) | R REST API (plumber) |
-| [`demos/reactfront/`](demos/reactfront/) | React front end for either API |
-| [`demos/shinyapp/`](demos/shinyapp/) | R Shiny dashboard |
-| [`demos/rpackage/`](demos/rpackage/) | R package skeleton |
-| [`demos/making_readmes/`](demos/making_readmes/) | writing a README judges can follow |
-
-Every deployable template follows the same **four-script contract**:
-`testme` (run it locally) → `manifestme` (write the Connect manifest) →
-`deployme` (publish) → `README.md`.
-
----
-
 ### ⁉️ Frequently Asked Questions
 
-- **Who can participate?** All team members must be (1) on-campus, enrolled
-  Cornell students AND (2a) in the Systems Engineering MEng program OR (2b)
-  enrolled in SYSEN 5300 / MAE 5390 OR (2c) SYSEN 5900.
+- **Who can participate?** Cornell students who are (a) in the Systems
+  Engineering MEng/MS program, OR (b) enrolled in SYSEN 5300 / MAE 5390, OR
+  (c) enrolled in SYSEN 5900. Teams of **2 to 5**.
 
-- **Dates**? Hackathon runs from October 16 @ 3 PM to October 17 @ 3 PM EST.
-  - **Submission Deadline**: submissions are due at October 17, 1 PM EST sharp.
-  - **Presentation Session**: October 17, 2-3 PM. Must attend!
+- **On-campus or virtual?** On-campus students do the 24-hour event in Upson
+  Hall 116 (required unless excused). Distance-learning students, and anyone
+  who can't attend in person, do the 7-day Virtual DL Challenge.
+  [Dates above](#-when--where).
+
+- **What are the deadlines?** On-campus: submissions due Sat Oct 17, 1 PM ET
+  sharp; showcase Sat Oct 17, 2-3 PM (must attend). DL: submissions due
+  Fri Oct 23, 3 PM ET.
+
+- **What do we win?** On-campus winners: dinner for the team at the Statler
+  Dining Room. DL winners: bragging rights — infamy for all time.
 
 - **Do I need Six Sigma experience?** No. Trainings are provided during the
   event, and many of the analyses can be learned in a few minutes. The
@@ -100,43 +125,37 @@ Every deployable template follows the same **four-script contract**:
   is enough, and AI assistants close a lot of the gap. A winning project is a
   smart, correct solution to a quality-control problem — not fancy code.
 
-- **What if I can't find team members?** Sign up anyway; we will match you with
-  a team. It's a good way to meet people in the program.
+- **What if I can't find team members?** Register on
+  [Devpost](https://six-sigma-hackathon.devpost.com/) anyway; we will match
+  you with a team.
 
-- **Do I have to participate the whole 24 hours?** You do you — a successful
-  team works most of it. Stagger breaks across team members.
+- **Do I have to be there the whole 24 hours?** A successful team works most of
+  it. Step out, sleep, stagger breaks — just keep someone on the team present.
 
-- **Can I step out? Sleep? Work from a coffee shop?** Yes, yes, and yes. Keep
-  absences brief and keep someone on the team present.
+- **Can a teammate join the on-campus event remotely?** No. Anyone who can't
+  attend in person does the Virtual DL Challenge instead.
 
-- **Can a teammate join remotely?** No. All team members attend in person.
-
-- **What do I need to make?** A working prototype you can demo at the end.
+- **What do we submit?** On Devpost: a link to your public GitHub repository
+  and a demo of a working prototype, deployed live to Posit Connect. At least
+  one team member needs a working (non-Cornell) GitHub account.
 
 - **What software do I need?** Install R or Python and at least one coding
-  interface (RStudio, VSCode, Cursor, Positron, ...) **before** you arrive. If
-  you plan to use an AI assistant, set it up beforehand too.
-
-- **How do we share our final product?** A public GitHub repository, submitted
-  through Devpost. At least one team member needs a working (non-Cornell)
-  GitHub account.
+  interface (RStudio, VSCode, Cursor, Positron, ...) **before** the event
+  starts. If you plan to use an AI assistant, set it up beforehand too.
 
 - **What language should I use?** R, Python, or both. Code must be fully
   reproducible and public.
 
-- **What skills help?** Writing functions, building a package, using GitHub,
-  statistical analysis, reliability analysis, Six Sigma techniques, building or
-  querying an API, building a dashboard.
-
-- **How are products evaluated?** See [the criteria](docs/criteria.md): tool
-  implementation (50), tool design (15), documentation (35).
+- **How are products evaluated?** Scored 0-100 by event staff on
+  [the criteria](docs/criteria.md): tool implementation (50), tool design
+  (25), documentation (25).
 
 ---
 
 ### 👥 How to Join
 
-Form a team (max 5) and register — the signup link is circulated with the event
-announcement. No team? Sign up anyway and we'll match you.
+[Register on Devpost](https://six-sigma-hackathon.devpost.com/) — registration
+is required. Form a team of 2 to 5, or register solo and we'll match you.
 
 ---
 

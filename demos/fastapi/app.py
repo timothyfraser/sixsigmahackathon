@@ -3,12 +3,23 @@ Minimal FastAPI application for the Six Sigma Hackathon.
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 app = FastAPI(
     title="FastAPI Example API",
     description="FastAPI example description.",
     version="1.0.0"
+)
+
+# Let a browser frontend on another address (e.g. demos/reactfront on localhost:5173)
+# call this API. Fine for a hackathon demo; list your real frontend URL in
+# allow_origins before you put anything private behind an API.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
