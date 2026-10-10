@@ -36,6 +36,15 @@ Thank you very much for your time and consideration. I hope to see you there!
 - **Where can I learn more about the Hackathon?** All Hackathon details are available on GitHub here: https://github.com/timothyfraser/sixsigmahackathon/tree/main
 
 
+## Day-of agent smoke check
+
+Friday morning, before teams arrive, on a mentor laptop with a free Gemini key connected in OpenCode (`/connect`):
+
+1. `python tools/check_agent_bundle.py` (no key needed). It should end with `SUMMARY: PASS`.
+2. `python tools/check_agent_bundle.py --live`. It also confirms OpenCode lists the two Gemini models we use.
+3. Open OpenCode in the repo and type `/plan`. It should ask a multiple-choice question, one at a time. If it does, the agents are ready; if not, see [`opencode.md`](opencode.md).
+
+
 ---
 
 ![](images/banner_icons.png)
