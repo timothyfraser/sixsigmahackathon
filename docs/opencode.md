@@ -19,7 +19,7 @@ Setup takes about 15 minutes when the Wi-Fi is quiet. Do it before the event.
 - [ ] OpenCode installed: `opencode --version` prints `opencode v2.` something ([section 2](#2-install-opencode)).
 - [ ] A free key from **your own** Google account ([section 3](#3-get-your-free-key)). One per person.
 - [ ] Key connected with `/connect` ([section 4](#4-connect-the-key)).
-- [ ] `/models` shows **gemini-3.5-flash** and **gemini-3.1-flash-lite**.
+- [ ] `/models` shows `gemini-3.5-flash` (Gemini 3.5 Flash) and `gemini-3.1-flash-lite` (Gemini 3.1 Flash Lite).
 - [ ] One test question answered on campus Wi-Fi (or the network you will use).
 - [ ] Optional backup: GitHub Student Developer Pack verified, for Copilot ([`agents.md`](agents.md)).
 - [ ] This repo cloned, `SPEC.md` opened once, `CONTRACT.yaml` skimmed.
@@ -67,7 +67,7 @@ projects: follow the "Import projects" prompt on that page, then try again.
 **Key rules.** Paste the key in exactly one place: OpenCode's `/connect` (next step).
 
 - Never put it in a file in this repo, a `.env`, a chat message, a prompt, a screenshot or a commit.
-- Never share it with a teammate. Each person uses their own.
+- Do not share it by default. Each person uses their own key. (Sharing is possible as a last resort: read [Option: cycling or sharing keys](#option-cycling-or-sharing-keys) first.)
 - If it leaks: create a new key on the same page and delete the old one.
 
 ---
@@ -84,8 +84,11 @@ opencode
 1. Type `/connect` and press Enter.
 2. Choose **Google**, then the **API key** method.
 3. Paste your key and press Enter.
-4. Type `/models`. Check that **gemini-3.5-flash** and **gemini-3.1-flash-lite** are listed.
+4. Type `/models`. Check that `gemini-3.5-flash` (shown as Gemini 3.5 Flash) and `gemini-3.1-flash-lite` (shown as Gemini 3.1 Flash Lite) are listed.
 
+> **Careful with names.** "Gemini 3.5 Flash **Lite**" (`gemini-3.5-flash-lite`) is a *different* model from `gemini-3.1-flash-lite`. It cannot finish a build on the free tier. Do not pick it for `/build`.
+
+<!-- UNVERIFIED: the menu labels written as "shown as Gemini ..." throughout this page follow Google's model names but were not read from the OpenCode /models picker on 2026-10-10; the demo run must confirm them. -->
 <!-- UNVERIFIED: the interactive /connect -> Google -> paste flow and the /models picker were documented by OpenCode but not run end to end in the TUI on 2026-10-10 (an agent cannot paste a key interactively). The demo run must confirm the exact menu labels. -->
 
 Check from a normal terminal, any time:
@@ -100,6 +103,8 @@ Always start OpenCode **inside this repo folder**. The repo's [`opencode.json`](
 the free Gemini model and points OpenCode at [`CLAUDE.md`](../CLAUDE.md), [`SPEC.md`](../SPEC.md) and the
 skills in [`.claude/skills/`](../.claude/skills/). OpenCode reads those skills as they are: expect the 8
 repo skills plus 2 built-in ones. More than 10 means skills from a folder above the repo; that is harmless.
+
+Use Claude Code too? Your own personal skills from it will also show up in OpenCode's list; that's normal and doesn't affect the repo.
 
 > **Advanced: the environment-variable route.** You can set `GEMINI_API_KEY` instead of `/connect`.
 > OpenCode runs a background service that keeps the environment it started with, so stop it after
@@ -123,14 +128,15 @@ rung is used up, step down to the next. (RPM = requests per minute; a "request" 
 
 | Job | Model | Per key, per day | Per minute | What it costs |
 |---|---|---|---|---|
-| **Think**: plan, design decisions | `gemini-3.5-flash` | 20 requests | 5 | a good plan took 4 requests (about 1 minute) |
+| **Think**: plan, design decisions | `gemini-3.5-flash` (Gemini 3.5 Flash) | 20 requests | 5 | a good plan took 4 requests (about 1 minute) |
 | Think, next rungs | `gemini-3.8-flash`, `3.7-flash`, `3.6-flash`, `3-flash`, `2.5-flash` | 20 each | 5 each | step down when one is spent |
-| **Loop**: build, test, fix, check in | `gemini-3.1-flash-lite` | 500 requests | 15 | one tested task took 29 requests (about 5 minutes) |
-| Loop fallback | `gemini-3.5-flash-lite` | 500 | 15 | fine for a quick plan (re-run if a formula is missing); **could not finish a build** in our tests |
+| **Loop**: build, test, fix, check in | `gemini-3.1-flash-lite` (Gemini 3.1 Flash Lite) | 500 requests | 15 | one tested task took 29 requests (about 5 minutes) |
+| Loop fallback | `gemini-3.5-flash-lite` (Gemini 3.5 Flash Lite) | 500 | 15 | fine for a quick plan (re-run if a formula is missing); **could not finish a build** in our tests |
 | Not for agents | Gemma models | | | won't work in an agent: OpenCode's first message is bigger than Gemma's per-minute limit |
 
-The repo's commands pick the right rung for you: `/plan` and `/decide` use `gemini-3.5-flash`;
-`/build`, `/checkin` and `/stuck` use `gemini-3.1-flash-lite`.
+The repo's commands pick the right rung for you: `/plan` and `/decide` use `gemini-3.5-flash` (Gemini 3.5 Flash);
+`/build`, `/checkin` and `/stuck` use `gemini-3.1-flash-lite` (Gemini 3.1 Flash Lite).
+Remember: Gemini 3.5 Flash **Lite** is not the same model as Gemini 3.1 Flash Lite.
 
 <!-- UNVERIFIED: per-command model pins are documented by OpenCode but were not exercised in the TUI on 2026-10-10. -->
 
@@ -140,11 +146,27 @@ hit that wall in under a minute. So a team works in parallel **across people**: 
 agent on their own key, from their own Google account.
 
 **Per-team arithmetic.** One key ≈ 5 plans and ≈ 15 built tasks a day. A team of three, each with
-their own key, has three times that. Limits belong to a Google Cloud *project*, so two keys from the
-same account and project share one allowance. Daily quotas reset at **midnight Pacific** (3 AM Eastern).
+their own key, has three times that. Two keys from the same Google account share one allowance, so only keys from different people's accounts add capacity. Daily quotas reset at **midnight Pacific** (3 AM Eastern).
 
 **Step-down rule.** Per-minute limit hit (a `429` error)? Wait one minute, `/new`, run the command again.
 Daily limit hit? `/models` → the next rung down the same row of the table.
+
+### Option: cycling or sharing keys
+
+**The default stays the same: your own key, from your own Google account.** If you want more
+capacity, there is an option. Treat it as a last resort, and read the security note first.
+
+**How it works.** When your key's daily quota runs out, a teammate can hand you their key. You run
+`/connect` again and paste it. Later, switch back by running `/connect` with your own key. The
+teammate's key still counts against *their* allowance, so only borrow it while theirs has room.
+
+**Security: an API key is a password.**
+
+- Share it only **in person**, or in a **direct message that you then delete**.
+- Never put it in a group chat, a file, a commit or a screenshot.
+- Anyone holding the key can use up the owner's quota. On a **paid** account, they can spend the owner's money.
+- After the hackathon, the owner should **delete the key and make a new one** at <https://aistudio.google.com/apikey>.
+- Two keys from the **same** Google account share one quota. Only keys from **different people's** accounts add capacity.
 
 ---
 
