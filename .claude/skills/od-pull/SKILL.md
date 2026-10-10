@@ -1,4 +1,5 @@
 ---
+name: od-pull
 description: Pull a design made in Open Design (OD) into your team repo through the open-design MCP server, then implement it against your real data. Use when someone says "pull this design into the repo", "implement this design", "export the OD artifact", "build this screen from the prototype", or "get the design tokens from Open Design".
 ---
 

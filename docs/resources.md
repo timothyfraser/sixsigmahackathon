@@ -59,4 +59,3 @@ Check out the [SYSEN 5300 Systems Engineering and Six Sigma course textbook onli
 ---
 
 ![](images/banner_icons.png)
-k=AIzaSyA1234567890abcdefghijklmnop
