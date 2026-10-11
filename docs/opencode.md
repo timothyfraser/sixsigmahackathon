@@ -35,9 +35,11 @@ These are the commands opencode.ai shows today. Pick one line for your computer.
 | **macOS / Linux** | `curl -fsSL https://opencode.ai/v2/install \| bash` |
 | **macOS** (Homebrew) | `brew install anomalyco/tap/opencode-v2` |
 | **Any OS with Node.js** (Windows too) | `npm install -g @opencode/cli` |
-| **Windows without Node.js** | Download the standalone CLI zip (x64 or ARM64) from <https://opencode.ai/v2/docs>, or run the curl line above inside **Git Bash** |
+| **Windows without Node.js** | Run the curl line above inside **Git Bash** (recommended), or download <https://opencode.ai/files/bin/2.0.26/opencode-windows-x64.zip> (ARM laptops: `opencode-windows-arm64.zip` in the same folder) and unzip `opencode.exe` into `%USERPROFILE%\.opencode\bin`. The zip linked from opencode.ai/v2/docs is an older 2.0.6 build, so use the link in this row. |
 
-<!-- UNVERIFIED: the Windows paths (npm on Windows, the CLI zip, curl inside Git Bash) were not re-run on a clean Windows machine; opencode.ai says "Windows package managers are not supported" and shows no PowerShell one-liner (checked 2026-10-10). The demo run must confirm one Windows lane end to end. -->
+npm 11 may print a warning such as `install-scripts ... postinstall`. It is harmless; `opencode --version` below is the real check.
+
+<!-- VERIFIED 2026-10-11: npm and the Git Bash curl line were run on Windows 11 and both installed v2.0.26; the 2.0.26 zip URL returns HTTP 200. -->
 
 Then **close the terminal and open a new one**, and check:
 
@@ -81,15 +83,18 @@ cd sixsigmahackathon
 opencode
 ```
 
-1. Type `/connect` and press Enter.
-2. Choose **Google**, then the **API key** method.
-3. Paste your key and press Enter.
+1. Type `/connect` and press Enter. A list titled **Connect an integration** opens.
+2. Choose **Google** (near the top, under **Popular**; type `goo` to filter). OpenCode goes straight to a box titled **Connect Google**.
+3. Paste your key where it says `API key` and press Enter.
+
+Already connected once? Choosing Google shows your saved account instead of the key box. That is fine: skip to `/models`. From a normal terminal, `opencode auth login google` does the same job and asks `Enter your Google API key`.
+
 4. Type `/models`. Check that `gemini-3.5-flash` (shown as Gemini 3.5 Flash) and `gemini-3.1-flash-lite` (shown as Gemini 3.1 Flash Lite) are listed.
 
 > **Careful with names.** "Gemini 3.5 Flash **Lite**" (`gemini-3.5-flash-lite`) is a *different* model from `gemini-3.1-flash-lite`. It cannot finish a build on the free tier. Do not pick it for `/build`.
 
-<!-- UNVERIFIED: the menu labels written as "shown as Gemini ..." throughout this page follow Google's model names but were not read from the OpenCode /models picker on 2026-10-10; the demo run must confirm them. -->
-<!-- UNVERIFIED: the interactive /connect -> Google -> paste flow and the /models picker were documented by OpenCode but not run end to end in the TUI on 2026-10-10 (an agent cannot paste a key interactively). The demo run must confirm the exact menu labels. -->
+<!-- UNVERIFIED: the "shown as Gemini ..." labels were not read from the /models picker. -->
+<!-- VERIFIED 2026-10-11: the /connect flow above is what the v2.0.26 TUI shows (Google has one auth method, so there is no method step). Still UNVERIFIED: the /models display labels. -->
 
 Check from a normal terminal, any time:
 
@@ -138,7 +143,7 @@ The repo's commands pick the right rung for you: `/plan` and `/decide` use `gemi
 `/build`, `/checkin` and `/stuck` use `gemini-3.1-flash-lite` (Gemini 3.1 Flash Lite).
 Remember: Gemini 3.5 Flash **Lite** is not the same model as Gemini 3.1 Flash Lite.
 
-<!-- UNVERIFIED: per-command model pins are documented by OpenCode but were not exercised in the TUI on 2026-10-10. -->
+<!-- VERIFIED 2026-10-11: /plan ran on gemini-3.5-flash and /build on gemini-3.1-flash-lite, as pinned. -->
 
 **One agent per key.** The real ceiling is not requests per day. It is about **250,000 input tokens
 per minute** per model, and OpenCode sends 20,000-30,000 tokens on every step. Two agents on one key
@@ -278,6 +283,8 @@ commit. That permission prompt is the real yes: a free model may skip the questi
 the commit. Check in `git diff CONTRACT.yaml` that only `status` and `result` changed and `owner` and
 `started_at` are still there.
 
+<!-- VERIFIED 2026-10-11: OpenCode's permission prompt fired on the `git add` + `git commit` call, and Reject blocked both; a free model skipped the "Commit these files?" question; a check-in changed only `status` and `result`. -->
+
 
 Next task: `/new`, then `/build H-04`. One task per session, every time.
 
@@ -299,6 +306,7 @@ Next task: `/new`, then `/build H-04`. One task per session, every time.
 | You see | What it means | Do this |
 |---|---|---|
 | `429`, `RESOURCE_EXHAUSTED` or `quota`, and the agent stops | a per-minute limit ("Please retry in ...s") or the daily one | wait one minute, then type `continue` in the **same** session (not `/new`: it would repeat every step and hit the same limit); still failing → daily limit: `/models`, next rung down ([section 5](#5-the-model-ladder-which-model-for-which-job)) |
+| `This model is currently experiencing high demand` (a Google `503`) | Google is busy; it is not your quota | OpenCode retries by itself; if it stops, wait a minute and type `continue` |
 | Nothing happens for over a minute, no error | no key connected | `opencode auth list`; if Google is missing, `/connect` again |
 | `API key not valid` | key copied wrong, or deleted | copy it again, or make a new one |
 | `Model exo-free has been deprecated` | you started OpenCode outside the repo folder | `cd` into the repo and run `opencode` again |
