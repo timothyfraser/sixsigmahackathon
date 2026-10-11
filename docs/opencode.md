@@ -273,8 +273,10 @@ plain English.
 **Minute 55-60: `/checkin H-03`.** It runs the task's `definition_of_done`, marks the task `done` in
 `CONTRACT.yaml` with a one-line result, shows you the diff and asks "Commit these files? (yes/no)".
 OpenCode also asks permission before any `git commit` or `git push` (the repo's `opencode.json` says
-so): choose **allow once** only after your team has read the diff. Check that `owner` and `started_at`
-are filled in, not deleted.
+so): choose **allow once** only after your team has read the diff, and never **allow always** for a
+commit. That permission prompt is the real yes: a free model may skip the question and go straight to
+the commit. Check in `git diff CONTRACT.yaml` that only `status` and `result` changed and `owner` and
+`started_at` are still there.
 
 
 Next task: `/new`, then `/build H-04`. One task per session, every time.

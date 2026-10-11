@@ -161,8 +161,8 @@ You are the REVIEWER for this task. I run you in a fresh session (/new), after /
 1. Load the stats-first-steering skill (.claude/skills/stats-first-steering/SKILL.md).
 2. Read SPEC.md section 4 (the method and the known-answer check), the task's block in CONTRACT.yaml, the files in its owns list, and its tests.
 3. Write the formula the code uses in one line, and say whether it matches the method in SPEC.md. Code that computes a different statistic is a FAIL. Name any trap from the skill that applies (for example Cp labelled as Cpk, or control limits mixed up with spec limits).
-4. Known answer: run the code on the known-answer data from SPEC.md (the numbers in SPEC.md, not the ones in the tests). Show expected and got for every number.
-5. Degenerate case: run it on constant data (or n = 1). PASS only if it raises a clear error or returns NaN or None with a message. inf, 0 or any other confident number is a FAIL, even if a test accepts it.
+4. Known answer: import the task's function from its file and call it on the known-answer data from SPEC.md (the numbers in SPEC.md, not the ones in the tests), for example python -c "from app.qc import my_function; print(my_function(...))". Never re-type the formula yourself: you are testing the team's code. Show expected and got for every number.
+5. Degenerate case: call the same function on constant data (or n = 1) and paste what it printed or raised. PASS only if it raises a clear error or returns NaN or None with a message. inf, 0 or any other confident number is a FAIL, even if a test accepts it.
 6. Run the task's tests and paste the real output.
 7. Report a table with the columns check, expected, got, PASS/FAIL, then one line: OVERALL: PASS or OVERALL: FAIL. On FAIL, say in one sentence what to fix. Do not fix it yourself. Never report a number you did not see printed.
 ```
@@ -198,8 +198,8 @@ Check this task in, following the contract-ledger skill (.claude/skills/contract
 
 1. Run the task's definition_of_done exactly as written in CONTRACT.yaml. Paste the command and its real output. Never swap in a different command.
 2. If it failed, stop: the task is not done. Leave status: in_progress, write what is missing in result, and tell me.
-3. If it passed, edit only this task's block in CONTRACT.yaml: status: done, and result = one line saying what exists now and the check that proved it. Keep owner and started_at filled in; never delete a field. If started_at is blank, run date "+%Y-%m-%d %H:%M" and paste what it prints (never a time you made up). Quote any value that contains a colon.
-4. Check the ledger still parses: python -c "import yaml; yaml.safe_load(open('CONTRACT.yaml'))"
+3. If it passed, change exactly two lines in this task's block in CONTRACT.yaml, one small edit each: the status line becomes status: done, and the result line becomes result: "one line saying what exists now and the check that proved it". Do not rewrite or replace the block: owner, started_at, owns, notes and definition_of_done stay exactly as they are. In every edit, the new text keeps every line of the old text; only the status value and the result value change. If started_at is blank, run date "+%Y-%m-%d %H:%M" and paste what it prints (never a time you made up). Quote any value that contains a colon.
+4. Check the ledger: run python -c "import yaml; yaml.safe_load(open('CONTRACT.yaml'))" and git diff CONTRACT.yaml. If any line other than status and result changed, put it back before going on.
 5. Show me git status, the diff, and the exact commit command, staging files by name (the task's owned files plus CONTRACT.yaml; never git add . or git add -A). Then stop: end your message with the question "Commit these files? (yes/no)" and run nothing else. Commit only after I answer yes in my next message. Never push.
 6. After the commit, paste the definition_of_done output again and the commit hash.
 ```

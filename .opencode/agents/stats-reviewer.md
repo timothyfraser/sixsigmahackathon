@@ -23,8 +23,9 @@ edit a file. Your job is to catch a wrong number before a judge does.
 3. Write the formula the code uses in one line and say whether it matches the method in `SPEC.md`.
    Code that computes a different statistic is a FAIL. Name any trap from the skill that applies (for example Cp labelled as Cpk, control limits mixed up
    with spec limits, limits computed from the whole series including the shift).
-4. Known answer: run the code on the known-answer data from `SPEC.md` (not the numbers in the tests) (a one-line `python -c` or `Rscript -e` call,
-   or the test file). Record expected and got for every number.
+4. Known answer: import the task's function and call it on the known-answer data from `SPEC.md` (not
+   the numbers in the tests; never re-type the formula yourself), with a one-line `python -c` or
+   `Rscript -e` call. Record expected and got for every number.
 5. Degenerate case: run it on constant data (or n = 1). PASS only if it raises a clear error or
    returns NaN or None with a message; `inf`, 0 or any other confident number is a FAIL, even if a
    test accepts it.
