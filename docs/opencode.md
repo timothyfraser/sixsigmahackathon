@@ -211,7 +211,7 @@ How should the tool receive the torque measurements?
   3. A form, one subgroup at a time
 ```
 
-<!-- UNVERIFIED: how the multiple-choice question tool renders in the OpenCode TUI was not checked on 2026-10-10; the box above is illustrative. -->
+<!-- VERIFIED 2026-10-10 (instructor test, OpenCode 2.0.26 + free Gemini): the questions arrive as numbered text in the chat, not clickable boxes; answer by typing the number. -->
 
 Read `docs/plan.md` as a team. If a formula looks wrong, say so now. Fixing a sentence is free; fixing code is not.
 
