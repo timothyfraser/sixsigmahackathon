@@ -3,10 +3,11 @@
 
 # 🗨️ Prompts
 
-> **Prompts are revealed at the start of the event.**
+> **Prompts are revealed at kickoff on [Devpost](https://six-sigma-hackathon.devpost.com/).**
 >
-> This page is intentionally a placeholder. At kickoff it will be updated with
-> this year's short prompts. Teams pick **one** and design a tool around it.
+> Devpost is the one place the prompts live. Each track (on-campus and Virtual DL)
+> has its own prompts: your team picks **one** from your track, puts its number and
+> title in [`SPEC.md`](../SPEC.md), and designs a tool around it.
 
 ---
 

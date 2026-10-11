@@ -11,7 +11,7 @@ disagree. The skills below are plain Markdown: open the SKILL.md and follow it.
    what the tool is; CONTRACT is the task ledger. Both are pre-filled for this event.
 2. **If SPEC.md still has `FILL IN` lines, help the team fill them first** (task H-01). Ask, don't
    guess: the team, the prompt they picked, the user, the statistic, the stack. Prompts are revealed
-   at kickoff in [`docs/prompts.md`](docs/prompts.md); never invent one.
+   at kickoff on Devpost (linked from [`docs/prompts.md`](docs/prompts.md)); never invent one.
 3. **Work one CONTRACT task at a time.** Check it out (`status: in_progress`, `owner`, `started_at`),
    write only inside its `owns` paths, then check it in (`status: done` + a one-line `result`) in the
    same commit as the work. Nothing gets built that is not a task; propose a new one and wait for a yes.

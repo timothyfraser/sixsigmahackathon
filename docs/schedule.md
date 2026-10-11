@@ -4,8 +4,8 @@
 
 # 📅 Schedule
 
-The Hackathon runs on **two tracks** that start together and share the same
-prompts and [criteria](criteria.md).
+The Hackathon runs on **two tracks** that start together, each with its own
+prompts (on [Devpost](https://six-sigma-hackathon.devpost.com/) at kickoff), and share the same [criteria](criteria.md).
 
 | | 🏫 On-campus (24 hours) | 🌐 Virtual DL Challenge (7 days) |
 |---|---|---|
@@ -56,7 +56,7 @@ teams.
 
 ## 🌐 Virtual DL Challenge — 7 days
 
-Same kickoff, same prompts, same criteria — a week instead of a day, worked
+Same kickoff, same criteria, its own prompts — a week instead of a day, worked
 remotely on your own schedule.
 
 ### Phase I — Kickoff

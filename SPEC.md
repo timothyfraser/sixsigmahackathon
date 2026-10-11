@@ -11,7 +11,7 @@ The examples after each `FILL IN` show the shape of an answer. They are not hint
 ## 1. Team and prompt
 - **Team name:** FILL IN. Example: "Control Freaks"
 - **Track:** FILL IN, on-campus (24 hours) or Virtual DL Challenge (7 days). See [`docs/schedule.md`](docs/schedule.md).
-- **Prompt we chose:** FILL IN, the prompt number and title, copied from `docs/prompts.md` at kickoff.
+- **Prompt we chose:** FILL IN, the prompt number and title, copied from the [Devpost](https://six-sigma-hackathon.devpost.com/) challenge page at kickoff.
 - **Our public repo:** FILL IN. Example: "github.com/our-team/our-tool"
 
 ## 2. User and use case (rubric: scope 5, user and use case 5)
