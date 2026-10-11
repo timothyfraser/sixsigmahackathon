@@ -13,7 +13,7 @@ In this event, SYSEN MEng / MS students work in teams for 24 hours to build stat
 
 **As a mentor, you are asked to attend just 1-2 hours of the event - Mentor Hours - where you go around and meet with a few teams and offer encouragement and feedback.**
 
-- ⏰ When are Mentor Hours? Mentor Hours will be held on Friday evening at 7 PM (10/17) and Saturday 10 AM (10/18).
+- ⏰ When are Mentor Hours? Mentor Hours will be held on Friday evening at 7 PM (10/16) and Saturday 10 AM (10/17).
 - You can attend Friday OR Saturday OR both, based on your availability. 
 - I really appreciate you sharing your time on the weekend. 
 
