@@ -28,6 +28,8 @@ link plus a demo. Full run of show: [🗓️ Schedule](docs/schedule.md).
 
 ### 🚀 Start here in 3 steps
 
+**0. No paid AI plan?** → [Use a free AI agent tonight](docs/opencode.md) (OpenCode + a free Google AI Studio key, $0).
+
 **1. Pick your stack.** Copy one template folder into your own repo.
 
 | You want to build… | Start from |

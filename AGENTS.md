@@ -33,6 +33,21 @@ disagree. The skills below are plain Markdown: open the SKILL.md and follow it.
 Also worth installing: [posit-dev/skills](https://github.com/posit-dev/skills) (MIT), Posit's own R
 package and deploy-to-Connect skills.
 
+## Which command, when
+
+Six starter prompts carry a task from plan to check-in. In OpenCode they are slash commands
+([`.opencode/commands/`](.opencode/commands/)); in any other agent, paste the same prompt from
+[`docs/prompts-starter.md`](docs/prompts-starter.md). Start a fresh session for each one.
+
+| Command | Use it when | It ends with |
+|---|---|---|
+| `/plan` | `SPEC.md` is filled in and there is no `docs/plan.md` yet | `docs/plan.md`: tasks mapped to CONTRACT ids, each with its known-answer and degenerate test |
+| `/decide` | a design choice is still open (data shape, outputs, run rules) | one multiple-choice question at a time, then a Decisions section in `docs/plan.md` |
+| `/build H-03` | you are ready to do ONE CONTRACT task | the implementer, then the stats reviewer, one after the other; real test and `definition_of_done` output |
+| `/review H-03` | before you trust any statistic | a PASS/FAIL table: known answer and degenerate case, with the numbers |
+| `/checkin H-03` | the build and review passed and a teammate read the diff | `status: done` + a one-line `result`; commits only after a yes |
+| `/stuck <error>` | a 429 or quota error, a silent hang, the same error three times | the problem named in one sentence and ONE next step |
+
 ## Hard rules
 
 - **No secrets in files.** Never write a password, token, API key or server URL into a file,
