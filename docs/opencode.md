@@ -22,7 +22,7 @@ Setup takes about 15 minutes when the Wi-Fi is quiet. Do it before the event.
 - [ ] `/models` shows `gemini-3.5-flash` (Gemini 3.5 Flash) and `gemini-3.1-flash-lite` (Gemini 3.1 Flash Lite).
 - [ ] One test question answered on campus Wi-Fi (or the network you will use).
 - [ ] Optional backup: GitHub Student Developer Pack verified, for Copilot ([`agents.md`](agents.md)).
-- [ ] This repo cloned, `SPEC.md` opened once, `CONTRACT.yaml` skimmed.
+- [ ] This repo cloned, and `SPEC.md` and `CONTRACT.yaml` seen once (you will ask the agent to update `SPEC.md`, not edit it by hand).
 
 ---
 
@@ -190,17 +190,28 @@ themselves live in [`.opencode/commands/`](../.opencode/commands/).
 
 **Minute 0-10: say hello.** Start `opencode` in the repo and type:
 
-> What is this repo for, and which files should we fill in first? Two sentences.
+> What is this repo for, and which files describe our project? Two sentences.
 
 It should name `SPEC.md` and `CONTRACT.yaml`. That proves the key, the model and the repo are all connected.
 
-**Minute 10-20: fill in the SPEC with your team, not the agent.** Open [`SPEC.md`](../SPEC.md) and
-replace every `FILL IN` line (`grep -c "FILL IN[.,]" SPEC.md` prints 0 when you are done). Four sentences are enough: **who** uses the tool (a quality engineer on a
-bolt-tightening line), **what** question it answers (is torque in control, and is the process capable?),
-**which statistic** (X-bar and R charts with subgroups of 5; Cp and Cpk), and **which stack** (FastAPI + one
-React page). Put a hand-calculated known answer in section 4, with the spec limits. For the bolt example:
-"4 subgroups of 5, grand mean 25.0 N-m, R-bar 0.4 N-m, spec 25 ± 1.5 N-m". The agent guesses whatever you
-leave blank, and `/build` takes its known-answer test from this line.
+**Minute 10-20: describe your app, and ask the agent to write the SPEC.** You do not fill in
+[`SPEC.md`](../SPEC.md) by hand, and you do not need to read all of it. As a team, agree on a few
+sentences: **who** uses the tool, **what data** they have, **which statistic** answers their question, and
+**what they should see**. Then ask your agent (this is the `/spec` command; the plain-text prompt for other agents is in
+[`prompts-starter.md`](prompts-starter.md)):
+
+> Describe your app in a few sentences (who uses it, what data they have, what statistic answers their question, what they should see), and ask your agent: "Update SPEC.md's FILL IN lines from this description and show me the diff."
+
+`/spec` does exactly that. For the bolt example, type:
+
+```text
+/spec A quality engineer on a bolt-tightening line uploads torque readings (CSV). We use X-bar and R charts with subgroups of 5, plus Cp and Cpk. Known answer: 4 subgroups of 5, grand mean 25.0 N-m, R-bar 0.4 N-m, spec 25 +/- 1.5 N-m. They see "in control: yes/no" and a chart. FastAPI plus one React page.
+```
+
+Now **read the diff together**. Check that the user, the statistic and the known answer are what you meant;
+if something is wrong or vague, say what to change and ask again. Do not move on until it says what
+you mean: the agent guesses whatever the SPEC leaves blank, and `/build` takes its known-answer test from
+section 4. (`grep -c "FILL IN[.,]" SPEC.md` prints 0 when every blank is filled.)
 
 **Minute 20-30: `/plan`, then `/decide`.** Type `/new`, then `/plan`. The planner reads `SPEC.md` and
 `CONTRACT.yaml`, states the statistic and its formula, asks all its open questions in one numbered list,

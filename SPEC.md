@@ -4,7 +4,7 @@ What your tool IS. Your agent reads this before every task. Where the code and t
 disagree, the code is the bug: change this file first, then the code.
 
 Most of this page is already decided by the event and the [rubric](docs/criteria.md).
-**Only the `FILL IN` lines are yours.** They depend on the prompt your team picks at kickoff
+**Only the `FILL IN` lines change, and you do not have to write them by hand:** describe your app and ask your agent to update them. They depend on the prompt your team picks at kickoff
 (prompts are secret until then, see [`docs/prompts.md`](docs/prompts.md)) and on your team.
 The examples after each `FILL IN` show the shape of an answer. They are not hints about the prompts.
 

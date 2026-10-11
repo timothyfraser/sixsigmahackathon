@@ -34,12 +34,13 @@ package and deploy-to-Connect skills.
 
 ## Which command, when
 
-Six starter prompts carry a task from plan to check-in. In OpenCode they are slash commands
+Seven starter prompts carry a team from a description of the app to a checked-in task. In OpenCode they are slash commands
 ([`.opencode/commands/`](.opencode/commands/)); in any other agent, paste the same prompt from
 [`docs/prompts-starter.md`](docs/prompts-starter.md). Start a fresh session for each one.
 
 | Command | Use it when | It ends with |
 |---|---|---|
+| `/spec <description>` | first, before anything else: `SPEC.md` still has `FILL IN` lines | the agent writes the `FILL IN` lines from your description and shows the `SPEC.md` diff; you read it together |
 | `/plan` | `SPEC.md` is filled in and there is no `docs/plan.md` yet | `docs/plan.md`: tasks mapped to CONTRACT ids, each with its known-answer and degenerate test |
 | `/decide` | a design choice is still open (data shape, outputs, run rules) | one multiple-choice question at a time, then a Decisions section in `docs/plan.md` |
 | `/build H-03` | you are ready to do ONE CONTRACT task | reads `SPEC.md` and `docs/plan.md`, builds that one task inside its files, pastes the real test and `definition_of_done` output (then `/new` and `/review H-03`) |

@@ -40,11 +40,16 @@ link plus a demo. Full run of show: [🗓️ Schedule](docs/schedule.md).
 | a dashboard | [`demos/shinyapp/`](demos/shinyapp/) |
 | a reusable library | [`demos/pypackage/`](demos/pypackage/) or [`demos/rpackage/`](demos/rpackage/) |
 
-**2. Fill in the pre-filled SPEC and CONTRACT at the root.**
+**2. Describe your app and ask your agent to update the SPEC.**
 [`SPEC.md`](SPEC.md) (what you are building and for whom) and
 [`CONTRACT.yaml`](CONTRACT.yaml) (the task list your team and your agents check
-tasks in and out of) are already here and already started for you. Your agent
-reads them first, so finish them before it writes code. Blank copies live in
+tasks in and out of) are already here and already started for you. You do not
+need to read or edit `SPEC.md` by hand. Describe your app in a few sentences (who
+uses it, what data they have, what statistic answers their question, what they
+should see) and ask your agent: *"Update SPEC.md's FILL IN lines from this
+description and show me the diff."* Read the diff together. Your agent reads
+both files first, so do this before it writes code (the ready-made prompt is
+"Write our SPEC" in [`docs/prompts-starter.md`](docs/prompts-starter.md)). Blank copies live in
 [`.claude/templates/`](.claude/templates/README.md).
 
 **3. Deploy with one workflow.** Copy the matching workflow from

@@ -22,8 +22,10 @@ also cost nothing extra. The tips below matter more than which agent you pick.
 
 ## Steering an agent toward correct statistics on a budget
 
-1. **Spec first.** Finish the pre-filled [`SPEC.md`](../SPEC.md) before the agent writes code. Most wasted
-   tokens come from the agent guessing what you meant.
+1. **Spec first, written by the agent.** Describe your app in a few sentences and ask the agent: "Update
+   [`SPEC.md`](../SPEC.md)'s FILL IN lines from this description and show me the diff." Read the diff with your
+   team before the agent writes code. You do not need to edit `SPEC.md` by hand. Most wasted tokens come
+   from the agent guessing what you meant.
 2. **One small task per prompt.** "Do H-03 only" beats "build the app". Small tasks are cheap to throw away.
 3. **Make it state the method before it codes.** Ask: "In one sentence, which statistic and which formula
    will you use, and why?" Fix the sentence, not the code.

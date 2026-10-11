@@ -1,15 +1,15 @@
 # Starter prompts for any AI agent
 
-Six prompts that take a team from a filled-in `SPEC.md` to a checked-in, tested task:
-**plan, decide, build, review, check in**, and **stuck** for when something goes wrong. They work
+Seven prompts that take a team from a description of their app to a checked-in, tested task:
+**spec** (the agent writes `SPEC.md` from your description), **plan, decide, build, review, check in**, and **stuck** for when something goes wrong. They work
 pasted into any coding agent: OpenCode, Claude Code, Codex, GitHub Copilot agent mode, and the
 Gemini or Antigravity CLI.
 
 - **OpenCode** (the free path, see [`opencode.md`](opencode.md)): you do not paste anything. Each
-  prompt is a slash command in this repo: type `/plan`, `/decide`, `/build H-03`, `/review H-03`,
+  prompt is a slash command in this repo: type `/spec <your description>`, `/plan`, `/decide`, `/build H-03`, `/review H-03`,
   `/checkin H-03` or `/stuck`. Each command is set to the free Gemini model that suits its job:
   `/plan` and `/decide` use `gemini-3.5-flash` (the better thinker, about 20 requests a day), the
-  others use `gemini-3.1-flash-lite` (the workhorse, about 500 a day). If a command's model is out of
+  others (including `/spec`) use `gemini-3.1-flash-lite` (the workhorse, about 500 a day). If a command's model is out of
   quota, switch with `/models` and paste the prompt from this page instead.
 - **Any other agent:** copy the grey block, change the placeholder on its first line if it has one,
   and paste it as your message.
@@ -24,7 +24,7 @@ agent they use.
   are faster, cheaper, and stay under a free key's per-minute limit.
 - **Read what the agent prints.** Every prompt ends with real output: a test result, a table, a diff.
   If you get a claim ("DONE", "should work") instead of output, ask for the output.
-- **The order:** `plan` once, `decide` when a choice is open, then for each task `build`, then
+- **The order:** `spec` once, then `plan` once, `decide` when a choice is open, then for each task `build`, then
   `review` **in a fresh session**, then `checkin`. Use `stuck` whenever you need it.
 - **A per-minute limit (`429`) mid-answer?** Wait one minute and type `continue` in the **same**
   session. A fresh session repeats every step it already did and hits the same limit.
@@ -35,9 +35,35 @@ The examples below use a made-up bolt-torque line (X-bar and R chart, subgroups 
 show the shape of good output; they are not hints about the event prompts.
 
 
+## Start here: Write our SPEC  (OpenCode: `/spec <your description>`)
+
+**When:** First, before `/plan`. You do not fill in `SPEC.md` by hand and you do not need to read all of it. Describe your app in a few sentences (who uses it, what data they have, what statistic answers their question, what they should see) and the agent writes the `FILL IN` lines for you.
+
+**Before pasting:** Replace `$ARGUMENTS` on the first line with your description. In OpenCode, type it after the command: `/spec a quality engineer on a bolt line uploads torque readings; X-bar and R chart, subgroups of 5; Cp and Cpk; they see in control yes/no`.
+
+<!-- prompt: spec -->
+```text
+My team's description of our app: $ARGUMENTS
+
+You are writing our SPEC, not coding. Do not create or edit any file except SPEC.md.
+
+1. Read SPEC.md completely. Do not search or re-read a file.
+2. From my description above, update ONLY the lines of SPEC.md that say FILL IN: the user, the decision they make, the inputs, the method and why it fits, the known-answer check, the stack, the starting demo, what the user sees, the datasets, and anything else. Keep the headings, tables, rubric text and examples as they are. Replace each FILL IN with a real answer. Do not copy the Example text unless it truly is our app.
+3. Never invent the team name, the track, the chosen prompt or the repo address. If my description does not give a fact you need, ask me ALL your questions in ONE numbered message (at most 5 questions, each with at most 4 numbered options; mark the one you recommend and say why in one line) and wait before you edit.
+4. For the known-answer check, work the numbers out by hand in your message (show the arithmetic) and put the data and the expected result in SPEC.md. Never make up an answer.
+5. When SPEC.md is saved, run git diff SPEC.md, show me the diff, and say in two sentences what changed. Then stop and wait: we will read the diff together and tell you what to fix.
+
+We are beginners: short sentences, and explain any jargon in a few words. When SPEC.md is updated, say SPEC WRITTEN and stop.
+```
+
+**What good output looks like:** A diff of `SPEC.md` where only the former `FILL IN` lines changed, each with a concrete answer, a hand-worked known answer in section 4 (data, arithmetic, expected numbers) and no invented team name or prompt. Read the diff with your team. Anything wrong or vague: say what to change and ask again. `grep -c "FILL IN[.,]" SPEC.md` should print 0 when you are done.
+
+**Works the same in every agent.** Nothing here needs subagents or a question tool.
+
+
 ## 1. Write the plan  (OpenCode: `/plan`)
 
-**When:** Once `SPEC.md` has no `FILL IN` lines left, and before anyone writes code. Start a fresh session for it.
+**When:** Once `SPEC.md` has no `FILL IN` lines left (the Write our SPEC prompt above gets you there), and before anyone writes code. Start a fresh session for it.
 
 <!-- prompt: plan -->
 ```text

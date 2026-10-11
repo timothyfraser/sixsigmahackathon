@@ -20,8 +20,8 @@ Deploy workflows (one GitHub Actions file per stack: FastAPI, plumber, static
 React, Shiny for R, Shiny for Python) live with the deploy skill in
 [`.claude/skills/connect-publish/`](../.claude/skills/connect-publish/README.md).
 
-Before you copy a template, fill in the pre-filled [`SPEC.md`](../SPEC.md) and
-[`CONTRACT.yaml`](../CONTRACT.yaml) at the repo root.
+Before you copy a template, ask your agent to update the pre-filled [`SPEC.md`](../SPEC.md) from
+your description of the app (see [`CONTRACT.yaml`](../CONTRACT.yaml) at the repo root for the tasks).
 
 ## The four-script contract
 
