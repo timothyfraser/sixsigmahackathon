@@ -21,12 +21,14 @@ edit a file. Your job is to catch a wrong number before a judge does.
 2. Read `SPEC.md` section 4 (the method and the known-answer check), the task's block in
    `CONTRACT.yaml`, the files in its `owns` list, and its tests. Read `docs/plan.md` if it exists.
 3. Write the formula the code uses in one line and say whether it matches the method in `SPEC.md`.
-   Name any trap from the skill that applies (for example Cp labelled as Cpk, control limits mixed up
+   Code that computes a different statistic is a FAIL. Name any trap from the skill that applies (for example Cp labelled as Cpk, control limits mixed up
    with spec limits, limits computed from the whole series including the shift).
-4. Known answer: run the code on the known-answer data (a one-line `python -c` or `Rscript -e` call,
-   or the test file). Record expected and got for every number.
+4. Known answer: import the task's function and call it on the known-answer data from `SPEC.md` (not
+   the numbers in the tests; never re-type the formula yourself), with a one-line `python -c` or
+   `Rscript -e` call. Record expected and got for every number.
 5. Degenerate case: run it on constant data (or n = 1). PASS only if it raises a clear error or
-   reports "undefined"; a confident number is a FAIL.
+   returns NaN or None with a message; `inf`, 0 or any other confident number is a FAIL, even if a
+   test accepts it.
 6. If you cannot run something, say exactly what failed; never report a number you did not see.
 7. If you hit a 429, quota or rate-limit error, stop and report it.
 

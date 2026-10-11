@@ -43,7 +43,7 @@ Six starter prompts carry a task from plan to check-in. In OpenCode they are sla
 |---|---|---|
 | `/plan` | `SPEC.md` is filled in and there is no `docs/plan.md` yet | `docs/plan.md`: tasks mapped to CONTRACT ids, each with its known-answer and degenerate test |
 | `/decide` | a design choice is still open (data shape, outputs, run rules) | one multiple-choice question at a time, then a Decisions section in `docs/plan.md` |
-| `/build H-03` | you are ready to do ONE CONTRACT task | the implementer, then the stats reviewer, one after the other; real test and `definition_of_done` output |
+| `/build H-03` | you are ready to do ONE CONTRACT task | reads `SPEC.md` and `docs/plan.md`, builds that one task inside its files, pastes the real test and `definition_of_done` output (then `/new` and `/review H-03`) |
 | `/review H-03` | before you trust any statistic | a PASS/FAIL table: known answer and degenerate case, with the numbers |
 | `/checkin H-03` | the build and review passed and a teammate read the diff | `status: done` + a one-line `result`; commits only after a yes |
 | `/stuck <error>` | a 429 or quota error, a silent hang, the same error three times | the problem named in one sentence and ONE next step |

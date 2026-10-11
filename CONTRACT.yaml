@@ -37,7 +37,8 @@ tasks:
       docs/prompts.md once the event starts. Keep inputs to what the user can
       actually measure.
     definition_of_done: >
-      grep -c "FILL IN" SPEC.md prints 0, and every teammate can say the
+      grep -c "FILL IN[.,]" SPEC.md prints 0 (it counts only the blanks,
+      not the instructions at the top), and every teammate can say the
       method sentence in SPEC section 4 without reading it.
     result: ""
 

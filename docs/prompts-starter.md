@@ -24,8 +24,10 @@ agent they use.
   are faster, cheaper, and stay under a free key's per-minute limit.
 - **Read what the agent prints.** Every prompt ends with real output: a test result, a table, a diff.
   If you get a claim ("DONE", "should work") instead of output, ask for the output.
-- **The order:** `plan` once, `decide` when a choice is open, then for each task `build`, `review`,
-  `checkin`. Use `stuck` whenever you need it.
+- **The order:** `plan` once, `decide` when a choice is open, then for each task `build`, then
+  `review` **in a fresh session**, then `checkin`. Use `stuck` whenever you need it.
+- **A per-minute limit (`429`) mid-answer?** Wait one minute and type `continue` in the **same**
+  session. A fresh session repeats every step it already did and hits the same limit.
 - **One agent at a time per key.** On a free Google key, two agents working at once run out of the
   per-minute allowance. Teams work in parallel across people, each on their own key.
 
@@ -39,21 +41,21 @@ show the shape of good output; they are not hints about the event prompts.
 
 <!-- prompt: plan -->
 ```text
-You are planning, not coding. Do not create or edit any file except docs/plan.md.
+You are planning, not coding. Do not create or edit any file except docs/plan.md. This model allows only 5 requests a minute, so use as few steps as you can.
 
-1. Read SPEC.md and CONTRACT.yaml completely before you say anything.
+1. In one step, read SPEC.md, CONTRACT.yaml and docs/plan.md (if it exists) completely, before you say anything. Do not search, list folders or re-read a file.
 2. In one sentence each, state: the user, the question the tool answers, the statistic, and the formula for that statistic (write the formula out). If SPEC.md leaves any of these unclear or still says FILL IN, stop and ask me before going on.
-3. List every design decision that is still open (data shape, where the data comes from, what the function or API returns, what the user sees, what counts as "in control" or "capable"). Ask them ONE AT A TIME as multiple-choice questions with at most 4 options each, and say which option you recommend and why in one line. Use your question tool if you have one; otherwise ask as a numbered list and wait for my answer. Never ask the next question before I answer the current one.
-4. Then write docs/plan.md: a numbered list of tasks, each mapped to one task id from CONTRACT.yaml (use the real ids; never invent one). For each task give: the files it may touch (from its owns list), the test that proves it (a known answer from a textbook or a hand calculation, AND a degenerate case such as constant data), and a time estimate. The statistic comes first, then the tool around it, then the page or chart. Nothing about styling until the numbers are proven.
+3. List every design decision that is still open (data shape, where the data comes from, what the function or API returns, what the user sees, what counts as "in control" or "capable"). Ask them ALL in this ONE message, as a numbered list: at most 5 questions, each with at most 4 numbered options; mark the option you recommend and say why in one line. Then stop and wait. I will answer in one reply, for example "1-1, 2-3, 3-1". If nothing is open, say so and go straight to step 4.
+4. In your next turn, after my answers, write docs/plan.md: a numbered list of tasks, each mapped to one task id from CONTRACT.yaml (use the real ids; never invent one). For each task give: the files it may touch (from its owns list), the test that proves it (the known answer from SPEC.md section 4, AND a degenerate case such as constant data), and a time estimate. The statistic comes first, with its formula written out, then the tool around it, then the page or chart. Nothing about styling until the numbers are proven.
 5. Under the tasks, list the decisions I made in step 3, one line each.
 6. End with the three biggest risks and what we will do about each.
 
 Keep docs/plan.md under 60 lines. We are beginners: short sentences, and explain any jargon in a few words. When docs/plan.md is written, say PLAN WRITTEN and stop.
 ```
 
-**What good output looks like:** The agent writes four one-sentence statements (user, question, statistic, formula), asks you 3 to 5 multiple-choice questions, then writes `docs/plan.md`. For a bolt-torque example (X-bar and R chart, subgroups of 5, plus Cpk), a good first task reads like: *"1. H-03, `app/qc.py` and `tests/`: `xbar_r_limits()` and `cpk()`; test a hand-worked example and constant data (Cpk must be undefined, not a number). 30 min."* Statistics first, styling nowhere.
+**What good output looks like:** The agent writes four one-sentence statements (user, question, statistic, formula) and asks you 3 to 5 multiple-choice questions **in one message**. You answer them all in one reply (for example `1-1, 2-3, 3-1`), and it writes `docs/plan.md`. For a bolt-torque example (X-bar and R chart, subgroups of 5, plus Cpk), a good first task reads like: *"1. H-03, `app/qc.py` and `tests/`: `xbar_r_limits()` and `cpk()`; test a hand-worked example and constant data (Cpk must be undefined, not a number). 30 min."* Statistics first, styling nowhere.
 
-**No question tool in your agent?** The prompt already says it: the agent asks as a numbered list and waits. Answer with the number.
+**Answer in one reply,** question number then option number: `1-1, 2-3`.
 
 
 ## 2. Make the design decisions  (OpenCode: `/decide`)
@@ -62,28 +64,31 @@ Keep docs/plan.md under 60 lines. We are beginners: short sentences, and explain
 
 <!-- prompt: decide -->
 ```text
-You are helping my team make design decisions. Do not write code. The only file you may edit is docs/plan.md.
+You are helping my team make design decisions. Do not write code. The only file you may edit is docs/plan.md. This model allows only 5 requests a minute, so use as few steps as you can.
 
-1. Read SPEC.md, CONTRACT.yaml and docs/plan.md (if it exists).
+1. In one step, read SPEC.md, CONTRACT.yaml and docs/plan.md (if it exists). Do not search or re-read a file.
 2. Find the design decisions that are still open: anything SPEC.md or docs/plan.md leaves undecided or marks as a question, and anything two tasks disagree about.
-3. Ask them ONE AT A TIME. Each question has at most 4 options, numbered 1 to 4. Mark the option you recommend and give the reason in one line, tied to SPEC.md (the user, the statistic, or the rubric). Use your question tool if you have one; otherwise ask as a numbered list and wait for my answer. Never ask the next question before I answer the current one. Ask at most 5 questions; if more are open, ask first the ones that change the statistic or the inputs.
-4. After my last answer, add or update a "Decisions" section in docs/plan.md: one line per decision, what we chose and why. If an answer changes SPEC.md, tell me the exact line to change; do not edit SPEC.md yourself.
+3. Ask them ALL in this ONE message, as a numbered list: at most 5 questions (if more are open, pick the ones that change the statistic or the inputs), each with at most 4 numbered options. Mark the option you recommend and give the reason in one line, tied to SPEC.md (the user, the statistic, or the rubric). Then stop and wait. I will answer in one reply, for example "1-1, 2-3, 3-1".
+4. In your next turn, after my answers, add or update a "Decisions" section in docs/plan.md: one line per decision, what we chose and why. If an answer changes SPEC.md, tell me the exact line to change; do not edit SPEC.md yourself.
 5. Say DECISIONS RECORDED and stop.
 ```
 
-**What good output looks like:** One question at a time, never a wall of text:
+**What good output looks like:** All the open questions in one numbered list, each short:
 
 ```
-How should the tool receive the torque readings?
-  1. CSV upload, columns subgroup and torque_nm   (recommended: matches SPEC.md)
-  2. Paste a table into a text box
-  3. Typed into a form
-  4. Read from a shared sheet
+1. How should the tool receive the torque readings?
+   1. CSV upload, columns subgroup and torque_nm   (recommended: matches SPEC.md)
+   2. Paste a table into a text box
+   3. Typed into a form
+2. What should the tool say when a point is outside the limits?
+   1. "Stop the line: yes" in red   (recommended: the decision in SPEC.md)
+   2. Only a red point on the chart
 ```
 
-You answer with a number. At the end `docs/plan.md` has a **Decisions** section, one line per answer.
+You answer every question in one reply, for example `1-1, 2-1`. Asking them all at once saves
+requests: the free planning model allows only 5 a minute. At the end `docs/plan.md` has a **Decisions** section, one line per answer.
 
-**No question tool in your agent?** The prompt already says it: the agent asks as a numbered list and waits. Answer with the number.
+**Answer in one reply,** question number then option number: `1-1, 2-3`.
 
 
 ## 3. Build one task  (OpenCode: `/build H-03`)
@@ -97,43 +102,52 @@ You answer with a number. At the end `docs/plan.md` has a **Decisions** section,
 Task id: $1
 If the task id above is blank, list the todo tasks in CONTRACT.yaml and ask me which one. Do not guess.
 
-Build exactly this ONE task from CONTRACT.yaml, following docs/plan.md if it exists. You are the coordinator. The work has two roles, done strictly one after the other, never at the same time (a free AI key allows only one agent working at once):
+You build exactly this ONE task from CONTRACT.yaml. You are the IMPLEMENTER only. Do not launch subagents or any other agent, and do not review your own work: the review is a separate step that I run in a fresh session (/new, then /review with this task id).
 
-- IMPLEMENTER: loads the contract-ledger skill; checks the task out (status: in_progress, with owner and started_at filled in, never deleted); edits only the paths in the task's owns list; for any statistic also loads the stats-first-steering skill; writes the tests first (a known answer AND a degenerate case), then the code; runs the tests after each small step; runs the task's definition_of_done; reports every command it ran with its real output. It does not check the task in and does not commit.
-- REVIEWER (only if the task computes a statistic): loads the stats-first-steering skill; edits nothing; runs the code on the known answer AND the degenerate case; reports PASS or FAIL with the numbers.
+1. Before anything else, read SPEC.md completely (section 4 is the method and the known-answer check), docs/plan.md if it exists, and this task's block in CONTRACT.yaml.
+2. In one sentence, restate the statistic this task computes and its formula, exactly as SPEC.md section 4 states it. If SPEC.md section 4 still says FILL IN or has no known-answer check, stop and ask me. Never invent a statistic or a known answer.
+3. If you do not know my name for the owner field, ask me once. Get the time by running this command: date "+%Y-%m-%d %H:%M" (if it fails, run: python -c "import datetime; print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))"). Load the contract-ledger skill and check the task out: status: in_progress, owner, and started_at = the time the command printed, pasted (never a time you made up). Never delete a field. Quote any value that contains a colon.
+4. If the task computes a statistic, load the stats-first-steering skill. Write the tests first, then the code:
+   - a known-answer test whose data and expected numbers are copied from SPEC.md section 4, never made up;
+   - a degenerate case (constant data, or n = 1). With zero spread, a capability index such as Cp or Cpk is undefined: the code must raise a clear error, or return NaN or None with a message. inf, 0 or any other confident number is wrong, and a test that accepts one is wrong.
+5. Stay inside the task's owns list:
+   - Edit only the paths in its owns list, plus this task's block in CONTRACT.yaml.
+   - Never delete, move or rename a file. Never create a file outside the owns list; scratch checks go in tests/ (or another folder on the owns list), never at the repo root.
+   - Every package you import that is not in the standard library goes into the requirements file (for example app/requirements.txt) in the same step. If that file is not on the owns list, stop and tell me the exact line to add.
+   - If you need any other file, stop and ask me.
+6. Work in small steps. After each step run the tests and read the real output.
+7. Run the task's definition_of_done exactly as written. For an API or app task, start the app, call the endpoint (or open the page) on one data/ file, and paste the real response.
+8. If you get a 429, quota or rate-limit error, stop and tell me. Do not retry in a loop.
+9. Do not commit, do not push, do not check the task in, and do not start another task.
 
-How to run the roles:
-1. Before starting, if you do not know my name for the owner field, ask me once.
-2. If you can launch subagents and agents named implementer and stats-reviewer exist (in OpenCode they do), launch implementer with the task id and wait for it to finish; then, if the task computes a statistic, launch stats-reviewer with the task id and wait for it. If launching a subagent fails for any reason, stop and tell me the exact error. Never substitute a different agent, and never say a role ran when it did not.
-3. If you cannot launch subagents, do the IMPLEMENTER role yourself, then the REVIEWER role yourself, one after the other, and label each part.
-4. If the reviewer says FAIL, run the implementer once more with the reviewer's numbers, then review again. If it still fails, stop and show me both reports.
-5. If the implementer needs a file outside the owns list, stop and ask me.
-6. If you get a 429, quota or rate-limit error, stop and tell me. Do not retry in a loop.
-7. Do not start another task, and do not check this one in (that is the check-in step, after I have read the diff).
-
-End your final message with these three parts, pasted, not summarized:
+End your final message with these parts, pasted, not summarized:
+STATISTIC: the one sentence from step 2
+FILES: every file you created or changed
 TESTS: the test command and its real output
 DEFINITION OF DONE: the definition_of_done command and its real output
-REVIEW: PASS or FAIL with the numbers, or "not a statistics task"
+NEXT: type /new, then /review with this task id
 ```
 
-**What good output looks like:** The task is checked out in `CONTRACT.yaml` with `owner` and `started_at` filled in. The final message ends with real output, not a claim:
+**What good output looks like:** The task is checked out in `CONTRACT.yaml` with `owner` and `started_at` filled in (`started_at` is the real time, from the `date` command). The final message starts from the statistic in `SPEC.md` and ends with real output, not a claim:
 
 ```
+STATISTIC: X-bar and R chart (subgroups of 5, limits from R-bar with A2, D3, D4), plus Cp and Cpk with sigma-hat = R-bar / d2
+FILES: app/qc.py, tests/test_qc.py, CONTRACT.yaml
 TESTS: pytest tests
   2 passed in 0.21s
 DEFINITION OF DONE: pytest tests  ->  2 passed
-REVIEW: PASS - X-bar UCL expected 11.077, got 11.077; constant data -> "undefined", as expected
+NEXT: type /new, then /review H-03
 ```
 
-If the last message only says "DONE", ask for the test output.
+If the last message only says "DONE", ask for the test output. If the statistic is not the one in
+`SPEC.md` section 4, stop it there: the code is wrong however many tests pass.
 
-**No subagents in your agent?** The prompt already says it: the agent does the implementer part, then the reviewer part, itself, one after the other. That is fine: OpenCode runs the same two roles in the same order, only as separate child sessions.
+**Build and review are separate on purpose.** An agent that reviews its own work in the same session passes its own mistakes. Start a fresh session (`/new`) and run the review prompt next.
 
 
 ## 4. Review a statistic  (OpenCode: `/review H-03`)
 
-**When:** Before you trust any number the tool prints, and always before `/checkin` on a statistics task. `/build` already runs this once; run it again after any change to the statistic.
+**When:** Right after `/build` on any statistics task, in a **fresh session** (`/new`, then `/review H-03`), and again after any change to the statistic. Always before `/checkin`.
 
 **Before pasting:** Replace `$1` on the first line with your task id, for example `H-03`.
 
@@ -142,14 +156,15 @@ If the last message only says "DONE", ask for the test output.
 Task id: $1
 If the task id above is blank, review the task in CONTRACT.yaml that is in_progress; if there is none, or more than one, ask me which.
 
-Review the statistics in this task. Do not edit any file. If you can launch a subagent named stats-reviewer (in OpenCode you can), launch it with the task id and wait for its report; if the launch fails, stop and tell me the exact error, and never substitute a different agent. Otherwise do the review yourself:
+You are the REVIEWER for this task. I run you in a fresh session (/new), after /build. Do the review yourself: do not launch subagents or any other agent. Do not edit, create or delete any file; run scratch checks as one-line python -c or Rscript -e commands.
 
 1. Load the stats-first-steering skill (.claude/skills/stats-first-steering/SKILL.md).
-2. Read SPEC.md section 4, the files in the task's owns list, and its tests.
-3. Write the formula the code uses in one line, and say whether it matches the method in SPEC.md. Name any trap from the skill that applies (for example Cp labelled as Cpk, or control limits mixed up with spec limits).
-4. Known answer: run the code on the SPEC.md known-answer data. Show expected and got for every number.
-5. Degenerate case: run it on constant data (or n = 1). It must raise a clear error or report "undefined", never a confident number.
-6. Report a table with the columns check, expected, got, PASS/FAIL, then one overall PASS or FAIL. On FAIL, say in one sentence what to fix. Do not fix it yourself.
+2. Read SPEC.md section 4 (the method and the known-answer check), the task's block in CONTRACT.yaml, the files in its owns list, and its tests.
+3. Write the formula the code uses in one line, and say whether it matches the method in SPEC.md. Code that computes a different statistic is a FAIL. Name any trap from the skill that applies (for example Cp labelled as Cpk, or control limits mixed up with spec limits).
+4. Known answer: import the task's function from its file and call it on the known-answer data from SPEC.md (the numbers in SPEC.md, not the ones in the tests), for example python -c "from app.qc import my_function; print(my_function(...))". Never re-type the formula yourself: you are testing the team's code. Show expected and got for every number.
+5. Degenerate case: call the same function on constant data (or n = 1) and paste what it printed or raised. PASS only if it raises a clear error or returns NaN or None with a message. inf, 0 or any other confident number is a FAIL, even if a test accepts it.
+6. Run the task's tests and paste the real output.
+7. Report a table with the columns check, expected, got, PASS/FAIL, then one line: OVERALL: PASS or OVERALL: FAIL. On FAIL, say in one sentence what to fix. Do not fix it yourself. Never report a number you did not see printed.
 ```
 
 **What good output looks like:** A table you could show a judge. For the bolt-torque example (mean of subgroup means 10.50 N·m, average range 1.00 N·m, n = 5, spec limits 8 to 12 N·m):
@@ -158,11 +173,14 @@ Review the statistics in this task. Do not edit any file. If you can launch a su
 check                 expected   got     
 X-bar UCL             11.077     11.077  PASS
 Cpk                   1.163      1.163   PASS
-constant data         undefined  error   PASS
+constant data         error/NaN  error   PASS
 OVERALL: PASS
 ```
 
-**No subagents in your agent?** The prompt already says it: the agent does the implementer part, then the reviewer part, itself, one after the other. That is fine: OpenCode runs the same two roles in the same order, only as separate child sessions.
+Constant data has zero spread, so Cp and Cpk are undefined. A tool that prints `inf` (or any
+number) for them fails the review, even if a test accepts it.
+
+**Works the same in every agent.** The reviewer runs in its own fresh session and needs no subagents.
 
 
 ## 5. Check the task in  (OpenCode: `/checkin H-03`)
@@ -178,15 +196,15 @@ If the task id above is blank, use the task in CONTRACT.yaml that is in_progress
 
 Check this task in, following the contract-ledger skill (.claude/skills/contract-ledger/SKILL.md).
 
-1. Run the task's definition_of_done exactly as written in CONTRACT.yaml. Paste the command and its real output.
+1. Run the task's definition_of_done exactly as written in CONTRACT.yaml. Paste the command and its real output. Never swap in a different command.
 2. If it failed, stop: the task is not done. Leave status: in_progress, write what is missing in result, and tell me.
-3. If it passed, edit only this task's block in CONTRACT.yaml: status: done, and result = one line saying what exists now and the check that proved it. Keep owner and started_at filled in (fill them if they are blank); never delete a field. Quote any value that contains a colon.
-4. Check the ledger still parses: python -c "import yaml; yaml.safe_load(open('CONTRACT.yaml'))"
-5. Show me git status, the diff, and the exact commit command, staging files by name (the task's owned files plus CONTRACT.yaml; never git add . or git add -A). Wait for my yes before committing. Never push.
-6. End your final message with the definition_of_done output, pasted again, and the commit hash.
+3. If it passed, change exactly two lines in this task's block in CONTRACT.yaml, one small edit each: the status line becomes status: done, and the result line becomes result: "one line saying what exists now and the check that proved it". Do not rewrite or replace the block: owner, started_at, owns, notes and definition_of_done stay exactly as they are. In every edit, the new text keeps every line of the old text; only the status value and the result value change. If started_at is blank, run date "+%Y-%m-%d %H:%M" and paste what it prints (never a time you made up). Quote any value that contains a colon.
+4. Check the ledger: run python -c "import yaml; yaml.safe_load(open('CONTRACT.yaml'))" and git diff CONTRACT.yaml. If any line other than status and result changed, put it back before going on.
+5. Show me git status, the diff, and the exact commit command, staging files by name (the task's owned files plus CONTRACT.yaml; never git add . or git add -A). Then stop: end your message with the question "Commit these files? (yes/no)" and run nothing else. Commit only after I answer yes in my next message. Never push.
+6. After the commit, paste the definition_of_done output again and the commit hash.
 ```
 
-**What good output looks like:** The `definition_of_done` output pasted, the task's block in `CONTRACT.yaml` showing `status: done`, a one-line `result` and `owner`/`started_at` still filled in, the diff, and a `git add` that names files. It commits only after you say yes.
+**What good output looks like:** The `definition_of_done` output pasted, the task's block in `CONTRACT.yaml` showing `status: done`, a one-line `result` and `owner`/`started_at` still filled in, the diff, and a `git add` that names files, ending with "Commit these files? (yes/no)". It commits only after you type yes. In OpenCode the repo's `opencode.json` also makes OpenCode ask before any `git commit` or `git push`: choose **allow once** only after you have read the diff.
 
 **Works the same in every agent.** Nothing here needs subagents or a question tool.
 
@@ -204,7 +222,7 @@ I am stuck. What I see (the error text or the symptom): $ARGUMENTS
 Diagnose before doing anything else. Do not edit any file in this step.
 
 1. Restate the problem in one sentence and say which of these it is:
-   a. 429, RESOURCE_EXHAUSTED, "quota" or "rate limit": the free key's per-minute or per-day allowance is used up. Fixes, in this order: wait one minute, start a fresh session (/new in OpenCode) and run the last prompt again; step down the model ladder (another model ending in -flash for planning and thinking, the other model ending in -flash-lite for building); a teammate's key from their own Google account; and only if your employer allows third-party AI vendors, a Zen model whose name ends in -free, or GitHub Copilot. After switching models, if a slash command still fails the same way, paste that command's prompt from docs/prompts-starter.md instead, because each slash command asks for a fixed model.
+   a. 429, RESOURCE_EXHAUSTED, "quota" or "rate limit": the free key's per-minute or per-day allowance is used up. Fixes, in this order: for a per-minute limit (the error says "retry in" some seconds), wait one minute, then type continue in the SAME session (do not start a new session: a new one repeats every step it already did and hits the same limit); for a daily limit, step down the model ladder (another model ending in -flash for planning and thinking, the other model ending in -flash-lite for building); a teammate's key from their own Google account; and only if your employer allows third-party AI vendors, a Zen model whose name ends in -free, or GitHub Copilot. After switching models, if a slash command still fails the same way, paste that command's prompt from docs/prompts-starter.md instead, because each slash command asks for a fixed model.
    b. Nothing happens, no answer and no error: usually no key is connected. In OpenCode type /connect, choose Google, paste your key, then pick a model with /models.
    c. "Model ... has been deprecated": the agent was started outside the repo folder. Close it, cd into the repo, and start it again.
    d. The same error three times in a row: the task is too big. Start a fresh session, shrink the task to the smallest piece that can be tested, and put the error text in the new prompt.

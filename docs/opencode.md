@@ -128,7 +128,7 @@ rung is used up, step down to the next. (RPM = requests per minute; a "request" 
 
 | Job | Model | Per key, per day | Per minute | What it costs |
 |---|---|---|---|---|
-| **Think**: plan, design decisions | `gemini-3.5-flash` (Gemini 3.5 Flash) | 20 requests | 5 | a good plan took 4 requests (about 1 minute) |
+| **Think**: plan, design decisions | `gemini-3.5-flash` (Gemini 3.5 Flash) | 20 requests | 5 | a plan takes 4-8 requests (2-3 minutes, because only 5 fit in a minute) |
 | Think, next rungs | `gemini-3.8-flash`, `3.7-flash`, `3.6-flash`, `3-flash`, `2.5-flash` | 20 each | 5 each | step down when one is spent |
 | **Loop**: build, test, fix, check in | `gemini-3.1-flash-lite` (Gemini 3.1 Flash Lite) | 500 requests | 15 | one tested task took 29 requests (about 5 minutes) |
 | Loop fallback | `gemini-3.5-flash-lite` (Gemini 3.5 Flash Lite) | 500 | 15 | fine for a quick plan (re-run if a formula is missing); **could not finish a build** in our tests |
@@ -148,8 +148,14 @@ agent on their own key, from their own Google account.
 **Per-team arithmetic.** One key ≈ 5 plans and ≈ 15 built tasks a day. A team of three, each with
 their own key, has three times that. Two keys from the same Google account share one allowance, so only keys from different people's accounts add capacity. Daily quotas reset at **midnight Pacific** (3 AM Eastern).
 
-**Step-down rule.** Per-minute limit hit (a `429` error)? Wait one minute, `/new`, run the command again.
+**Step-down rule.** Per-minute limit hit (a `429` error that says "Please retry in" some seconds)? Wait one
+minute, then type `continue` in the **same** session. Do **not** start a new session for this: `/new`
+repeats every step the agent already did and hits the same limit again.
 Daily limit hit? `/models` → the next rung down the same row of the table.
+
+One oddity: Google may count `gemini-3.5-flash` requests against the `gemini-3.6-flash` row of your
+rate-limit page (the 429 names the model it billed). Use the error text, not the model you picked, to
+see which allowance ran out.
 
 ### Option: cycling or sharing keys
 
@@ -184,13 +190,16 @@ themselves live in [`.opencode/commands/`](../.opencode/commands/).
 It should name `SPEC.md` and `CONTRACT.yaml`. That proves the key, the model and the repo are all connected.
 
 **Minute 10-20: fill in the SPEC with your team, not the agent.** Open [`SPEC.md`](../SPEC.md) and
-replace every `FILL IN` line. Four sentences are enough: **who** uses the tool (a quality engineer on a
+replace every `FILL IN` line (`grep -c "FILL IN[.,]" SPEC.md` prints 0 when you are done). Four sentences are enough: **who** uses the tool (a quality engineer on a
 bolt-tightening line), **what** question it answers (is torque in control, and is the process capable?),
 **which statistic** (X-bar and R charts with subgroups of 5; Cp and Cpk), and **which stack** (FastAPI + one
-React page). Put a hand-calculated known answer in section 4. The agent guesses whatever you leave blank.
+React page). Put a hand-calculated known answer in section 4, with the spec limits. For the bolt example:
+"4 subgroups of 5, grand mean 25.0 N-m, R-bar 0.4 N-m, spec 25 ± 1.5 N-m". The agent guesses whatever you
+leave blank, and `/build` takes its known-answer test from this line.
 
 **Minute 20-30: `/plan`, then `/decide`.** Type `/new`, then `/plan`. The planner reads `SPEC.md` and
-`CONTRACT.yaml`, states the statistic and its formula, and writes `docs/plan.md`. It does not touch code.
+`CONTRACT.yaml`, states the statistic and its formula, asks all its open questions in one numbered list,
+and after your one reply writes `docs/plan.md`. It does not touch code.
 A good plan for the bolt example states the formulas before any task:
 
 ```text
@@ -198,26 +207,33 @@ X-bar chart: centre = X-double-bar; limits = X-double-bar ± A2·R-bar   (n = 5:
 R chart:     centre = R-bar; LCL = D3·R-bar, UCL = D4·R-bar             (D3 = 0, D4 = 2.114)
 sigma-hat = R-bar / d2 (d2 = 2.326);  Cp = (USL − LSL) / 6·sigma-hat
 Cpk = min(USL − X-double-bar, X-double-bar − LSL) / 3·sigma-hat
-H-03  app/qc.py + tests/: known answer from SPEC section 4, plus constant data (must not divide by zero)
+H-03  app/qc.py + tests/: known answer from SPEC section 4, plus constant data (Cp, Cpk undefined: error or NaN, never inf)
 ```
 
-Then type `/decide`. It asks the open design questions one at a time, as multiple choice, with a
-recommendation. You answer with a number:
+`/plan` and `/decide` ask every open design question in **one** message, as a numbered multiple-choice
+list with a recommendation. You answer all of them in one reply, question number then option number
+(`1-1, 2-2`). One message instead of five matters: the planning model allows only 5 requests a minute.
+Run `/decide` later for anything still open.
 
 ```text
-How should the tool receive the torque measurements?
-  1. CSV upload (columns: subgroup, value)   <- recommended: matches SPEC
-  2. Paste a table into a text box
-  3. A form, one subgroup at a time
+1. How should the tool receive the torque measurements?
+   1. CSV upload (columns: subgroup, value)   <- recommended: matches SPEC
+   2. Paste a table into a text box
+   3. A form, one subgroup at a time
+2. What does the user see first?
+   1. "Stop the line: yes/no"                 <- recommended: the decision in SPEC
+   2. The chart only
 ```
 
-<!-- VERIFIED 2026-10-10 (instructor test, OpenCode 2.0.26 + free Gemini): the questions arrive as numbered text in the chat, not clickable boxes; answer by typing the number. -->
 
 Read `docs/plan.md` as a team. If a formula looks wrong, say so now. Fixing a sentence is free; fixing code is not.
 
 **Minute 30-45: `/build H-03`.** Type `/new`, then `/build H-03`. H-03 is the first statistics task in
-[`CONTRACT.yaml`](../CONTRACT.yaml): one plain, tested function. The agent checks the task out, writes
-`app/qc.py` and `tests/test_qc.py`, and runs the tests. Good output shows the **real** test result:
+[`CONTRACT.yaml`](../CONTRACT.yaml): one plain, tested function. The agent reads `SPEC.md` and
+`docs/plan.md`, restates the statistic and its formula in one sentence (check it: if it is not your
+method, stop it there), checks the task out with the real time, writes `tests/test_qc.py` and
+`app/qc.py`, and runs the tests. It builds only; it does not review itself and never commits.
+Good output shows the **real** test result:
 
 ```text
 tests/test_qc.py::test_qc_known_answer PASSED
@@ -225,11 +241,25 @@ tests/test_qc.py::test_qc_degenerate_constant PASSED
 2 passed
 ```
 
-and numbers you can check against your hand calculation, for example X-bar centre 25.00, UCL 25.23,
-LCL 24.77; R centre 0.40, UCL 0.85; Cp = Cpk = 1.94.
+and numbers you can check against your hand calculation. For the bolt example (grand mean 25.0 N-m,
+R-bar 0.4 N-m, spec 25 ± 1.5 N-m):
 
-**Minute 45-55: `/review`.** Type `/new`, then `/review`. A reviewer checks the statistic against the
-known answer and the constant-data case and reports PASS or FAIL with the numbers. Then read the change
+```text
+X-bar chart: 25.0 ± 0.577 × 0.4 = 25.0 ± 0.231   -> LCL 24.77, UCL 25.23
+R chart:     centre 0.40; LCL 0 × 0.4 = 0; UCL 2.114 × 0.4 = 0.85
+sigma-hat = 0.4 / 2.326 = 0.172
+Cp  = (26.5 − 23.5) / (6 × 0.172) = 3.0 / 1.032 = 2.91
+Cpk = min(26.5 − 25.0, 25.0 − 23.5) / (3 × 0.172) = 1.5 / 0.516 = 2.91
+```
+
+Constant data (every reading the same) has zero spread, so Cp and Cpk are undefined: the function must
+raise an error or return NaN with a message. `inf` is a wrong answer, even if a test accepts it.
+
+**Minute 45-55: `/review H-03`.** Type `/new`, then `/review H-03`. The review is a separate step in a
+fresh session on purpose: an agent that checks its own work in the same session passes its own
+mistakes. The reviewer runs the code on the `SPEC.md` known answer and on constant data, edits nothing,
+and reports PASS or FAIL with the numbers. On FAIL, `/new`, then `/build H-03` again with the reviewer's
+one-sentence fix pasted after it. Then read the change
 yourselves:
 
 ```bash
@@ -240,10 +270,14 @@ git diff
 Can each of you explain every number the test printed? If not, ask the agent to explain one function in
 plain English.
 
-**Minute 55-60: `/checkin H-03`.** It marks the task `done` in `CONTRACT.yaml` with a one-line result,
-in the same commit as the code. Check that `owner` and `started_at` are filled in, not deleted.
+**Minute 55-60: `/checkin H-03`.** It runs the task's `definition_of_done`, marks the task `done` in
+`CONTRACT.yaml` with a one-line result, shows you the diff and asks "Commit these files? (yes/no)".
+OpenCode also asks permission before any `git commit` or `git push` (the repo's `opencode.json` says
+so): choose **allow once** only after your team has read the diff, and never **allow always** for a
+commit. That permission prompt is the real yes: a free model may skip the question and go straight to
+the commit. Check in `git diff CONTRACT.yaml` that only `status` and `result` changed and `owner` and
+`started_at` are still there.
 
-<!-- UNVERIFIED: the argument form of /checkin (with or without a task id) depends on the command file being written in parallel; confirm against .opencode/commands/checkin.md. -->
 
 Next task: `/new`, then `/build H-04`. One task per session, every time.
 
@@ -251,7 +285,7 @@ Next task: `/new`, then `/build H-04`. One task per session, every time.
 
 ## 7. Session hygiene
 
-- **`/new` for every task.** A fresh session sends fewer tokens per step, so you stay under the per-minute limit.
+- **`/new` for every task.** A fresh session sends fewer tokens per step, so you stay under the per-minute limit. (After a `429` mid-task, type `continue` in the same session instead; see [section 8](#8-when-it-stalls).)
 - **`/compact` when a session gets long** and answers get slow or vague. It summarises the conversation.
 - **Read the diff after every task** (`git diff`). The agent's summary is not proof; the test output is.
 - **Stage files by name** (`git add app/qc.py tests/test_qc.py`), never `git add .`.
@@ -264,13 +298,14 @@ Next task: `/new`, then `/build H-04`. One task per session, every time.
 
 | You see | What it means | Do this |
 |---|---|---|
-| `429`, `RESOURCE_EXHAUSTED` or `quota`, and the agent stops | a per-minute or daily limit | wait one minute, `/new`, run the command again; still failing → `/models`, next rung down ([section 5](#5-the-model-ladder-which-model-for-which-job)) |
+| `429`, `RESOURCE_EXHAUSTED` or `quota`, and the agent stops | a per-minute limit ("Please retry in ...s") or the daily one | wait one minute, then type `continue` in the **same** session (not `/new`: it would repeat every step and hit the same limit); still failing → daily limit: `/models`, next rung down ([section 5](#5-the-model-ladder-which-model-for-which-job)) |
 | Nothing happens for over a minute, no error | no key connected | `opencode auth list`; if Google is missing, `/connect` again |
 | `API key not valid` | key copied wrong, or deleted | copy it again, or make a new one |
 | `Model exo-free has been deprecated` | you started OpenCode outside the repo folder | `cd` into the repo and run `opencode` again |
 | The same error three times | the task is too big | stop; `/stuck`, or `/new` with a smaller task and the error message pasted in |
 | It edits a file outside the task | ignoring the task's `owns` list | say "undo that; only touch the files in the task's owns list", then check `git diff` |
-| It says a helper agent failed and it "did it another way" | it swapped in a different agent | stop it; ask it to report the error instead. Never accept a substitute |
+| `/build` prints "REVIEW: PASS" or says it reviewed its own work | it did both jobs in one session | ignore that review; `/new`, then `/review` with the task id |
+| It commits without asking, or makes up a `started_at` time | it skipped a step | `git reset --soft HEAD~1` undoes the commit and keeps your files; fix the time from `date` |
 | It asks you to put the key in a file or `.env` | wrong advice | refuse. Keys go in `/connect` only |
 | Your model is gone from `/models` | Google renamed or retired it | pick the next rung of the same row |
 | `opencode: command not found` | PATH not updated | open a new terminal; see [section 2](#2-install-opencode) |
