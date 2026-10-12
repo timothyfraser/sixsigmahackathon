@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 LIB = (ROOT / ".opencode/plugins/model-ladder.lib.mjs").as_uri()
 NODE = shutil.which("node")
 pytestmark = pytest.mark.skipif(NODE is None, reason="node not installed")
@@ -134,7 +134,7 @@ def test_plugin_entry_point_switches_and_resumes(tmp_path):
     (tmp_path / ".opencode").mkdir()
     data = json.dumps({"sessionID": "ses_test", "error": {"name": "APIError", "data": {
         "message": "429 Too Many Requests", "statusCode": 429, "isRetryable": False, "responseBody": DAILY}}})
-    out = subprocess.run([NODE, "tests/test_model_ladder_harness.mjs", str(tmp_path), data],
+    out = subprocess.run([NODE, "tools/tests/test_model_ladder_harness.mjs", str(tmp_path), data],
                          capture_output=True, text=True, cwd=ROOT)
     assert out.returncode == 0, out.stderr
     res = json.loads(out.stdout)
@@ -155,6 +155,6 @@ def test_per_minute_error_does_not_switch(tmp_path):
     (tmp_path / ".opencode").mkdir()
     data = json.dumps({"sessionID": "ses_m", "error": {"name": "APIError", "data": {"statusCode": 429,
                                                                                    "responseBody": MINUTE}}})
-    out = subprocess.run([NODE, "tests/test_model_ladder_harness.mjs", str(tmp_path), data],
+    out = subprocess.run([NODE, "tools/tests/test_model_ladder_harness.mjs", str(tmp_path), data],
                          capture_output=True, text=True, cwd=ROOT)
     assert json.loads(out.stdout)["calls"] == []

@@ -1,5 +1,5 @@
 // Drives the real plugin entry point with a fake OpenCode ctx and one error event.
-// Usage: node tests/test_model_ladder_harness.mjs <dir> <json-event-data>
+// Usage: node tools/tests/test_model_ladder_harness.mjs <dir> <json-event-data>
 import { pathToFileURL } from "node:url";
 import { join, resolve } from "node:path";
 const [dir, payload] = process.argv.slice(2);
