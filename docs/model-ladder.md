@@ -11,17 +11,31 @@ plugin stops that from ending your work.
 2. When your model hits its **daily** limit, the plugin switches your session to the
    next model on the ladder and continues the task. You will see one line like:
    `Daily limit reached on google/gemini-3.5-flash-lite; switched to google/gemini-3.1-flash-lite.`
-3. The plugin remembers which models are used up today (in
+   It tries the models below yours first, then wraps around to the ones above it, so
+   starting in the middle of the ladder (the repo default, `gemini-3.1-flash-lite`, is
+   the second model) never skips the top one.
+3. The plugin remembers which models are used up (in
    `.opencode/model-ladder-state.json`, which git ignores), so a new session does not
-   start on a dead model. The list clears itself at midnight Pacific time, when Google
-   resets the limits.
-4. If every model on the ladder is used up, you get a message saying so, with your
+   start on a dead model.
+4. **Used-up models come back when Google says they do.** Google's error usually says
+   how long to wait ("Please retry in 1h1m15s"). The plugin marks the model used up for
+   exactly that long, and never past midnight Pacific time, when Google resets every
+   daily limit. If the error gives no wait, the model is back at midnight Pacific.
+5. If every model on the ladder is used up, you get a message saying so, with your
    options: a teammate connects their own key, switch to a free OpenCode Zen model with
    `/models` (if your event allows it), or wait for midnight Pacific.
 
 Short waits are **not** handled by the ladder. "Too many requests per minute" and
 "model is experiencing high demand" (503) errors are retried by OpenCode itself, on the
 same model, after a few seconds.
+
+The state file looks like this (each model with the time it comes back, in UTC):
+
+```json
+{ "version": 2, "exhausted": { "google/gemini-3.1-flash-lite": "2026-10-11T19:01:15.000Z" } }
+```
+
+Deleting it is safe: the next daily-limit error simply writes it again.
 
 ## Which model am I on?
 

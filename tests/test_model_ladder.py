@@ -64,16 +64,70 @@ def test_next_skips_exhausted_rungs():
     assert js('L.nextModel("google/not-on-ladder", ["google/gemini-3.5-flash-lite"])') == "google/gemini-3.1-flash-lite"
 
 
+def test_next_wraps_around_to_rungs_above():
+    # repo default is rung 2; when it and everything below is used up, rung 1 is still fresh
+    below = js("L.LADDER.slice(2)")
+    assert js(f'L.nextModel("google/gemini-3.1-flash-lite", {json.dumps(below)})') == "google/gemini-3.5-flash-lite"
+    # last rung, nothing used up -> wraps to the top rung
+    assert js("L.nextModel(L.LADDER[L.LADDER.length-1], [])") == "google/gemini-3.5-flash-lite"
+    # rungs below come before rungs above
+    assert js('L.nextModel("google/gemini-3.1-flash-lite", [])') == "google/gemini-3.1-flash-lite-preview"
+    # never returns current, even when current is not listed as exhausted
+    assert js('L.nextModel("google/gemini-3.5-flash-lite", L.LADDER.slice(1))') is None
+
+
+def test_next_null_only_when_every_rung_is_exhausted():
+    assert js('L.nextModel("google/gemini-3.1-flash-lite", L.LADDER)') is None
+    assert js('L.nextModel("google/not-on-ladder", L.LADDER)') is None
+    assert js('L.nextModel("google/gemini-3.1-flash-lite", L.LADDER.slice(1))') == "google/gemini-3.5-flash-lite"
+
+
 def test_end_of_ladder_message():
-    assert js("L.nextModel(L.LADDER[L.LADDER.length-1], [])") is None
     msg = js("L.END_OF_LADDER")
     assert "used up for today" in msg and "midnight Pacific" in msg
     assert "teammate" in msg and "Zen" in msg
 
 
-def test_exhausted_resets_on_new_pacific_day():
-    assert js('L.exhaustedToday({day:"2000-01-01",exhausted:["x"]})') == []
-    assert js('L.exhaustedToday({day:L.pacificDay(),exhausted:["x"]})') == ["x"]
+def test_old_state_format_resets_on_new_pacific_day():
+    assert js('L.exhaustedNow({day:"2000-01-01",exhausted:["x"]})') == []
+    assert js('L.exhaustedNow({day:L.pacificDay(),exhausted:["x"]})') == ["x"]
+
+
+NOW = 'new Date("2026-10-11T18:00:00Z")'  # 11:00 Pacific (PDT), 13 h before the reset
+
+
+def test_next_midnight_pacific():
+    assert js(f"L.nextMidnightPacific({NOW}).toISOString()") == "2026-10-12T07:00:00.000Z"
+    # winter (PST, UTC-8)
+    assert js('L.nextMidnightPacific(new Date("2026-12-01T20:00:00Z")).toISOString()') == "2026-12-02T08:00:00.000Z"
+    # daylight-saving day: early 2026-11-01 PDT, next midnight is in PST
+    assert js('L.nextMidnightPacific(new Date("2026-11-01T08:30:00Z")).toISOString()') == "2026-11-02T08:00:00.000Z"
+
+
+def test_expiry_uses_retry_time_when_given():
+    # "retry in 1h1m15s" / retryDelay 3675s -> back in about an hour, not at midnight
+    assert js(f"L.expiryFor({json.dumps(DAILY)}, {NOW}).toISOString()") == "2026-10-11T19:01:15.000Z"
+
+
+def test_expiry_capped_at_midnight_pacific():
+    long_wait = '{"error":{"code":429,"message":"limit: 500 per day. Please retry in 20h.","status":"RESOURCE_EXHAUSTED"}}'
+    assert js(f"L.expiryFor({json.dumps(long_wait)}, {NOW}).toISOString()") == "2026-10-12T07:00:00.000Z"
+
+
+def test_expiry_falls_back_to_midnight_without_retry_time():
+    no_wait = '{"error":{"code":429,"message":"GenerateRequestsPerDayPerProjectPerModel","status":"RESOURCE_EXHAUSTED"}}'
+    assert js(f"L.expiryFor({json.dumps(no_wait)}, {NOW}).toISOString()") == "2026-10-12T07:00:00.000Z"
+
+
+def test_state_entries_expire_at_their_own_time():
+    st = js(f'L.markInState(null, "google/a", new Date("2026-10-11T19:00:00Z"), {NOW})')
+    assert st == {"version": 2, "exhausted": {"google/a": "2026-10-11T19:00:00.000Z"}}
+    st_js = json.dumps(st)
+    assert js(f"L.exhaustedNow({st_js}, {NOW})") == ["google/a"]
+    assert js(f'L.exhaustedNow({st_js}, new Date("2026-10-11T19:00:01Z"))') == []
+    # marking a second model keeps live entries and drops expired ones
+    st2 = js(f'L.markInState({st_js}, "google/b", new Date("2026-10-12T07:00:00Z"), new Date("2026-10-11T19:30:00Z"))')
+    assert st2["exhausted"] == {"google/b": "2026-10-12T07:00:00.000Z"}
 
 
 def test_plugin_entry_point_switches_and_resumes(tmp_path):
@@ -91,7 +145,10 @@ def test_plugin_entry_point_switches_and_resumes(tmp_path):
     syn = res["calls"][1]["synthetic"]
     assert syn["resume"] is True and syn["text"].startswith("Daily limit reached on google/gemini-3.1-flash-lite")
     state = json.loads((tmp_path / ".opencode/model-ladder-state.json").read_text())
-    assert "google/gemini-3.1-flash-lite" in state["exhausted"]
+    assert state["version"] == 2 and "google/gemini-3.1-flash-lite" in state["exhausted"]
+    # the error said "retry in 1h1m15s": the model comes back in about an hour, not at midnight
+    until = js(f'Date.parse({json.dumps(state["exhausted"]["google/gemini-3.1-flash-lite"])}) - Date.now()')
+    assert 3600_000 < until <= 3675_000
 
 
 def test_per_minute_error_does_not_switch(tmp_path):

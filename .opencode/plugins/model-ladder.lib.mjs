@@ -66,15 +66,17 @@ export function modelFromError(err) {
   return m ? `google/${m[1]}` : null;
 }
 
-// Next usable rung after `current`, skipping rungs exhausted today. null = ladder is used up.
+// Next usable rung after `current`: first the rungs below it, then wrap around to the
+// rungs above it (a higher rung has its own fresh daily budget). Skips exhausted rungs and
+// `current` itself. null = every other rung is used up.
 export function nextModel(current, exhausted = [], ladder = LADDER) {
-  const dead = new Set(exhausted);
+  const dead = new Set([...exhausted, current]);
   const start = ladder.indexOf(current);
-  for (let i = start + 1; i < ladder.length; i++) {
-    if (!dead.has(ladder[i])) return ladder[i];
+  if (start === -1) return firstLive([...dead], ladder);
+  for (let k = 1; k < ladder.length; k++) {
+    const m = ladder[(start + k) % ladder.length];
+    if (!dead.has(m)) return m;
   }
-  // current was not on the ladder: start from the top
-  if (start === -1) return firstLive([...dead, current], ladder);
   return null;
 }
 
@@ -84,11 +86,60 @@ export function firstLive(exhausted = [], ladder = LADDER) {
   return ladder.find((m) => !dead.has(m)) ?? null;
 }
 
-// State file contents -> list of rungs exhausted TODAY (older days are ignored).
-export function exhaustedToday(state, now = new Date()) {
-  if (!state || state.day !== pacificDay(now)) return [];
-  return Array.isArray(state.exhausted) ? state.exhausted : [];
+// Offset of Pacific wall-clock time from UTC at `at`, in ms (e.g. -7 h in summer).
+function pacificOffsetMs(at) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles", hourCycle: "h23", year: "numeric", month: "2-digit",
+    day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit",
+  }).formatToParts(at).map((x) => [x.type, Number(x.value)]));
+  const wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+  return wall - Math.floor(at.getTime() / 1000) * 1000;
 }
+
+// The next midnight Pacific after `now` (Google's daily reset), as a Date.
+export function nextMidnightPacific(now = new Date()) {
+  const [y, m, d] = pacificDay(now).split("-").map(Number);
+  const wallMidnight = Date.UTC(y, m - 1, d + 1);
+  let t = wallMidnight - pacificOffsetMs(now);
+  t = wallMidnight - pacificOffsetMs(new Date(t)); // re-check across a daylight-saving change
+  return new Date(t);
+}
+
+// When a used-up model comes back: now + the wait Google asked for, but never later than
+// the next midnight Pacific. No wait in the error -> midnight Pacific.
+export function expiryFor(err, now = new Date()) {
+  const midnight = nextMidnightPacific(now);
+  const s = retrySeconds(asText(err));
+  if (s > 0) return new Date(Math.min(now.getTime() + s * 1000, midnight.getTime()));
+  return midnight;
+}
+
+// State file: { "version": 2, "exhausted": { "google/<id>": "<ISO time it comes back>" } }.
+// Returns the rungs still used up at `now`. The old { day, exhausted: [..] } format counts
+// as used up until the end of that Pacific day.
+export function exhaustedNow(state, now = new Date()) {
+  if (!state) return [];
+  if (Array.isArray(state.exhausted)) {
+    return state.day === pacificDay(now) ? state.exhausted : [];
+  }
+  const map = state.exhausted && typeof state.exhausted === "object" ? state.exhausted : {};
+  return Object.keys(map).filter((ref) => Date.parse(map[ref]) > now.getTime());
+}
+
+// New state with `ref` used up until `until`; expired entries are dropped.
+export function markInState(state, ref, until, now = new Date()) {
+  const out = {};
+  const old = state && !Array.isArray(state.exhausted) && state.exhausted ? state.exhausted : {};
+  for (const [k, v] of Object.entries(old)) if (Date.parse(v) > now.getTime()) out[k] = v;
+  if (state && Array.isArray(state.exhausted) && state.day === pacificDay(now)) {
+    for (const k of state.exhausted) out[k] = nextMidnightPacific(now).toISOString();
+  }
+  out[ref] = until.toISOString();
+  return { version: 2, exhausted: out };
+}
+
+// Kept for older callers: same as exhaustedNow.
+export const exhaustedToday = exhaustedNow;
 
 export function switchedLine(from, to) {
   return `Daily limit reached on ${from}; switched to ${to}.`;

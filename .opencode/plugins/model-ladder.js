@@ -5,8 +5,8 @@ import { readFileSync, writeFileSync, appendFileSync, mkdirSync } from "node:fs"
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
-  LADDER, classify, modelFromError, nextModel, firstLive, exhaustedToday,
-  pacificDay, switchedLine, END_OF_LADDER, splitRef,
+  LADDER, classify, modelFromError, nextModel, firstLive, exhaustedNow,
+  expiryFor, markInState, switchedLine, END_OF_LADDER, splitRef,
 } from "./model-ladder.lib.mjs";
 
 export default {
@@ -20,16 +20,19 @@ export default {
       try { appendFileSync(join(tmpdir(), "model-ladder-debug.log"), `${new Date().toISOString()} ${msg}\n`); } catch {}
     };
     const load = () => { try { return JSON.parse(readFileSync(stateFile, "utf8")); } catch { return null; } };
-    const markExhausted = (ref) => {
-      const list = new Set(exhaustedToday(load()));
-      list.add(ref);
+    // Used-up models come back when Google says they do (the error's retry time),
+    // never later than midnight Pacific.
+    const markExhausted = (ref, err) => {
+      const until = expiryFor(err);
+      const state = markInState(load(), ref, until);
       try {
         mkdirSync(dir, { recursive: true });
-        writeFileSync(stateFile, JSON.stringify({ day: pacificDay(), exhausted: [...list] }, null, 2));
+        writeFileSync(stateFile, JSON.stringify(state, null, 2));
       } catch (e) { log(`state write failed: ${e}`); }
-      return [...list];
+      log(`exhausted ${ref} until ${until.toISOString()}`);
+      return { dead: exhaustedNow(state), until };
     };
-    const handled = new Set();
+    const handled = new Map(); // "session|model" -> time (ms) the model comes back
     log(`loaded; ladder=${LADDER.join(",")}`);
 
     async function currentModel(sessionID, err) {
@@ -49,9 +52,15 @@ export default {
       if (kind !== "daily" || !sessionID) return;
       const from = await currentModel(sessionID, err);
       const key = `${sessionID}|${from}`;
-      if (handled.has(key)) return;
-      handled.add(key);
-      const dead = from ? markExhausted(from) : exhaustedToday(load());
+      if ((handled.get(key) ?? 0) > Date.now()) return;
+      let dead;
+      if (from) {
+        const r = markExhausted(from, err);
+        dead = r.dead;
+        handled.set(key, r.until.getTime());
+      } else {
+        dead = exhaustedNow(load());
+      }
       const to = nextModel(from, dead);
       if (!to) {
         log(`end of ladder after ${from}`);
@@ -73,7 +82,7 @@ export default {
       const m = data?.model ?? data?.info?.model;
       if (!m || !sessionID) return;
       const ref = `${m.providerID}/${m.id ?? m.modelID}`;
-      const dead = exhaustedToday(load());
+      const dead = exhaustedNow(load());
       if (!dead.includes(ref)) return;
       const to = nextModel(ref, dead) ?? firstLive(dead);
       if (to) {
