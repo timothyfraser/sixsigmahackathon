@@ -70,9 +70,9 @@ We are beginners: short sentences, and explain any jargon in a few words. When S
 You are planning, not coding. Do not create or edit any file except docs/plan.md. This model allows only 5 requests a minute, so use as few steps as you can.
 
 1. In one step, read SPEC.md, CONTRACT.yaml and docs/plan.md (if it exists) completely, before you say anything. Do not search, list folders or re-read a file.
-2. In one sentence each, state: the user, the question the tool answers, the statistic, and the formula for that statistic (write the formula out). If SPEC.md leaves any of these unclear or still says FILL IN, stop and ask me before going on.
+2. In one sentence each, state: the user, the question the tool answers, every statistic, and the formula for each statistic (write the formula out). If SPEC.md leaves any of these unclear or still says FILL IN, stop and ask me before going on. A known-answer check with no concrete numbers (the input data AND the expected values) counts as FILL IN: stop, and offer to work out the numbers with me.
 3. List every design decision that is still open (data shape, where the data comes from, what the function or API returns, what the user sees, what counts as "in control" or "capable"). Ask them ALL in this ONE message, as a numbered list: at most 5 questions, each with at most 4 numbered options; mark the option you recommend and say why in one line. Then stop and wait. I will answer in one reply, for example "1-1, 2-3, 3-1". If nothing is open, say so and go straight to step 4.
-4. In your next turn, after my answers, write docs/plan.md: a numbered list of tasks, each mapped to one task id from CONTRACT.yaml (use the real ids; never invent one). For each task give: the files it may touch (from its owns list), the test that proves it (the known answer from SPEC.md section 4, AND a degenerate case such as constant data), and a time estimate. The statistic comes first, with its formula written out, then the tool around it, then the page or chart. Nothing about styling until the numbers are proven.
+4. In your next turn, after my answers, write docs/plan.md: a numbered list of tasks, each mapped to one task id from CONTRACT.yaml (use the real ids; never invent one). For each task give: the files it may touch (from its owns list), the test that proves it (the known answer from SPEC.md section 4, AND a degenerate case such as constant data), and a time estimate. Every statistic comes first, each with its formula written out, then the tool around it, then the page or chart. Nothing about styling until the numbers are proven.
 5. Under the tasks, list the decisions I made in step 3, one line each.
 6. End with the three biggest risks and what we will do about each.
 
@@ -131,24 +131,33 @@ If the task id above is blank, list the todo tasks in CONTRACT.yaml and ask me w
 You build exactly this ONE task from CONTRACT.yaml. You are the IMPLEMENTER only. Do not launch subagents or any other agent, and do not review your own work: the review is a separate step that I run in a fresh session (/new, then /review with this task id).
 
 1. Before anything else, read SPEC.md completely (section 4 is the method and the known-answer check), docs/plan.md if it exists, and this task's block in CONTRACT.yaml.
-2. In one sentence, restate the statistic this task computes and its formula, exactly as SPEC.md section 4 states it. If SPEC.md section 4 still says FILL IN or has no known-answer check, stop and ask me. Never invent a statistic or a known answer.
+2. In one sentence, restate the statistic this task computes and its formula, exactly as SPEC.md section 4 states it. Stop and ask me if SPEC.md section 4 still says FILL IN, or if its known-answer check has no concrete numbers (the input data AND the expected values). A known-answer check with no concrete numbers counts as FILL IN. Never invent a statistic or a known answer.
 3. If you do not know my name for the owner field, ask me once. Get the time by running this command: date "+%Y-%m-%d %H:%M" (if it fails, run: python -c "import datetime; print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))"). Load the contract-ledger skill and check the task out: status: in_progress, owner, and started_at = the time the command printed, pasted (never a time you made up). Never delete a field. Quote any value that contains a colon.
 4. If the task computes a statistic, load the stats-first-steering skill. Write the tests first, then the code:
    - a known-answer test whose data and expected numbers are copied from SPEC.md section 4, never made up;
    - a degenerate case (constant data, or n = 1). With zero spread, a capability index such as Cp or Cpk is undefined: the code must raise a clear error, or return NaN or None with a message. inf, 0 or any other confident number is wrong, and a test that accepts one is wrong.
-5. Stay inside the task's owns list:
+5. Deliver EVERY statistic SPEC.md names, not just the first one. For an X-bar and R chart that means all of these:
+   - X-bar chart limits (constant A2);
+   - R chart limits (constants D3 and D4);
+   - sigma-hat = R-bar/d2 for Cp and Cpk. Never use the overall standard deviation: that gives Pp and Ppk, a different statistic;
+   - an out-of-control flag for each subgroup.
+6. Stay inside the task's owns list:
    - Edit only the paths in its owns list, plus this task's block in CONTRACT.yaml.
    - Never delete, move or rename a file. Never create a file outside the owns list; scratch checks go in tests/ (or another folder on the owns list), never at the repo root.
-   - Every package you import that is not in the standard library goes into the requirements file (for example app/requirements.txt) in the same step. If that file is not on the owns list, stop and tell me the exact line to add.
+   - Every third-party package you import (numpy, pandas, scipy, ...) goes into the requirements file (for example app/requirements.txt) in the same step. If that file is not on the owns list, stop and tell me the exact line to add.
+   - Use absolute package imports (from app.qc import ...), never relative ones (from .qc import ...). The app and every script must start from the repo root with one command.
    - If you need any other file, stop and ask me.
-6. Work in small steps. After each step run the tests and read the real output.
-7. Run the task's definition_of_done exactly as written. For an API or app task, start the app, call the endpoint (or open the page) on one data/ file, and paste the real response.
-8. If you get a 429, quota or rate-limit error, stop and tell me. Do not retry in a loop.
-9. Do not commit, do not push, do not check the task in, and do not start another task.
+7. Never run a server, testme.sh or any other long-running command in the foreground: it hangs the session. Start it in the background with a time limit (for example: timeout 120 bash app/testme.sh &), or ask me to run it. Stop only the process you started, by its PID. Never kill processes by name (taskkill /IM, pkill, killall, Stop-Process -Name).
+8. Work in small steps. After each step run the tests and read the real output.
+9. Run the task's definition_of_done exactly as written. For an API or app task, start the app in the background (step 7), call the endpoint (or open the page) on one data/ file, and paste the real response.
+10. If you get a 429, quota or rate-limit error, stop and tell me. Do not retry in a loop.
+11. Do not commit, do not push, do not check the task in, and do not start another task.
 
 End your final message with these parts, pasted, not summarized:
 STATISTIC: the one sentence from step 2
+STATISTICS: every statistic SPEC.md names, one per line, with its value on the known-answer data. A missing one means the task is NOT DONE.
 FILES: every file you created or changed
+RUN: the one command, run from the repo root, that starts the app
 TESTS: the test command and its real output
 DEFINITION OF DONE: the definition_of_done command and its real output
 NEXT: type /new, then /review with this task id
@@ -186,11 +195,16 @@ You are the REVIEWER for this task. I run you in a fresh session (/new), after /
 
 1. Load the stats-first-steering skill (.claude/skills/stats-first-steering/SKILL.md).
 2. Read SPEC.md section 4 (the method and the known-answer check), the task's block in CONTRACT.yaml, the files in its owns list, and its tests.
-3. Write the formula the code uses in one line, and say whether it matches the method in SPEC.md. Code that computes a different statistic is a FAIL. Name any trap from the skill that applies (for example Cp labelled as Cpk, or control limits mixed up with spec limits).
-4. Known answer: import the task's function from its file and call it on the known-answer data from SPEC.md (the numbers in SPEC.md, not the ones in the tests), for example python -c "from app.qc import my_function; print(my_function(...))". Never re-type the formula yourself: you are testing the team's code. Show expected and got for every number.
+3. List every statistic SPEC.md names. For each one, write the formula the code uses in one line and say whether it matches SPEC.md. A statistic SPEC.md names that the code does not compute is a FAIL. Code that computes a different statistic is a FAIL. Name any trap from the skill that applies. For an X-bar and R chart, check all of these:
+   - R chart limits exist (constants D3 and D4);
+   - Cp and Cpk use sigma-hat = R-bar/d2. The overall standard deviation gives Pp and Ppk: FAIL;
+   - each subgroup gets an out-of-control flag.
+4. Known answer: import the task's function from its file and call it on the known-answer data from SPEC.md (the numbers in SPEC.md, not the ones in the tests), for example python -c "from app.qc import my_function; print(my_function(...))". Do this for EVERY statistic. If SPEC.md gives no expected number for a statistic, recompute it from the SPEC.md formula with one python -c line and mark it "recomputed".
 5. Degenerate case: call the same function on constant data (or n = 1) and paste what it printed or raised. PASS only if it raises a clear error or returns NaN or None with a message. inf, 0 or any other confident number is a FAIL, even if a test accepts it.
 6. Run the task's tests and paste the real output.
-7. Report a table with the columns check, expected, got, PASS/FAIL, then one line: OVERALL: PASS or OVERALL: FAIL. On FAIL, say in one sentence what to fix. Do not fix it yourself. Never report a number you did not see printed.
+7. Report this table, one row per statistic, plus one row for the degenerate case and one for the tests:
+   | statistic | expected | got | verdict |
+   Then one line: OVERALL: PASS or OVERALL: FAIL. A bare PASS with no table is forbidden: no table means OVERALL: FAIL. On FAIL, say in one sentence what to fix. Do not fix it yourself. Never report a number you did not see printed.
 ```
 
 **What good output looks like:** A table you could show a judge. For the bolt-torque example (mean of subgroup means 10.50 N·m, average range 1.00 N·m, n = 5, spec limits 8 to 12 N·m):

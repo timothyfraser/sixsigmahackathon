@@ -2,8 +2,8 @@
 """Offline consistency check for the agent bundle (no CI needed, stdlib only).
 
 Usage:
-    python tools/check_agent_bundle.py          # checks 1-6, no network, no key
-    python tools/check_agent_bundle.py --live   # also checks 7: needs opencode + a connected key
+    python tools/check_agent_bundle.py          # checks 1-7, no network, no key
+    python tools/check_agent_bundle.py --live   # also checks 8: needs opencode + a connected key
 
 Exit code 0 = every check passed, 1 = at least one FAIL.
 Each failure prints a line starting with "FAIL" that names the file and the expectation.
@@ -22,6 +22,44 @@ KEY_PATTERNS = [
     r"AQ\.[A-Za-z0-9_-]{20,}",
     r"gh[pousr]_[A-Za-z0-9]{20,}",
 ]
+
+# Shell commands the agent must ask before running (it once tried to kill every python process).
+KILL_PATTERNS = ["*taskkill*", "*pkill*", "*Stop-Process*", "*killall*", "*rm -rf*"]
+
+# Rules the commands and agents must keep. Each entry: (file, label, regex). Case-insensitive.
+BUILD_RULES = [
+    ("every statistic", r"EVERY statistic"),
+    ("R chart limits", r"R chart limits"),
+    ("D3 and D4", r"D3.{0,10}D4"),
+    ("sigma-hat = R-bar/d2", r"R-bar/d2"),
+    ("overall SD is Pp/Ppk", r"Pp and Ppk"),
+    ("out-of-control flag per subgroup", r"out-of-control flag for each subgroup"),
+    ("no foreground server", r"Never run a server.{0,80}foreground"),
+    ("background with a time limit", r"background with a time limit"),
+    ("never kill by name", r"Never kill processes by name"),
+    ("every third-party import in requirements", r"third-party package you import"),
+    ("absolute imports", r"absolute package imports"),
+    ("starts from the repo root", r"repo root with one\s+command"),
+]
+REVIEW_RULES = [
+    ("every statistic", r"every statistic"),
+    ("sigma-hat = R-bar/d2", r"R-bar/d2"),
+    ("overall SD is Pp/Ppk", r"Pp and Ppk"),
+    ("R chart limits", r"R chart limits"),
+    ("out-of-control flag", r"out-of-control flag"),
+    ("statistic/expected/got/verdict table", r"\|\s*statistic\s*\|\s*expected\s*\|\s*got\s*\|\s*verdict\s*\|"),
+    ("bare PASS forbidden", r"bare PASS with no table is forbidden"),
+]
+NUMBERS_RULE = [("known answer without numbers = FILL IN",
+                 r"no concrete numbers.{0,80}(counts as FILL IN|still counts as FILL IN)")]
+GUARDS = {
+    ".opencode/commands/build.md": BUILD_RULES + NUMBERS_RULE + [("STATISTICS in the report", r"^STATISTICS:")],
+    ".opencode/agents/implementer.md": BUILD_RULES + NUMBERS_RULE + [("STATISTICS in the report", r"STATISTICS:")],
+    ".opencode/commands/review.md": REVIEW_RULES,
+    ".opencode/agents/stats-reviewer.md": REVIEW_RULES,
+    ".opencode/commands/plan.md": NUMBERS_RULE,
+}
+
 
 failures = []  # list of (check name, message)
 
@@ -187,6 +225,63 @@ def check_frontmatter():
     return len(files)
 
 
+def check_kill_permissions(data=None):
+    """opencode.json must `ask` before any process kill or rm -rf (permissions: [{action, resource, effect}])."""
+    name = "kill-guards"
+    if data is None:
+        try:
+            data = json.loads(read_text(ROOT / "opencode.json"))
+        except (OSError, ValueError) as e:
+            fail(name, "opencode.json: expected valid JSON (%s)" % e)
+            return 0
+    rules = data.get("permissions")
+    if not isinstance(rules, list):
+        fail(name, "opencode.json: expected a `permissions` array of {action, resource, effect}, got %r"
+             % type(rules).__name__)
+        return 0
+    asks = set()
+    for r in rules:
+        if not isinstance(r, dict) or set(r) != {"action", "resource", "effect"}:
+            fail(name, "opencode.json: permission rule %r should have exactly action, resource, effect" % (r,))
+            continue
+        if r["action"] == "shell" and r["effect"] in ("ask", "deny"):
+            asks.add(r["resource"])
+    for pat in KILL_PATTERNS:
+        if pat not in asks:
+            fail(name, "opencode.json: expected a shell rule {resource: %r, effect: ask} in `permissions`" % pat)
+        else:
+            # The last matching rule wins: a later allow on the same resource would undo the ask.
+            last = [r for r in rules if isinstance(r, dict) and r.get("action") == "shell"
+                    and r.get("resource") == pat][-1]
+            if last.get("effect") == "allow":
+                fail(name, "opencode.json: the last rule for %r is allow, expected ask" % pat)
+    return len(KILL_PATTERNS)
+
+
+def check_guards(texts=None):
+    """The command and agent prompts keep the statistics, review and process-safety rules."""
+    name = "guards"
+    n = 0
+    for f, rules in GUARDS.items():
+        if texts is not None:
+            text = texts.get(f)
+        else:
+            try:
+                text = read_text(ROOT / f)
+            except OSError:
+                text = None
+        if text is None:
+            fail(name, "%s: file missing, expected it to hold %d rules" % (f, len(rules)))
+            continue
+        flat = re.sub(r"\s+", " ", text)
+        for label, rx in rules:
+            n += 1
+            src = text if rx.startswith("^") else flat
+            if not re.search(rx, src, re.I | re.M):
+                fail(name, "%s: lost the rule `%s` (expected text matching /%s/)" % (f, label, rx))
+    return n
+
+
 def section(text, heading):
     m = re.search(r"^## %s\s*$" % re.escape(heading), text, re.M)
     if not m:
@@ -296,13 +391,15 @@ def main():
         detail=lambda r: "%d files" % r)
     run("5 CLAUDE.md and AGENTS.md `Which command, when` identical", check_which_command)
     run("6 no key-shaped strings in tracked text files", check_secrets, detail=lambda r: "%d files scanned" % r)
+    run("7 bundle guards: kill rules ask, statistics/review/known-answer rules present",
+        lambda: (check_kill_permissions(), check_guards())[1], detail=lambda r: "%d rules" % (r + len(KILL_PATTERNS)))
     if live:
         st = check_live(model)
         if st == "skip":
-            print("SKIP  7 live: opencode models list the configured and pinned models")
+            print("SKIP  8 live: opencode models list the configured and pinned models")
         else:
-            results.append(("7 live", st == "pass"))
-            print("%s  7 live: opencode models list the configured and pinned models"
+            results.append(("8 live", st == "pass"))
+            print("%s  8 live: opencode models list the configured and pinned models"
                   % ("PASS" if st == "pass" else "FAIL"))
     bad = [l for l, ok in results if not ok]
     print("")

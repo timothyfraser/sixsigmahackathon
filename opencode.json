@@ -4,6 +4,11 @@
   "small_model": "google/gemini-3.5-flash-lite",
   "permissions": [
     { "action": "shell", "resource": "*git commit*", "effect": "ask" },
-    { "action": "shell", "resource": "*git push*", "effect": "ask" }
+    { "action": "shell", "resource": "*git push*", "effect": "ask" },
+    { "action": "shell", "resource": "*taskkill*", "effect": "ask" },
+    { "action": "shell", "resource": "*pkill*", "effect": "ask" },
+    { "action": "shell", "resource": "*Stop-Process*", "effect": "ask" },
+    { "action": "shell", "resource": "*killall*", "effect": "ask" },
+    { "action": "shell", "resource": "*rm -rf*", "effect": "ask" }
   ]
 }
