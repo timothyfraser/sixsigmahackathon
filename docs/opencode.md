@@ -162,6 +162,17 @@ One oddity: Google may count `gemini-3.5-flash` requests against the `gemini-3.6
 rate-limit page (the 429 names the model it billed). Use the error text, not the model you picked, to
 see which allowance ran out.
 
+### Quota in plain words
+
+- A **quota** is how many requests Google lets one key make in a day. It resets at midnight Pacific.
+- **Each model has its own daily quota.** Using up one model does not touch another.
+- **One full build can use a key's whole daily `gemini-3.1-flash-lite` quota (500 requests).** A SPEC,
+  a plan, test data, one statistic and part of an API was enough to run one key dry.
+- So **plan with one model and build with another**: `/plan` uses `gemini-3.5-flash`, `/build` uses
+  `gemini-3.1-flash-lite`. Do not spend your build model on chatting or planning.
+- Rehearsals count. A practice run the day before uses the same quota you need on the day.
+- If a model runs out for the day, see docs/model-ladder.md.
+
 ### Option: cycling or sharing keys
 
 **The default stays the same: your own key, from your own Google account.** If you want more
