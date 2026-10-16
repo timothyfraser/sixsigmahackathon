@@ -58,10 +58,10 @@ tasks:
   - id: H-03
     title: Core QC statistic as one plain, tested function
     points: "25 - Tool Implementation: valid analyses relevant to quality control in R or Python"
-    status: todo
-    owner: ""
-    started_at: ""
-    owns: ["app/qc.py", "app/qc.R", "app/requirements.txt", "tests/"]
+    status: in_progress
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 18:18"
+    owns: ["app/qc.R", "tests/"]
     notes: >
       Load the stats-first-steering skill before writing any statistics. Plain
       inputs (a data frame or vector), plain outputs (numbers), no framework.
@@ -69,7 +69,7 @@ tasks:
       pytest tests (Python) or Rscript -e "testthat::test_dir('tests')" (R)
       passes, including one test that reproduces the SPEC section 4
       known-answer check and one degenerate case (constant data or n = 1).
-    result: ""
+    result: "in progress: 149 tests pass and stats-reviewer OVERALL PASS; waiting for a teammate to read the diff and for H-01 team review"
 
   - id: H-04
     title: Working tool - one demo copied to app/ and wired to the H-03 function
