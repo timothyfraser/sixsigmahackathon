@@ -1,0 +1,172 @@
+{
+  "source": "https://gbfs.lyft.com/gbfs/2.3/bkn/en/station_information.json",
+  "retrieved_utc": "2026-10-16T22:35:20.251567+00:00",
+  "center": [
+    40.7178,
+    -74.0431
+  ],
+  "stations": [
+    {
+      "station_id": "66dd5960-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "City Hall",
+      "lat": 40.7177325,
+      "lon": -74.043845
+    },
+    {
+      "station_id": "22cd02a2-228f-4eeb-b249-cbea51a0e219",
+      "dockID": "York St & Marin Blvd",
+      "lat": 40.716615000830494,
+      "lon": -74.0424120426178
+    },
+    {
+      "station_id": "2290031f-e7d8-40a3-9ad6-566df493bbbc",
+      "dockID": "Grove St PATH",
+      "lat": 40.71941,
+      "lon": -74.04309
+    },
+    {
+      "station_id": "66dddc08-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Columbus Drive",
+      "lat": 40.71835519823214,
+      "lon": -74.03891444206238
+    },
+    {
+      "station_id": "66dddc98-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Marin Light Rail",
+      "lat": 40.71458403535893,
+      "lon": -74.04281705617905
+    },
+    {
+      "station_id": "66dd83fc-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Van Vorst Park",
+      "lat": 40.71848892,
+      "lon": -74.047726625
+    },
+    {
+      "station_id": "66dddae7-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Manila & 1st",
+      "lat": 40.721650724879986,
+      "lon": -74.04288411140442
+    },
+    {
+      "station_id": "66dd80ac-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Newark Ave",
+      "lat": 40.72152515,
+      "lon": -74.046304543
+    },
+    {
+      "station_id": "a59f4f11-5d52-43a2-8a32-ae71137a6af8",
+      "dockID": "Grand St",
+      "lat": 40.71517767732029,
+      "lon": -74.03768330812454
+    },
+    {
+      "station_id": "2218569564729174336",
+      "dockID": "Washington St & Morgan St",
+      "lat": 40.719445793042716,
+      "lon": -74.03689158686865
+    },
+    {
+      "station_id": "66dd5a42-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Warren St",
+      "lat": 40.7211236,
+      "lon": -74.03805095
+    },
+    {
+      "station_id": "e163ce54-4c39-43c5-9831-e10a2603527d",
+      "dockID": "JC Medical Center",
+      "lat": 40.71539114317,
+      "lon": -74.04969155788422
+    },
+    {
+      "station_id": "66ddda59-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Jersey & 3rd",
+      "lat": 40.72333158646436,
+      "lon": -74.04595255851744
+    },
+    {
+      "station_id": "6107e75a-2493-4e3d-a3e0-d4886d3416e5",
+      "dockID": "Montgomery St",
+      "lat": 40.71942,
+      "lon": -74.05099
+    },
+    {
+      "station_id": "66ddd78e-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Morris Canal",
+      "lat": 40.7124188237569,
+      "lon": -74.03852552175522
+    },
+    {
+      "station_id": "66ddde40-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Dixon Mills",
+      "lat": 40.721630142638354,
+      "lon": -74.04996782541275
+    },
+    {
+      "station_id": "3742e2ab-6cd0-40cf-846a-72cbe637afe1",
+      "dockID": "Exchange Pl",
+      "lat": 40.71636596185077,
+      "lon": -74.034343957901
+    },
+    {
+      "station_id": "66dd8479-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Essex Light Rail",
+      "lat": 40.7127742,
+      "lon": -74.0364857
+    },
+    {
+      "station_id": "66ddd93e-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Jersey & 6th St",
+      "lat": 40.72528910781132,
+      "lon": -74.04557168483734
+    },
+    {
+      "station_id": "66dd58f2-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Paulus Hook",
+      "lat": 40.7141454,
+      "lon": -74.0335519
+    },
+    {
+      "station_id": "66dd7fe2-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Brunswick St",
+      "lat": 40.7241765,
+      "lon": -74.0506564
+    },
+    {
+      "station_id": "f841ae52-0bbb-49db-b6eb-f898fbce6108",
+      "dockID": "Washington St",
+      "lat": 40.7242941,
+      "lon": -74.0354826
+    },
+    {
+      "station_id": "66ddddb4-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Monmouth & 6th",
+      "lat": 40.72568548362901,
+      "lon": -74.04879033565521
+    },
+    {
+      "station_id": "66dd7b37-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Hamilton Park",
+      "lat": 40.727595966,
+      "lon": -74.044247311
+    },
+    {
+      "station_id": "66ddd8a8-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Brunswick & 6th",
+      "lat": 40.72601172964625,
+      "lon": -74.05038893222809
+    },
+    {
+      "station_id": "66dd5f24-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Liberty Light Rail",
+      "lat": 40.7112423,
+      "lon": -74.0557013
+    },
+    {
+      "station_id": "66dd6721-0aca-11e7-82f6-3863bb44ef7c",
+      "dockID": "Newport PATH",
+      "lat": 40.7272235,
+      "lon": -74.0337589
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "source": "https://gbfs.bcycle.com/1/bcycle_bublr/station_information.json",
+  "retrieved_utc": "2026-10-16T22:35:20.456695+00:00",
+  "center": [
+    43.0389,
+    -87.9065
+  ],
+  "stations": [
+    {
+      "station_id": "bcycle_bublr_9036",
+      "dockID": "411 East Wisconsin ",
+      "lat": 43.03872,
+      "lon": -87.90534
+    },
+    {
+      "station_id": "bcycle_bublr_7764",
+      "dockID": "Water & Wisconsin",
+      "lat": 43.03871,
+      "lon": -87.90861
+    },
+    {
+      "station_id": "bcycle_bublr_8873",
+      "dockID": "Jefferson & Clybourn",
+      "lat": 43.03657,
+      "lon": -87.90511
+    },
+    {
+      "station_id": "bcycle_bublr_2780",
+      "dockID": "777 East Wisconsin",
+      "lat": 43.03886,
+      "lon": -87.90272
+    },
+    {
+      "station_id": "bcycle_bublr_3758",
+      "dockID": "Cathedral Square",
+      "lat": 43.0413,
+      "lon": -87.9042
+    },
+    {
+      "station_id": "bcycle_bublr_8832",
+      "dockID": "Veolia",
+      "lat": 43.03774,
+      "lon": -87.91104
+    },
+    {
+      "station_id": "bcycle_bublr_2779",
+      "dockID": "Broadway & St Paul",
+      "lat": 43.03519,
+      "lon": -87.90739
+    },
+    {
+      "station_id": "bcycle_bublr_8916",
+      "dockID": "MSOE Library",
+      "lat": 43.04269,
+      "lon": -87.9057
+    },
+    {
+      "station_id": "bcycle_bublr_2772",
+      "dockID": "Red Arrow Park",
+      "lat": 43.04249,
+      "lon": -87.90996
+    },
+    {
+      "station_id": "bcycle_bublr_8931",
+      "dockID": "Postman Square",
+      "lat": 43.04046,
+      "lon": -87.91287
+    },
+    {
+      "station_id": "bcycle_bublr_7236",
+      "dockID": "Mason & Prospect",
+      "lat": 43.04014,
+      "lon": -87.89963
+    },
+    {
+      "station_id": "bcycle_bublr_7759",
+      "dockID": "Couture",
+      "lat": 43.03726,
+      "lon": -87.8996
+    },
+    {
+      "station_id": "bcycle_bublr_8944",
+      "dockID": "State & Van Buren",
+      "lat": 43.04377,
+      "lon": -87.9031
+    },
+    {
+      "station_id": "bcycle_bublr_8864",
+      "dockID": "Kilbourn & Marshall",
+      "lat": 43.0427,
+      "lon": -87.90103
+    },
+    {
+      "station_id": "bcycle_bublr_8981",
+      "dockID": "Plankinton & St Paul",
+      "lat": 43.03444,
+      "lon": -87.91148
+    },
+    {
+      "station_id": "bcycle_bublr_8929",
+      "dockID": "MSOE Diercks Hall",
+      "lat": 43.0447,
+      "lon": -87.90729
+    },
+    {
+      "station_id": "bcycle_bublr_8925",
+      "dockID": "MLK & Wisconsin",
+      "lat": 43.03897,
+      "lon": -87.9146
+    },
+    {
+      "station_id": "bcycle_bublr_4634",
+      "dockID": "MLK & State",
+      "lat": 43.04287,
+      "lon": -87.91435
+    },
+    {
+      "station_id": "bcycle_bublr_3733",
+      "dockID": "War Memorial",
+      "lat": 43.04079,
+      "lon": -87.89731
+    },
+    {
+      "station_id": "bcycle_bublr_3727",
+      "dockID": "Zeidler Union Square Park",
+      "lat": 43.0373,
+      "lon": -87.9158
+    },
+    {
+      "station_id": "bcycle_bublr_9061",
+      "dockID": "Summerfest Midgate",
+      "lat": 43.03293,
+      "lon": -87.90143
+    },
+    {
+      "station_id": "bcycle_bublr_8999",
+      "dockID": "Vel R. Phillips & Wisconsin",
+      "lat": 43.03913,
+      "lon": -87.91615
+    },
+    {
+      "station_id": "bcycle_bublr_7254",
+      "dockID": "East Juneau Post Office",
+      "lat": 43.04583,
+      "lon": -87.9043
+    },
+    {
+      "station_id": "bcycle_bublr_2383",
+      "dockID": "Discovery World",
+      "lat": 43.0369,
+      "lon": -87.89667
+    },
+    {
+      "station_id": "bcycle_bublr_3330",
+      "dockID": "Erie & Menomonee",
+      "lat": 43.03148,
+      "lon": -87.90817
+    },
+    {
+      "station_id": "bcycle_bublr_8875",
+      "dockID": "Juneau & Water",
+      "lat": 43.04559,
+      "lon": -87.91159
+    },
+    {
+      "station_id": "bcycle_bublr_4635",
+      "dockID": "Vel R. Phillips & Kilbourn",
+      "lat": 43.0417,
+      "lon": -87.91627
+    }
+  ]
+}

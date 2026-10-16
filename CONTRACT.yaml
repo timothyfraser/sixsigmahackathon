@@ -45,15 +45,15 @@ tasks:
   - id: H-02
     title: Two or three test datasets plus a codebook
     points: "10 - Tool Documentation: 2-3 working test datasets (5), codebook and README for the data (5)"
-    status: todo
-    owner: ""
-    started_at: ""
-    owns: ["data/"]
+    status: in_progress
+    owner: "Codex + Lexi"
+    started_at: "2026-10-16"
+    owns: ["data/", "simulate_data.R"]
     definition_of_done: >
-      ls data/*.csv lists 2 or 3 files (e.g. in control, planted shift, edge
-      case), and data/README.md names every one of them and describes every
-      column with units and how the data would be collected for real.
-    result: ""
+      Rscript data/validate_simulation.R passes; ls data/*.csv.gz lists
+      exactly 3 movement datasets, and data/README.md describes every
+      column, mile distances, source metadata, and synthetic assumptions.
+    result: "READY FOR REVIEW: three 3499200-row movement datasets and three 729-pair mile grids; Rscript data/validate_simulation.R passes for all cities, including 8640 observations per bike; teammate review pending."
 
   - id: H-03
     title: Core QC statistic as one plain, tested function
