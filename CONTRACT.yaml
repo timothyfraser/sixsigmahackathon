@@ -28,9 +28,9 @@ tasks:
   - id: H-01
     title: Fill in every FILL IN line in SPEC.md
     points: "15 - Tool Design: scope matches a prompt (5), clear user and use case (5), minimal inputs (5)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: in_progress
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 17:06"
     owns: ["SPEC.md"]
     notes: >
       Do this together, out loud, right after kickoff. The prompts are in
@@ -154,4 +154,40 @@ tasks:
       git clone of the public repo into an empty folder, then the app/
       testme script and the H-03 tests both pass with no extra steps; git
       grep -i "api_key" finds no real key; the Devpost entry links the repo.
+    result: ""
+
+  - id: H-09
+    title: Split SPEC.md into template answers plus docs/methods.md
+    points: "supports H-01 (Tool Design 15) and H-07 (documentation 10): keeps SPEC.md in the event template form"
+    status: in_progress
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 17:37"
+    owns: ["SPEC.md", "docs/methods.md", "docs/plan.md"]
+    notes: >
+      Restore every non-FILL-IN line of the original SPEC.md, using the fixed
+      template commit 29fe8e4 as the reference (never a moving HEAD), with
+      section-by-section edits, never a whole-file revert or overwrite.
+      Project answers go only on the former FILL IN lines, one line each, and
+      may link docs/methods.md; template "Example:" text on those lines is
+      kept, except in the section 3 table placeholder row, which becomes a
+      one-row summary of the inputs. Move the detailed status-data rules, data
+      contract, simulation constraints, decisions D-1 to D-4 and known answers
+      KA-1 to KA-11 to docs/methods.md, verbatim where possible. docs/plan.md
+      stays under 60 lines, points to docs/methods.md, and renumbers its
+      proposed tasks to H-10 to H-18 (still proposals). Do not touch demos/,
+      other CONTRACT blocks, docs/criteria.md or any rule file. H-01 stays
+      in_progress and is checked in only after this task.
+    definition_of_done: >
+      (1) grep -c "FILL IN[.,]" SPEC.md prints 0.
+      (2) python -c "import re,subprocess;t=subprocess.run(['git','show','29fe8e4:SPEC.md'],capture_output=True,text=True,encoding='utf-8').stdout.splitlines();n=open('SPEC.md',encoding='utf-8').read().splitlines();p=[bool(re.search(r'FILL IN[.,]',l)) for l in t];f=[i for i in range(len(t)) if not p[i]];a=[i for i in range(len(t)) if p[i]];e=[i for i in a if 'Example:' in t[i]];print('lines template',len(t),'now',len(n));print('fixed lines identical at the same position:',sum(i<len(n) and n[i]==t[i] for i in f),'of',len(f));print('placeholder lines answered:',sum(i<len(n) and n[i].strip()!='' and not re.search(r'FILL IN[.,]',n[i]) for i in a),'of',len(a));print('template examples kept:',sum(i<len(n) and t[i][t[i].index('Example:'):] in n[i] for i in e),'of',len(e))"
+      prints lines template 74 now 74, fixed lines identical 57 of 57,
+      placeholder lines answered 17 of 17, and template examples kept 9 of 10
+      (the one exception is the section 3 table placeholder row).
+      (3) grep -o "KA-[0-9]*[a-d]*" docs/methods.md | sort -u lists KA-1,
+      KA-1b, KA-2, KA-2b, KA-2c, KA-3, KA-4, KA-4b, KA-5, KA-6, KA-7, KA-8,
+      KA-8b, KA-8c, KA-8d, KA-9, KA-10, KA-11; and D-1, D-2, D-3 and D-4 each
+      appear in docs/methods.md.
+      (4) wc -l docs/plan.md prints a number below 60.
+      (5) a teammate reads git diff and docs/methods.md and confirms no design
+      content was lost.
     result: ""
