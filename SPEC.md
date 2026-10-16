@@ -9,14 +9,14 @@ Most of this page is already decided by the event and the [rubric](docs/criteria
 The examples after each `FILL IN` show the shape of an answer. They are not hints about the prompts.
 
 ## 1. Team and prompt
-- **Team name:** FILL IN. Example: "Control Freaks"
-- **Track:** FILL IN, on-campus (24 hours) or Virtual DL Challenge (7 days). See [`docs/schedule.md`](docs/schedule.md).
-- **Prompt we chose:** FILL IN, the prompt number and title, copied from the [Devpost](https://six-sigma-hackathon.devpost.com/) challenge page at kickoff.
-- **Our public repo:** FILL IN. Example: "github.com/our-team/our-tool"
+- **Team name:** Big Red Crew
+- **Track:** On campus (24 hours). See [`docs/schedule.md`](docs/schedule.md).
+- **Prompt we chose:** Urban Systems, the prompt number and title, copied from the [Devpost](https://six-sigma-hackathon.devpost.com/) challenge page at kickoff.
+- **Our public repo:** "https://github.com/collinshiang/sixsigmahackathonBRC"
 
 ## 2. User and use case (rubric: scope 5, user and use case 5)
-- **User:** FILL IN, one named kind of person, not "everyone". Example: "the supervisor who checks part diameters at the end of each shift"
-- **Decision the tool helps them make, and when:** FILL IN. Example: "whether to stop the line and recalibrate before the next shift starts"
+- **User:** The bike rider (commuter, tourist).
+- **Decision the tool helps them make, and when:** Where to pick up a bike from and where to drop their bike off (optimal location).
 - **Why this matches the prompt:** FILL IN, one sentence.
 
 ## 3. Inputs (rubric: minimal inputs 5)
