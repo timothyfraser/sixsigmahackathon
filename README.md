@@ -9,6 +9,11 @@ Your team picks a prompt, invents the data, and ships a working quality-control
 tool. **👉 [Register on Devpost](https://six-sigma-hackathon.devpost.com/)**
 (required, even if you don't have a team yet).
 
+> ### 📘 New here? Read the [step-by-step start tutorial](docs/start.md) first
+> Ten minutes, for the whole team: set up your agent, **plan with `/superagent` on your
+> strongest model**, then **switch to a cheaper model** that builds and checks each task with
+> helper agents. **[→ docs/start.md](docs/start.md)**
+
 ---
 
 ### 📍 When & where
@@ -28,6 +33,9 @@ link plus a demo. Full run of show: [🗓️ Schedule](docs/schedule.md).
 
 ### 🚀 Start here in 3 steps
 
+The short version is below. The full walkthrough, with the plan-then-switch routine and a sample
+first hour, is the **[start tutorial](docs/start.md)**.
+
 **1. Get an agent.** Any one of these works: Claude Code, OpenCode, Cursor,
 Codex, GitHub Copilot, or the Gemini / Antigravity CLI. **No paid AI plan?**
 [OpenCode with a free Google AI Studio key](docs/opencode.md) costs $0. How to
@@ -41,6 +49,10 @@ have, which statistic answers their question, and what they see. For example:
 /superagent A line supervisor uploads bolt-torque readings and sees whether the
 process is in control and whether it is capable.
 ```
+
+Plan on your strongest model (Claude Code: `/model opus`), then switch to a cheaper one
+(`/model sonnet`) and type `/superagent keep going` to build. Why, and how in every agent:
+[the start tutorial](docs/start.md).
 
 That is the whole job. The agent writes your [`SPEC.md`](SPEC.md), asks your
 design decisions as multiple-choice questions, plans, builds one task at a time

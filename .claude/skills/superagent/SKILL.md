@@ -92,6 +92,7 @@ Load a resource only when you reach its row. Read long files by section, never w
 | animate something | motion.dev's `/motion` skill, when installed |
 | write an R package, a Shiny app or a Quarto doc | posit-dev skills, when installed |
 | run one step by hand, the fixed way | the step prompts: `/spec /plan /decide /build /review /checkin /stuck` in OpenCode (`.opencode/commands/`); the same text for any agent in `docs/prompts-starter.md` |
+| explain the working routine to the team (set up, plan on a strong model, switch down to build) | `docs/start.md` |
 | check what earns points | `docs/criteria.md` (the 100-point rubric) |
 | find the event prompts | `docs/prompts.md`: they appear on Devpost at kickoff. Never invent one |
 | explain a method the course way | the course textbook, https://timothyfraser.com/sigma/ |
