@@ -9,7 +9,7 @@ Because they all edit `app/qc.R` and `app/app.R`, they run **one at a time**.
 | Id | Work | Owns | Needs | Acceptance (known answer + degenerate) | Est |
 |---|---|---|---|---|---|
 | H-02 | Seeded generator, 3 scenario CSVs, codebook | `data/` | methods section 7 schema | CONTRACT DoD as written; re-running `data/generate_data.R` reproduces the files byte for byte; `planted_shift` starts on weekday 11 | 1.5 h |
-| H-03 | Loader and schema validator, 4.1 grid, unusable minutes and coverage, p charts, I-MR, greedy plan, paired CI | `app/qc.R`, `tests/` | H-01 | KA-1, KA-1b(a-d), KA-2, KA-2b, KA-2c, KA-3 (+ constant data gives NA), KA-4, KA-5, KA-11; schema errors stop with a clear message | 2.5 h |
+| H-03 | Loader and schema validator, 4.1 grid, unusable minutes and coverage, p charts, I-MR, greedy plan, paired CI | `app/qc.R`, `tests/` | H-01 | KA-1, KA-1b(a-d), KA-2, KA-2b, KA-2c, KA-3 (+ constant data: limits NA, data shown), KA-4, KA-5, KA-5b, KA-11; structural errors stop; row-level problems are rejected or flagged and listed (methods section 7), never stopping the load | 2.5 h |
 | H-04 | Copy `demos/shinyapp` to `app/`; Overview, Stations, Quality (p, I-MR) and Rebalancing tabs; four R scripts | `app/` except `qc.R` | H-02, H-03 | CONTRACT DoD; Playwright shows the H-03 numbers for `data/baseline.csv` | 2 h |
 | H-06 | Deploy: `deploy-shiny-r.yml`, `manifest.json` | CONTRACT list | H-04 | CONTRACT DoD; **prepared only**, deploy only after the team says yes | 1 h |
 | H-10 | Simulation engine: van, task and event model, reservations, policies none and reactive, paired seeds; Improvement tab | `app/sim.R`, `tests/test-sim.R`, `app/app.R` | H-03, H-04 | KA-4b; conservation holds at every event; same seed gives identical output; primary CI already uses 98.333% (the alpha = 0.05/3 family) | 2.5 h |
@@ -20,7 +20,7 @@ Because they all edit `app/qc.R` and `app/app.R`, they run **one at a time**.
 | Id | Work | Acceptance | Est |
 |---|---|---|---|
 | H-11 | c chart, X-bar/R response time, Cpu (only with a USL entered and the process in control) | KA-6, KA-7; R-bar = 0, a missing USL or an out-of-control chart gives NA with a reason; dispersion warning above 1.5 | 1.5 h |
-| H-12 | Historical Kaplan-Meier, RMST, F(10/20/30) ("History" panel) | KA-8; no usable 07:00 starts stops with an error; censoring at unknown gaps tested | 1 h |
+| H-12 | Historical Kaplan-Meier, RMST, F(10/20/30) ("History" panel) | KA-8; no usable 07:00 starts gives NA with a reason; censoring at unknown gaps tested | 1 h |
 | H-13 | Forecast step 5a, fixed Poisson rates ("Now" panel) | KA-8b (within 4 simulation SE), KA-8c no look-ahead; stale inventory gives NA | 1.5 h |
 | H-14 | Forecast step 5b, day bootstrap | KA-8d; output keeps the simulation SE and the parameter range as separate fields | 1 h |
 | H-15 | Predictive policy; 3-policy comparison | identical demand streams across the 3 policies for each seed; KA-5 (primary at 98.333%, secondary labelled unadjusted 95%) | 1.5 h |
