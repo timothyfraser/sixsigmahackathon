@@ -49,11 +49,13 @@ Do these in order, without being asked. `$ARGUMENTS` (or whatever the user typed
    AND degenerate test, and every statistic's formula written out. Statistics first, then the tool,
    then the page. Add a Decisions section with the answers from step 5.
 7. **Roll, one CONTRACT task at a time.** For each task:
-   - **Build:** hand it to the `implementer` subagent (Claude Code: `.claude/agents/implementer.md`;
+   - **Build:** hand it to the `implementer` subagent BY NAME, never a generic one (Claude Code:
+     the Agent/Task tool with `subagent_type: "implementer"`, defined in `.claude/agents/implementer.md`;
      OpenCode: `.opencode/agents/implementer.md`) with the charter in section 7. With no subagents,
      follow `.opencode/commands/build.md` yourself.
    - **Review:** any task that computes a statistic goes to the `stats-reviewer` subagent, in a
-     fresh context (Claude Code: `.claude/agents/stats-reviewer.md`). With no subagents, the team
+     fresh context (Claude Code: `subagent_type: "stats-reviewer"`, defined in
+     `.claude/agents/stats-reviewer.md`). With no subagents, the team
      runs `.opencode/commands/review.md` in a NEW session. No PASS table, no check-in.
    - **Check in:** follow `.opencode/commands/checkin.md`. Run the `definition_of_done` exactly as
      written and paste its output.
