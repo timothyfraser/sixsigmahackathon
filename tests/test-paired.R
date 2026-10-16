@@ -1,0 +1,30 @@
+test_that("KA-5: mean 10, sd 1.581, se 0.707; Bonferroni (3) and unadjusted intervals", {
+  d <- c(10, 12, 8, 11, 9)
+  b <- paired_diff_ci(d, conf = 0.95, family_size = 3)
+  expect_near(b$mean, 10)
+  expect_near(b$sd, 1.581139)
+  expect_near(b$se, 0.707107)
+  expect_near(b$t, 3.960786)
+  expect_near(b$lower, 7.199)
+  expect_near(b$upper, 12.801)
+  expect_near(b$conf_level, 0.98333)
+  u <- paired_diff_ci(d, conf = 0.95, family_size = 1)
+  expect_near(u$t, 2.776445)
+  expect_near(u$lower, 8.037)
+  expect_near(u$upper, 11.963)
+})
+
+test_that("KA-5b: a single seed keeps the mean, interval NA with a note", {
+  r <- paired_diff_ci(10)
+  expect_equal(r$mean, 10)
+  expect_equal(r$n, 1)
+  expect_true(all(is.na(c(r$sd, r$se, r$t, r$lower, r$upper))))
+  expect_match(r$note, "n < 2: no interval can be estimated", fixed = TRUE)
+})
+
+test_that("missing differences are excluded and counted", {
+  r <- paired_diff_ci(c(10, NA, 12))
+  expect_equal(r$n, 2)
+  expect_equal(r$n_missing, 1)
+  expect_near(r$mean, 11)
+})

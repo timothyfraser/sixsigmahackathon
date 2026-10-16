@@ -28,7 +28,7 @@ tasks:
   - id: H-01
     title: Fill in every FILL IN line in SPEC.md
     points: "15 - Tool Design: scope matches a prompt (5), clear user and use case (5), minimal inputs (5)"
-    status: in_progress
+    status: blocked
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 17:06"
     owns: ["SPEC.md"]
@@ -40,7 +40,7 @@ tasks:
       grep -c "FILL IN[.,]" SPEC.md prints 0 (it counts only the blanks,
       not the instructions at the top), and every teammate can say the
       method sentence in SPEC section 4 without reading it.
-    result: ""
+    result: "blocked: grep check prints 0; waiting for every teammate to confirm they can say the method sentence"
 
   - id: H-02
     title: Two or three test datasets plus a codebook
@@ -58,10 +58,10 @@ tasks:
   - id: H-03
     title: Core QC statistic as one plain, tested function
     points: "25 - Tool Implementation: valid analyses relevant to quality control in R or Python"
-    status: todo
-    owner: ""
-    started_at: ""
-    owns: ["app/qc.py", "app/qc.R", "app/requirements.txt", "tests/"]
+    status: in_progress
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 18:18"
+    owns: ["app/qc.R", "tests/"]
     notes: >
       Load the stats-first-steering skill before writing any statistics. Plain
       inputs (a data frame or vector), plain outputs (numbers), no framework.
@@ -69,7 +69,7 @@ tasks:
       pytest tests (Python) or Rscript -e "testthat::test_dir('tests')" (R)
       passes, including one test that reproduces the SPEC section 4
       known-answer check and one degenerate case (constant data or n = 1).
-    result: ""
+    result: "in progress: 149 tests pass and stats-reviewer OVERALL PASS; waiting for a teammate to read the diff and for H-01 team review"
 
   - id: H-04
     title: Working tool - one demo copied to app/ and wired to the H-03 function
@@ -159,7 +159,7 @@ tasks:
   - id: H-09
     title: Split SPEC.md into template answers plus docs/methods.md
     points: "supports H-01 (Tool Design 15) and H-07 (documentation 10): keeps SPEC.md in the event template form"
-    status: in_progress
+    status: blocked
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 17:37"
     owns: ["SPEC.md", "docs/methods.md", "docs/plan.md"]
@@ -190,4 +190,4 @@ tasks:
       (4) wc -l docs/plan.md prints a number below 60.
       (5) a teammate reads git diff and docs/methods.md and confirms no design
       content was lost.
-    result: ""
+    result: "blocked: checks (1)-(4) pass; waiting for a teammate to confirm no design content was lost (check 5)"
