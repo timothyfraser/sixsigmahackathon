@@ -159,7 +159,7 @@ tasks:
   - id: H-09
     title: Split SPEC.md into template answers plus docs/methods.md
     points: "supports H-01 (Tool Design 15) and H-07 (documentation 10): keeps SPEC.md in the event template form"
-    status: in_progress
+    status: blocked
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 17:37"
     owns: ["SPEC.md", "docs/methods.md", "docs/plan.md"]
@@ -190,4 +190,4 @@ tasks:
       (4) wc -l docs/plan.md prints a number below 60.
       (5) a teammate reads git diff and docs/methods.md and confirms no design
       content was lost.
-    result: ""
+    result: "blocked: checks (1)-(4) pass; waiting for a teammate to confirm no design content was lost (check 5)"
