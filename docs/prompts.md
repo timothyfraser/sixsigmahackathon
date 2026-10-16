@@ -23,10 +23,11 @@ app you build is the delivery vehicle for the analysis, not the point.
 
 ### ⚙️ Requirements
 
-1. 🚀 **What you ship** — a publicly available tool, formatted as **one** of:
-   - an R package or Python library
-   - a public REST API (FastAPI in Python, or plumber in R)
-   - a dashboard or web app (React front end, or Shiny)
+1. 🚀 **What you ship** — a publicly available tool, formatted as:
+   - a dashboard or web app (React Vite front end)
+   - a statistical tool, formatted as either:
+      - an R package or Python library, AND/OR
+      - a public REST API (FastAPI in Python, or plumber in R)
 2. 📈 **2-3 test datasets** demonstrating the tool. They need not be real data,
    but they should look like what the data would look like in the field.
 3. 📑 **A codebook and README** for your datasets — what each file and variable
