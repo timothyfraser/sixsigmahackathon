@@ -17,4 +17,5 @@ Test Location 2: Milwaukee (Bublr)
 Test Location 3: Completely simulated including simulated docks (maybe Atlantis)
 In terms of the simulated data, consider workday vs. weekday for calculation purposes.
 The simulated data is not tracking bike location, if a bike is not at a docking station just list its dock ID as 0. It is assumed to be at some random nearby location and out of the scope of this work.
+Assume 15 bikes per dock
 
