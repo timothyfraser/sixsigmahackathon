@@ -38,6 +38,8 @@ Thank you very much for your time and consideration. I hope to see you there!
 
 ## Day-of agent smoke check
 
+Students type /superagent and describe their app; if an agent can't, they paste the starter from [`prompts-starter.md`](prompts-starter.md).
+
 Friday morning, before teams arrive, on a mentor laptop with a free Gemini key connected in OpenCode (`/connect`):
 
 1. `python tools/check_agent_bundle.py` (no key needed). It should end with `SUMMARY: PASS`.

@@ -1,5 +1,19 @@
 # Starter prompts for any AI agent
 
+## Start here: one prompt for any agent (OpenCode: `/superagent <your app>`; Claude Code: `/superagent <your app>`)
+
+Type `/superagent` and a few sentences about your app. If your agent has no slash commands, paste this
+and replace `$ARGUMENTS` with your description.
+
+<!-- prompt: superagent -->
+```text
+Read .claude/skills/superagent/SKILL.md completely, then follow it, starting at its section 0. Load any other skill or template only when that file's routing table tells you to.
+
+Our app, in our own words (may be blank): $ARGUMENTS
+```
+
+The seven prompts below are the manual steps the superagent itself follows. Use them to drive each step by hand.
+
 Seven prompts that take a team from a description of their app to a checked-in, tested task:
 **spec** (the agent writes `SPEC.md` from your description), **plan, decide, build, review, check in**, and **stuck** for when something goes wrong. They work
 pasted into any coding agent: OpenCode, Claude Code, Codex, GitHub Copilot agent mode, and the
