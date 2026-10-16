@@ -9,7 +9,10 @@ A step-by-step tutorial for your whole team. Read it together before you build a
 [6. When it goes wrong](#6-when-it-goes-wrong) · [Which model, in which agent](#which-model-in-which-agent) ·
 [A sample first hour](#a-sample-first-hour)
 
-## The idea
+
+### 🚀 Start here in 3 steps
+
+## Idea: Use Effective Vibecoding so You can focus on **Engineering**
 
 You are the engineer. The agent types. You decide what is correct, and a test proves it.
 
@@ -38,6 +41,8 @@ The routine has two halves, because good models are expensive:
    [setup.md](../.claude/skills/superagent/setup.md). One step you type yourself in a terminal:
    `npx motion-ai` (only if your app will animate anything).
 
+---
+
 ## 2. Plan on your strongest model (20-30 minutes)
 
 **Switch to the strongest model first.** In Claude Code type `/model opus`. Other agents: see
@@ -51,6 +56,7 @@ they have, which statistic answers their question, and what they see:
 We use an X-bar and R chart with subgroups of 5, plus Cp and Cpk against a spec of 25 +/- 1.5 N-m.
 They see "in control: yes/no", which subgroups are out of control, Cp, Cpk and a chart.
 A Python FastAPI app with one simple page.
+<ADD MUCH MORE SPECIFICATIONS FOR BETTER RESULTS, eg. MULTIPLE PAGES>
 ```
 
 The agent then does four things. **Stop and read each one as a team:**
@@ -93,15 +99,35 @@ Now the agent **orchestrates**. It does not write all the code itself. For each 
 `google/gemini-3.5-flash`, build on `google/gemini-3.1-flash-lite`. If a step stalls, use the
 by-hand commands in [opencode.md](opencode.md).
 
+#### Templates the agent uses
+
+The agent picks your starting template. You can look too: each is a folder to
+copy into your own repo. Want to build something more specific? Find examples, templates, etc. and supply them!
+
+| You want to build… | Starter |
+|---|---|
+| a Python API | [`demos/fastapi/`](demos/fastapi/) |
+| an R API | [`demos/plumber/`](demos/plumber/) |
+| a web front end | [`demos/reactfront/`](demos/reactfront/) |
+| a dashboard | [`demos/shinyapp/`](demos/shinyapp/) |
+| a reusable library | [`demos/pypackage/`](demos/pypackage/) or [`demos/rpackage/`](demos/rpackage/) |
+
+Blank SPEC and CONTRACT copies live in
+[`.claude/templates/`](.claude/templates/README.md).
+
+---
+
 ## 4. Between tasks
 
-- **Start fresh after each task.** Claude Code: `/clear`. OpenCode and Codex: `/new`. The files hold
+- **'Compact' the Agent's Transcript or Start fresh for New Tasks.** Claude Code: `/clear`. OpenCode and Codex: `/new`. The files hold
   the memory (`SPEC.md`, `CONTRACT.yaml`, `docs/plan.md`), not the chat. A long chat makes any
   model slower and sloppier.
 - **Lost? Ask it:** `/superagent where are we`. Or run the check yourself:
   `bash .claude/skills/superagent/scripts/check.sh`
-- **Switch back to the strong model** only for a hard design question or a bug the cheaper model
+- **Switch back to the strong model** only for a hard design plan or a bug the cheaper model
   failed twice. Then switch down again.
+
+---
 
 ## 5. Deploy early
 
@@ -118,6 +144,9 @@ publisher key (handed out at the event) into your GitHub repo's secrets, never i
 | It wants to edit files outside the task | Say no and ask why. Each task lists the files it may touch. |
 | A number you cannot explain | Do not move on. Ask: "Show me this calculation by hand on our known-answer data." |
 | It says "done" with no test output | It is not done. Ask it to run the task's definition of done and paste the output. |
+
+---
+
 
 ## Which model, in which agent
 
