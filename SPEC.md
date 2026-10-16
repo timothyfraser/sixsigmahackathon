@@ -11,7 +11,7 @@ The examples after each `FILL IN` show the shape of an answer. They are not hint
 ## 1. Team and prompt
 - **Team name:** Big Red Crew
 - **Track:** on-campus (24 hours). Submissions due Sat Oct 17, 1 PM ET. See [`docs/schedule.md`](docs/schedule.md).
-- **Prompt we chose:** FILL IN, the prompt number and exact title from Devpost. Working name: Urban Systems, bike share fleet management.
+- **Prompt we chose:** Urban Systems, bike share fleet management
 - **Our public repo:** github.com/collinshiang/sixsigmahackathonBRC (one shared fork for all five teammates)
 
 ## 2. User and use case (rubric: scope 5, user and use case 5)
