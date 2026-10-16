@@ -11,6 +11,7 @@ This folder contains explainers and tutorials for the Six Sigma Hackathon.
 | [`criteria.md`](criteria.md) | the scoring rubric (0-100) |
 | [`prompts.md`](prompts.md) | prompts — revealed at the start of the event |
 | [`superagent` skill](../.claude/skills/superagent/SKILL.md) | `/superagent`: the one skill that routes to every other skill and template |
+| [`start.md`](start.md) | **start here:** the step-by-step tutorial: set up, plan with `/superagent` on your strongest model, switch to a cheaper model to build |
 | [`superagent` setup](../.claude/skills/superagent/setup.md) | installs Playwright, Context7, impeccable, motion.dev and the Posit skills |
 | [`prompts-starter.md`](prompts-starter.md) | the one starter prompt for any agent, plus seven manual step prompts: spec, plan, decide, build, review, check in, stuck |
 | [`resources.md`](resources.md) | tutorials, textbook links, template pointers |

@@ -23,7 +23,7 @@ first task in about an hour. Copilot (free for verified students) or Codex on th
 also cost nothing extra. The tips below matter more than which agent you pick.
 
 **Have a Pro plan?** Plan on the strongest model, then build with a cheaper one. In Claude Code: `/model opus`
-to plan, then `/model sonnet` to build with subagents.
+to plan, then `/model sonnet` to build with subagents. Step by step, for every agent: [start.md](start.md).
 
 ## Steering an agent toward correct statistics on a budget
 
