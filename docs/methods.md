@@ -31,7 +31,7 @@ GBFS `station_information` / `station_status`, but real GBFS data needs an adapt
 | Status: `timestamp`, `station_id`, `bikes_available`, `docks_available`, `is_renting`, `is_returning` | ISO 8601 timestamp with UTC offset, about one snapshot per station per minute; bikes and docks are counts (integer >= 0, `bikes + docks <= capacity`); flags are TRUE/FALSE | the system's status feed (GBFS `station_status`), polled every minute |
 | Attempts: `attempt_id`, `timestamp`, `station_id`, `attempt_type`, `success`, `failure_reason` | one row per rent or return attempt; `attempt_type` in {rent, return}; `success` TRUE/FALSE; `failure_reason` is a code from the codebook, empty when `success` is TRUE | kiosk and app transaction logs. Failures are never inferred from inventory changes |
 | Tasks: `task_id`, `van_id`, `source_station_id`, `destination_station_id`, `planned_quantity`, `actual_quantity`, `assigned_at`, `arrived_at`, `completed_at`, `status` | quantities in bikes (integer >= 0); times as ISO 8601 with offset; all durations converted to minutes; `status` in {planned, assigned, in_progress, completed, cancelled} | the dispatch system's van task log |
-| Parameters (all have defaults and can be changed in the app) | rush window 07:00-10:00 America/New_York, weekdays; early-warning threshold 2 bikes / 2 docks; target fill 50% of capacity (demo heuristic, see 4.3); van capacity in bikes; `stale_limit` 2 min (demo assumption, see 4.1); minimum coverage for SPC 95% (demo assumption, see 4.1); optional response-time USL in minutes (no default) | the operator's own policy |
+| Parameters (all have defaults and can be changed in the app) | rush window 07:00-10:00 America/New_York, weekdays; early-warning threshold 2 bikes / 2 docks; target fill 50% of capacity (demo heuristic, see 4.3); van capacity 12 bikes (demo assumption); detour factor 1.3 (demo assumption); `stale_limit` 2 min (demo assumption, see 4.1); minimum coverage for SPC 95% (demo assumption, see 4.1); optional response-time USL in minutes (no default) | the operator's own policy |
 
 All timestamps are converted to America/New_York for display and for the rush-hour window.
 
@@ -134,8 +134,11 @@ These rules turn status snapshots into a station-minute grid.
   - **Forecast.** Poisson arrivals with rates that are constant within each 15-minute bin, stations independent; checked by comparing the observed variance/mean of attempts per bin. The three uncertainty sources are reported separately (item 5).
   - **Fault tree.** It stays qualitative unless probability data exist.
 - **Degenerate and small-sample rules:**
-  - **Valid zeros stay zeros.** With zero failures the tool still shows the failure count, the sample size `n` and the observed proportion 0.
-  - **Limits or indices that cannot be estimated reliably** return `NA` with a plain explanation. Examples: `p-bar = 0`; `MR-bar = 0` (constant data); `R-bar = 0`; `n < 2`; fewer than 2 baseline subgroups. The tool never returns `Inf` or a made-up number.
+  - **Only what cannot be estimated becomes `NA`.** That means control limits, standard deviations, standard errors, confidence intervals and capability indices, each with a plain reason. Examples: `p-bar = 0` or `p-bar = 1`; `MR-bar = 0` (constant data); `R-bar = 0`; `n < 2`; fewer than 2 baseline subgroups. The tool never returns `Inf` or a made-up number.
+  - **Valid observed values are always kept and shown.** This covers raw observations, counts, proportions, means, center lines and differences.
+    - With zero failures the tool shows the failure count and `n`, for example 0/300, and the proportion 0.
+    - With constant data it shows the observations and the center line.
+    - With n = 1 it shows the observed value or difference; only the spread, the standard error and the interval are `NA`.
   - **No observed failures does not mean no future risk.** The text says so explicitly: "no failures were observed in these n attempts; this does not show the risk is zero".
   - **Missing values** are excluded and counted. They are never treated as 0.
 - **Known-answer check:** each check below is hand-worked, and the R function must reproduce it to 3 decimals. **Unless a check says otherwise, it passes all of its subgroups as the baseline.** These are formula tests: they prove the arithmetic and the edge-case rules, and they do **not** show that any real or simulated process is stable.
@@ -167,7 +170,7 @@ These rules turn status snapshots into a station-minute grid.
     - X-bar = 32 and the moving ranges are 4, 6, 8, 4, so MR-bar = 5.5.
     - sigma-hat = 5.5/1.128 = 4.875887.
     - UCL = 46.628, LCL = 17.372, MR UCL = 3.267 x 5.5 = 17.969.
-    - No signal. With constant data 30, 30, 30, 30, 30, MR-bar = 0, so the limits are `NA` with the message "zero variation".
+    - No signal. With constant data 30, 30, 30, 30, 30, MR-bar = 0, so the limits are `NA` with the message "zero variation"; the observations, the center line 30 and the moving ranges (all 0) are still shown.
   - **KA-4, rebalancing:** station A (capacity 20, 18 bikes) and station B (capacity 20, 1 bike, 19 free docks), with target fill 0.5 (so target 10), an empty van and van capacity 12.
     - Surplus 8, deficit 9.
     - Plan: move min(8, 9, 19, 12) = 8 bikes from A to B.
@@ -180,6 +183,9 @@ These rules turn status snapshots into a station-minute grid.
     - Mean = 10, s = 1.581139, SE = 0.707107.
     - The primary family has 3 comparisons, so alpha = 0.05/3 per comparison: t(1 - 0.05/6, 4) = 3.960786, and the 98.333% CI = [7.199, 12.801].
     - As an unadjusted secondary-style interval: t(0.975, 4) = 2.776445, giving a 95% CI of [8.037, 11.963].
+  - **KA-5b, a single seed:** d = 10 (n = 1).
+    - The mean difference 10 is shown.
+    - s, SE and both intervals are `NA` with the message "n < 2: no interval can be estimated".
   - **KA-11, coverage and inclusion:** on a fixed set of 25 stations x 180 min = 4500 station-minutes per window.
     - Window X: 4500 known, coverage 100%, 450 unusable, share 10.0%. Included.
     - Window Y: 4200 known and 300 unknown, coverage 93.3%, 441 unusable, share 10.5%. Excluded from I-MR and c, listed and greyed out.
@@ -218,6 +224,10 @@ These rules turn status snapshots into a station-minute grid.
   - Surplus stations hold more bikes than their target.
   - Deficit stations hold fewer bikes than their target.
 - **Pairing.** Each deficit station, worst first by ranking, is paired with the nearest surplus station by haversine distance x a detour factor.
+  - The detour factor defaults to 1.3. It is adjustable and is a **demo assumption**.
+  - The result is labelled "estimated travel distance", not an actual road route.
+  - **Ties** are broken by `station_id` in ascending order: ties in ranking pick the deficit station, ties in distance pick the surplus station. This makes the plan deterministic.
+- **Van capacity** defaults to 12 bikes. It is adjustable and is a **demo assumption**.
 - **Quantity.** `quantity = min(source surplus, destination deficit, destination free docks, van free capacity)`.
 - **Reservations.** Bikes and docks planned for one task are reserved so that a second task cannot plan them again. Each van holds only one active task at a time.
 
@@ -296,6 +306,30 @@ Cause mapping for the fault tree and the recommendations:
 - `no_bike` and `no_dock` point to **rebalancing**.
 - `bike_fault`, `dock_fault` and `station_closed` point to **maintenance**.
 - `app_error` points to a **data check**.
+
+**Validation levels** (the same rules apply in the loader and in the 4.1 grid, so `edge_case` can be shown, not just rejected):
+- **Structural errors stop loading** with a clear message, because the file cannot be read safely:
+  - the file is missing or unreadable;
+  - there is no `table` column, or a required column is missing for a record type that is present;
+  - a `table` value is outside the four record types;
+  - there are no `stations` rows;
+  - a `station_id` is duplicated in `stations` (capacity would be ambiguous).
+- **Row-level data problems never stop loading.** The row is either **rejected** (left out of every calculation) or **flagged** (kept, with a mark), and listed in a data-issues table (record type, row, id, rule, action) that the app shows. Examples:
+  - **Rejected:**
+    - an unparseable timestamp;
+    - a negative or missing count;
+    - `bikes + docks > capacity`;
+    - an unknown `station_id`;
+    - status rows that conflict (4.1);
+    - repeated `attempt_id` or `task_id` with different values;
+    - `success` inconsistent with `failure_reason`;
+    - task times out of order.
+  - **Flagged:**
+    - identical repeated rows, which are kept once;
+    - unknown or stale minutes, which come from the grid.
+- **Counts that stay visible.** Every rejected or flagged row is counted in the data-issues figures and is never silently dropped.
+  - Status coverage is computed only from the station-minute grid in 4.1, as known minutes over known plus unknown minutes.
+  - Problem rows from attempts or tasks are reported as data issues. They are never added to coverage.
 
 ## 9. Out of scope
 - No live GBFS feed connection in this phase: only a loader that reads GBFS-shaped CSVs. No mobile app. No vehicle-routing optimiser: the moves are greedy and use straight-line distance times a detour factor. No machine-learning demand forecast. No real dispatch integration: tasks are simulated. Tier 2 and tier 3 are in scope but are not started until tier 1 runs end to end and has passed review.
