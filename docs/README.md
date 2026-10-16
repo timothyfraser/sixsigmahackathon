@@ -10,7 +10,9 @@ This folder contains explainers and tutorials for the Six Sigma Hackathon.
 | [`schedule.md`](schedule.md) | run of show — on-campus 24-hour and 7-day DL tracks |
 | [`criteria.md`](criteria.md) | the scoring rubric (0-100) |
 | [`prompts.md`](prompts.md) | prompts — revealed at the start of the event |
-| [`prompts-starter.md`](prompts-starter.md) | six starter prompts for any AI agent: plan, decide, build, review, check in, stuck |
+| [`superagent` skill](../.claude/skills/superagent/SKILL.md) | `/superagent`: the one skill that routes to every other skill and template |
+| [`superagent` setup](../.claude/skills/superagent/setup.md) | installs Playwright, Context7, impeccable, motion.dev and the Posit skills |
+| [`prompts-starter.md`](prompts-starter.md) | the one starter prompt for any agent, plus seven manual step prompts: spec, plan, decide, build, review, check in, stuck |
 | [`resources.md`](resources.md) | tutorials, textbook links, template pointers |
 | [`agents.md`](agents.md) | popular AI coding agents, and how to pick one |
 | [`opencode.md`](opencode.md) | the free path: OpenCode with a free Gemini key, step by step |

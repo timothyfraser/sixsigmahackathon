@@ -199,6 +199,8 @@ your event prompt will differ. The same prompts, as plain text for any other age
 Codex, Copilot, Gemini/Antigravity), are in [`prompts-starter.md`](prompts-starter.md). The commands
 themselves live in [`.opencode/commands/`](../.opencode/commands/).
 
+The quickest start is one command: `/superagent <your app>`. The step commands below are the same steps done by hand.
+
 **Minute 0-10: say hello.** Start `opencode` in the repo and type:
 
 > What is this repo for, and which files describe our project? Two sentences.

@@ -4,6 +4,8 @@ Bring whichever one you already have. They all work with this repo as it is: Cla
 reads [`CLAUDE.md`](../CLAUDE.md), most others read [`AGENTS.md`](../AGENTS.md), and both send the agent to
 [`SPEC.md`](../SPEC.md) and [`CONTRACT.yaml`](../CONTRACT.yaml) first.
 
+Whichever agent you pick, type `/superagent` and a few sentences about your app (or paste the starter from [`prompts-starter.md`](prompts-starter.md)). It does the rest.
+
 > **Prices and student offers as of 2 October 2026. They change often; check the linked page before you rely on one.**
 
 | Agent | What it is | Cost and free / student access | Start in two lines |
@@ -19,6 +21,9 @@ reads [`CLAUDE.md`](../CLAUDE.md), most others read [`AGENTS.md`](../AGENTS.md),
 recommended no-budget path, costs nothing, and the guide gets you from nothing to a planned, built and tested
 first task in about an hour. Copilot (free for verified students) or Codex on the ChatGPT plan you already have
 also cost nothing extra. The tips below matter more than which agent you pick.
+
+**Have a Pro plan?** Plan on the strongest model, then build with a cheaper one. In Claude Code: `/model opus`
+to plan, then `/model sonnet` to build with subagents.
 
 ## Steering an agent toward correct statistics on a budget
 

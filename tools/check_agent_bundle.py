@@ -2,14 +2,27 @@
 """Offline consistency check for the agent bundle (no CI needed, stdlib only).
 
 Usage:
-    python tools/check_agent_bundle.py          # checks 1-7, no network, no key
-    python tools/check_agent_bundle.py --live   # also checks 8: needs opencode + a connected key
+    python tools/check_agent_bundle.py          # checks 1-14, no network, no key
+    python tools/check_agent_bundle.py --live   # also checks 15: needs opencode + a connected key
+
+Checks 8-14 keep the /superagent bundle from drifting:
+     8 superagent     the router skill exists, names every other skill, cites only real paths,
+                      and every wrapper (OpenCode command and agent, AGENTS.md) points at it
+     9 front-door     README, CLAUDE, AGENTS, docs/prompts-starter, docs/agents mention /superagent
+    10 no-private     no private names or local paths in any tracked or new text file
+    11 json-configs   .mcp.json (playwright + context7), .claude/settings.json, opencode.json `mcp`
+    12 claude-agents  .claude/agents/*.md have name, description, model; implementer and
+                      stats-reviewer keep their statistics rules (in check 7)
+    13 root-layout    no new top-level folder (extra context lives under .claude/)
+    14 check-script   .claude/skills/superagent/scripts/check.sh exits 0 (skipped without bash)
 
 Exit code 0 = every check passed, 1 = at least one FAIL.
 Each failure prints a line starting with "FAIL" that names the file and the expectation.
 """
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -59,6 +72,30 @@ GUARDS = {
     ".opencode/agents/stats-reviewer.md": REVIEW_RULES,
     ".opencode/commands/plan.md": NUMBERS_RULE,
 }
+# Claude Code subagents keep the same rules as their OpenCode twins (checked when the file exists).
+OPTIONAL_GUARDS = {
+    ".claude/agents/implementer.md": BUILD_RULES + NUMBERS_RULE + [("STATISTICS in the report", r"STATISTICS:")],
+    ".claude/agents/stats-reviewer.md": REVIEW_RULES,
+}
+
+SUPERAGENT = ".claude/skills/superagent/SKILL.md"
+SUPERAGENT_EXTRA = [".claude/skills/superagent/setup.md", ".claude/skills/superagent/reference/playbook.md"]
+CANONICAL_LINE = "Read .claude/skills/superagent/SKILL.md completely"
+CLAUDE_SUBAGENTS = ["implementer", "stats-reviewer"]
+FRONT_DOORS = ["README.md", "CLAUDE.md", "AGENTS.md", "docs/prompts-starter.md", "docs/agents.md"]
+# Repo paths the router cites; the lookbehind skips a match inside a URL or a longer path.
+# Cited by the router but written by the team during the hackathon, so they may not exist yet.
+# (app/, tests/, data/ are team project folders too; CITED_PATH never matches them.)
+TEAM_WRITES = {"docs/plan.md"}
+CITED_PATH = re.compile(r"(?<![\w./-])((?:\.claude/(?:skills|agents)|demos|docs)/[A-Za-z0-9_./-]*)")
+# Private names and local paths that must never appear in this public repo (case-insensitive).
+PRIVATE_PATTERNS = ["sysen_instructors", "research-mcp", "FRASER-LABS/design", "design hub",
+                    "broker_whoami", "C:/Users/", "C:\\Users\\"]
+PRIVATE_SKIP = {"tools/check_agent_bundle.py", "tools/tests/test_check_agent_bundle.py"}
+ROOT_DIRS = [".claude", ".opencode", "demos", "docs", "tools"]
+ROOT_DIRS_IF_ON_MAIN = [".github"]
+CHECK_SCRIPT = ".claude/skills/superagent/scripts/check.sh"
+NESTED_ENV = "CHECK_AGENT_BUNDLE_NESTED"  # set while check.sh runs, so a check.sh that calls us cannot loop
 
 
 failures = []  # list of (check name, message)
@@ -262,7 +299,9 @@ def check_guards(texts=None):
     """The command and agent prompts keep the statistics, review and process-safety rules."""
     name = "guards"
     n = 0
-    for f, rules in GUARDS.items():
+    items = list(GUARDS.items()) + [(f, r) for f, r in OPTIONAL_GUARDS.items()
+                                    if (f in texts if texts is not None else (ROOT / f).is_file())]
+    for f, rules in items:
         if texts is not None:
             text = texts.get(f)
         else:
@@ -343,6 +382,236 @@ def check_secrets():
     return scanned
 
 
+def git_lines(args):
+    """Run git in ROOT and return its output lines, or None when git or the repo is unavailable."""
+    try:
+        out = subprocess.run(["git"] + args, cwd=str(ROOT), check=True,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return [l for l in out.decode("utf-8").replace("\0", "\n").split("\n") if l]
+
+
+def candidate_files():
+    """Tracked files plus new, not-ignored files: everything the next commit could publish."""
+    lines = git_lines(["ls-files", "-z", "--cached", "--others", "--exclude-standard"])
+    if lines is None:
+        print("NOTE  [no-private] git ls-files unavailable; scanning all files except .git")
+        return [p for p in ROOT.rglob("*") if p.is_file() and ".git" not in p.relative_to(ROOT).parts]
+    return [ROOT / l for l in sorted(set(lines))]
+
+
+def try_read(p):
+    try:
+        return read_text(p)
+    except (OSError, UnicodeDecodeError):
+        return None
+
+
+def names_word(text, word):
+    return re.search(r"(?<![\w-])%s(?![\w-])" % re.escape(word), text) is not None
+
+
+def check_superagent():
+    """The router exists, names every other skill, cites only real paths; every wrapper points at it."""
+    name = "superagent"
+    text = try_read(ROOT / SUPERAGENT)
+    if text is None:
+        fail(name, "%s: missing, expected the /superagent router skill" % SUPERAGENT)
+        return 0
+    fm, _ = split_frontmatter(text)
+    if not fm:
+        fail(name, "%s: expected YAML frontmatter (--- ... ---) with name and description" % SUPERAGENT)
+    else:
+        if unquote(fm.get("name", "")) != "superagent":
+            fail(name, "%s: frontmatter `name` is %r, expected `superagent`" % (SUPERAGENT, fm.get("name")))
+        desc = unquote(folded(fm.get("description", "")))
+        if not desc:
+            fail(name, "%s: frontmatter is missing a non-empty `description`" % SUPERAGENT)
+        elif len(desc) > 1024:
+            fail(name, "%s: description is %d chars, expected <= 1024" % (SUPERAGENT, len(desc)))
+    for d in sorted(p for p in (ROOT / ".claude" / "skills").iterdir() if p.is_dir() and p.name != "superagent"):
+        if not names_word(text, d.name):
+            fail(name, "%s: does not name the skill `%s` (expected `.claude/skills/%s/` or `%s` in the router)"
+                 % (SUPERAGENT, d.name, d.name, d.name))
+    for sub in CLAUDE_SUBAGENTS:
+        if not names_word(text, sub):
+            fail(name, "%s: does not mention the Claude Code subagent `%s` (.claude/agents/%s.md)"
+                 % (SUPERAGENT, sub, sub))
+    n = 0
+    for src in [SUPERAGENT] + SUPERAGENT_EXTRA:
+        t = text if src == SUPERAGENT else try_read(ROOT / src)
+        if t is None:
+            continue
+        for m in CITED_PATH.finditer(t):
+            path = m.group(1).rstrip(".,:;)")
+            if path.rstrip("/") in ("docs", "demos", ".claude/skills", ".claude/agents") or path in TEAM_WRITES:
+                continue
+            n += 1
+            if not (ROOT / path).exists():
+                fail(name, "%s:%d: cites `%s`, expected that path to exist"
+                     % (src, t.count("\n", 0, m.start()) + 1, path))
+    cmd = ".opencode/commands/superagent.md"
+    t = try_read(ROOT / cmd)
+    if t is None:
+        fail(name, "%s: missing, expected the OpenCode wrapper for /superagent" % cmd)
+    elif CANONICAL_LINE not in t:
+        fail(name, "%s: expected the canonical line `%s`" % (cmd, CANONICAL_LINE))
+    agent = ".opencode/agents/superagent.md"
+    t = try_read(ROOT / agent)
+    if t is None:
+        fail(name, "%s: missing, expected the OpenCode superagent agent" % agent)
+    elif CANONICAL_LINE not in t and SUPERAGENT not in t:
+        fail(name, "%s: expected the canonical line `%s` or a pointer to %s" % (agent, CANONICAL_LINE, SUPERAGENT))
+    t = try_read(ROOT / "AGENTS.md")
+    if t is None or SUPERAGENT not in t:
+        fail(name, "AGENTS.md: expected it to name %s (Cursor, Codex and Copilot read AGENTS.md)" % SUPERAGENT)
+    return n
+
+
+def check_front_door():
+    name = "front-door"
+    for f in FRONT_DOORS:
+        t = try_read(ROOT / f)
+        if t is None:
+            fail(name, "%s: missing, expected it to mention `/superagent`" % f)
+        elif "/superagent" not in t:
+            fail(name, "%s: expected it to mention `/superagent` (the one front door)" % f)
+    return len(FRONT_DOORS)
+
+
+def check_no_private(files=None):
+    name = "no-private"
+    regs = [(p, re.compile(re.escape(p), re.I)) for p in PRIVATE_PATTERNS]
+    scanned = 0
+    for p in (candidate_files() if files is None else files):
+        if rel(p) in PRIVATE_SKIP or not p.is_file():
+            continue
+        try:
+            raw = p.read_bytes()
+        except OSError:
+            continue
+        if b"\0" in raw[:8192]:
+            continue  # binary
+        scanned += 1
+        text = raw.decode("utf-8", errors="replace")
+        for pat, r in regs:
+            m = r.search(text)
+            if m:
+                fail(name, "%s:%d: contains the private string %r, expected none in this public repo"
+                     % (rel(p), text.count("\n", 0, m.start()) + 1, pat))
+    return scanned
+
+
+def load_json(name, f, required):
+    p = ROOT / f
+    if not p.is_file():
+        if required:
+            fail(name, "%s: missing, expected it to exist and parse as JSON" % f)
+        return None
+    try:
+        return json.loads(read_text(p))
+    except ValueError as e:
+        fail(name, "%s: expected valid JSON (%s)" % (f, e))
+        return None
+
+
+def check_json_configs():
+    name = "json-configs"
+    mcp = load_json(name, ".mcp.json", True)
+    if mcp is not None:
+        servers = mcp.get("mcpServers") if isinstance(mcp, dict) else None
+        if not isinstance(servers, dict):
+            fail(name, ".mcp.json: expected an `mcpServers` object")
+        else:
+            for s in ("playwright", "context7"):
+                if s not in servers:
+                    fail(name, ".mcp.json: expected `mcpServers.%s`" % s)
+    load_json(name, ".claude/settings.json", False)
+    oc = load_json(name, "opencode.json", True)
+    if isinstance(oc, dict) and "mcp" in oc:
+        block = oc["mcp"]
+        if not isinstance(block, dict):
+            fail(name, "opencode.json: `mcp` should be an object of servers, got %s" % type(block).__name__)
+        else:
+            for k, v in block.items():
+                t = v.get("type") if isinstance(v, dict) else None
+                if t not in ("local", "remote"):
+                    fail(name, "opencode.json: `mcp.%s.type` is %r, expected \"local\" or \"remote\"" % (k, t))
+
+
+def check_claude_agents():
+    name = "claude-agents"
+    d = ROOT / ".claude" / "agents"
+    files = sorted(d.glob("*.md")) if d.is_dir() else []
+    have = {f.stem for f in files}
+    for sub in CLAUDE_SUBAGENTS:
+        if sub not in have:
+            fail(name, ".claude/agents/%s.md: missing, expected a Claude Code subagent" % sub)
+    for f in files:
+        fm, _ = split_frontmatter(read_text(f))
+        if not fm:
+            fail(name, "%s: expected frontmatter (--- ... ---) with name, description, model" % rel(f))
+            continue
+        for key in ("name", "description", "model"):
+            if not unquote(folded(fm.get(key, ""))):
+                fail(name, "%s: frontmatter is missing a non-empty `%s`" % (rel(f), key))
+        nm = unquote(fm.get("name", ""))
+        if nm and nm != f.stem:
+            fail(name, "%s: name `%s` should equal the file name `%s`" % (rel(f), nm, f.stem))
+    return len(files)
+
+
+def check_root_layout(paths=None, allowed=None):
+    """No top-level folder beyond the allowlist (no new root folders; new context goes under .claude/)."""
+    name = "root-layout"
+    if allowed is None:
+        allowed = set(ROOT_DIRS)
+        for ref in ("main", "origin/main", "HEAD"):
+            main_dirs = git_lines(["ls-tree", "-d", "--name-only", ref])
+            if main_dirs is not None:
+                allowed |= set(ROOT_DIRS_IF_ON_MAIN) & set(main_dirs)
+                break
+    if paths is None:
+        paths = git_lines(["ls-files", "--cached", "--others", "--exclude-standard"])
+        if paths is None:
+            print("NOTE  [root-layout] git ls-files unavailable; listing top-level folders on disk")
+            paths = [p.name + "/" for p in ROOT.iterdir() if p.is_dir() and p.name != ".git"]
+    tops = sorted({p.split("/", 1)[0] for p in paths if "/" in p})
+    for t in tops:
+        if t not in allowed:
+            fail(name, "%s/: new top-level folder, expected only %s (put new context under .claude/)"
+                 % (t, ", ".join(sorted(allowed))))
+    return len(tops)
+
+
+def check_check_script():
+    """Run the superagent's own check.sh from the repo root; returns pass, fail or skip."""
+    name = "check-script"
+    if os.environ.get(NESTED_ENV):
+        print("NOTE  [check-script] called from inside check.sh; not running it again")
+        return "skip"
+    if not (ROOT / CHECK_SCRIPT).is_file():
+        print("NOTE  [check-script] %s not present; skipping" % CHECK_SCRIPT)
+        return "skip"
+    bash = shutil.which("bash")
+    if not bash:
+        print("NOTE  [check-script] bash is not on PATH; skipping %s" % CHECK_SCRIPT)
+        return "skip"
+    env = dict(os.environ, **{NESTED_ENV: "1"})
+    try:
+        res = subprocess.run([bash, CHECK_SCRIPT], cwd=str(ROOT), env=env, timeout=300,
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    except subprocess.TimeoutExpired:
+        fail(name, "%s: did not finish within 300 s, expected exit 0" % CHECK_SCRIPT)
+        return "fail"
+    if res.returncode != 0:
+        tail = res.stdout.decode("utf-8", errors="replace").strip().splitlines()[-5:]
+        fail(name, "%s: exited %d, expected 0. Last lines: %s" % (CHECK_SCRIPT, res.returncode, " | ".join(tail)))
+        return "fail"
+    return "pass"
+
+
 def check_live(model):
     name = "live"
     try:
@@ -393,13 +662,28 @@ def main():
     run("6 no key-shaped strings in tracked text files", check_secrets, detail=lambda r: "%d files scanned" % r)
     run("7 bundle guards: kill rules ask, statistics/review/known-answer rules present",
         lambda: (check_kill_permissions(), check_guards())[1], detail=lambda r: "%d rules" % (r + len(KILL_PATTERNS)))
+    run("8 superagent router: frontmatter, every skill named, cited paths exist, wrappers point at it",
+        check_superagent, detail=lambda r: "%d cited paths" % r)
+    run("9 front doors mention /superagent", check_front_door, detail=lambda r: "%d files" % r)
+    run("10 no private names or local paths in tracked or new text files", check_no_private,
+        detail=lambda r: "%d files scanned" % r)
+    run("11 .mcp.json, .claude/settings.json, opencode.json mcp parse", check_json_configs)
+    run("12 .claude/agents frontmatter has name, description, model", check_claude_agents,
+        detail=lambda r: "%d agents" % r)
+    run("13 no new top-level folders", check_root_layout, detail=lambda r: "%d folders" % r)
+    st = check_check_script()
+    if st == "skip":
+        print("SKIP  14 superagent scripts/check.sh exits 0")
+    else:
+        results.append(("14 check.sh", st == "pass"))
+        print("%s  14 superagent scripts/check.sh exits 0" % ("PASS" if st == "pass" else "FAIL"))
     if live:
         st = check_live(model)
         if st == "skip":
-            print("SKIP  8 live: opencode models list the configured and pinned models")
+            print("SKIP  15 live: opencode models list the configured and pinned models")
         else:
-            results.append(("8 live", st == "pass"))
-            print("%s  8 live: opencode models list the configured and pinned models"
+            results.append(("15 live", st == "pass"))
+            print("%s  15 live: opencode models list the configured and pinned models"
                   % ("PASS" if st == "pass" else "FAIL"))
     bad = [l for l, ok in results if not ok]
     print("")

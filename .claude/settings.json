@@ -1,0 +1,82 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pytest *)",
+      "Bash(python *)",
+      "Bash(py *)",
+      "Bash(Rscript *)",
+      "Bash(R *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git branch *)",
+      "Bash(git switch *)",
+      "Bash(git pull *)",
+      "Bash(git fetch *)",
+      "Bash(git stash list)",
+      "Bash(gh *)",
+      "Bash(curl *)",
+      "Bash(bash .claude/skills/superagent/scripts/*)",
+      "Bash(uvicorn *)",
+      "Bash(pip install *)",
+      "Read(./**)",
+      "Edit(./**)"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(*rsconnect*)",
+      "Bash(rm -rf *)",
+      "Bash(taskkill *)",
+      "Bash(pkill *)",
+      "Bash(killall *)",
+      "Bash(Stop-Process *)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(**/.env)",
+      "Edit(.env)",
+      "Edit(**/.env)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)"
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
+      }
+    },
+    "posit-dev-skills": {
+      "source": {
+        "source": "github",
+        "repo": "posit-dev/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "impeccable@impeccable": true,
+    "r-lib@posit-dev-skills": true,
+    "shiny@posit-dev-skills": true,
+    "quarto@posit-dev-skills": true,
+    "connect@posit-dev-skills": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

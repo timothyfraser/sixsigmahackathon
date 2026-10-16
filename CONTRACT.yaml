@@ -61,7 +61,7 @@ tasks:
     status: todo
     owner: ""
     started_at: ""
-    owns: ["app/qc.py", "app/qc.R", "tests/"]
+    owns: ["app/qc.py", "app/qc.R", "app/requirements.txt", "tests/"]
     notes: >
       Load the stats-first-steering skill before writing any statistics. Plain
       inputs (a data frame or vector), plain outputs (numbers), no framework.
