@@ -1,0 +1,30 @@
+# pyproject.toml - the one file that turns this folder into an installable package.
+# Rename "demotool" (here AND the src/demotool folder) to your own package name.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "demotool"
+version = "1.0.0"
+description = "Demo Python package for the Six Sigma Hackathon: individuals-chart limits and Cpk."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "Your Team Name" },
+]
+# Runtime dependencies. This demo uses only the standard library.
+# Add yours here, e.g. "numpy>=1.26", "pandas>=2.0".
+dependencies = []
+
+[project.optional-dependencies]
+# Install with: pip install -e ".[test]"
+test = ["pytest>=7"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/demotool"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

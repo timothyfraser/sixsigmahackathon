@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.env
+.posit/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+rsconnect/
+.opencode/model-ladder-state.json
+
+.claude/settings.local.json

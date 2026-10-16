@@ -1,0 +1,65 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555555;
+  --line: #888888;
+  --accent: #1f5fa8;
+  --bad: #b3261e;
+  --ok: #1b7a3a;
+  --panel: #f3f4f6;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #eeeeee;
+    --muted: #aaaaaa;
+    --line: #999999;
+    --accent: #7fb2ef;
+    --bad: #ff8a80;
+    --ok: #7fd49a;
+    --panel: #1f1f1f;
+  }
+}
+
+body { margin: 0; background: var(--bg); }
+main { max-width: 720px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 1.5rem; margin: 0 0 8px; }
+.lede { color: var(--muted); }
+code { overflow-wrap: anywhere; }
+
+label { display: block; font-weight: 600; margin-top: 12px; }
+textarea, input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--fg);
+}
+input { max-width: 8rem; }
+
+.api { padding: 8px 12px; border-radius: 6px; background: var(--panel); font-size: 0.9rem; }
+.api.ok { border-left: 4px solid var(--ok); }
+.api.down, .api.checking { border-left: 4px solid var(--muted); }
+.error { color: var(--bad); font-weight: 600; }
+
+svg { width: 100%; height: auto; margin-top: 16px; font-size: 18px; }
+svg text { fill: var(--muted); }
+.limit line { stroke: var(--bad); stroke-dasharray: 6 4; }
+.center line { stroke: var(--fg); }
+.baseline { stroke: var(--line); stroke-dasharray: 2 4; }
+.series { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.pt { fill: var(--accent); }
+.pt.out { fill: var(--bad); stroke: var(--bg); stroke-width: 2; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.stats div { background: var(--panel); padding: 8px; border-radius: 6px; }
+dt { font-size: 0.8rem; color: var(--muted); }
+dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
