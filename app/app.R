@@ -23,6 +23,7 @@ source("plots.R", local = TRUE)
 source("sim.R", local = TRUE)     # the policy simulation (H-10); the page only shows its results
 source("forecast.R", local = TRUE)   # the Now risk forecast, step 5a (H-13) and the day bootstrap 5b (H-14)
 source("reliability.R", local = TRUE)   # empirical availability and reliability (H-16)
+source("faulttree.R", local = TRUE)     # qualitative fault trees and cause shares (H-17, Diagnosis tab)
 
 # Built-in scenarios (H-02 data): app/data/*.csv.gz in the deployed bundle, ../data/*.csv in a
 # clone. With none, fall back to the tiny test fixture, else ask for an upload.
@@ -352,6 +353,54 @@ ui <- page_navbar(
         tags$li("Defaults: origin and destination = the first two stations, d = 15 minutes; parallel = the first two",
                 " stations; k-out-of-n region = the first region, k = half of its stations rounded up (all demo choices)."))
     )
+  ),
+
+  nav_panel("Diagnosis",
+    help_text("Question: when a rent or a return fails, is the cause something a van fixes (rebalancing), something a",
+              " technician fixes (maintenance), or a record that cannot be trusted (data check)? Each logged",
+              " failure_reason is mapped to one action; the share of an action is its failed attempts divided by all",
+              " failed attempts in the chosen scope."),
+    radioButtons("dx_scope", "Scope",
+                 choices = c("Sidebar date, 07:00-10:00 window" = "one", "All weekdays, 07:00-10:00 windows" = "all"),
+                 inline = TRUE),
+    uiOutput("dx_head"),
+    alert_box(paste("Qualitative only. No component probability data exist, so the trees give no probability of the",
+                    "top event. The shares describe the logged failures of the chosen scope and nothing more; they",
+                    "are not a forecast."), "info"),
+    layout_columns(
+      fill = FALSE, col_widths = c(6, 6),
+      panel_card(card_header("Fault tree: rent failed"), plotOutput("dx_tree_rent", height = 360),
+                 textOutput("dx_text_rent"), tableOutput("dx_action_rent")),
+      panel_card(card_header("Fault tree: return failed"), plotOutput("dx_tree_return", height = 360),
+                 textOutput("dx_text_return"), tableOutput("dx_action_return"))),
+    layout_columns(
+      fill = FALSE, col_widths = c(6, 6),
+      panel_card(card_header("Rent failures by logged reason"), tableOutput("dx_reason_rent")),
+      panel_card(card_header("Return failures by logged reason"), tableOutput("dx_reason_return"))),
+    layout_columns(
+      fill = FALSE, col_widths = c(6, 6),
+      panel_card(card_header("Stations with the most failed rents, and their top cause"), tableOutput("dx_station_rent")),
+      panel_card(card_header("Stations with the most failed returns, and their top cause"), tableOutput("dx_station_return"))),
+    help_text("How to read this: the top box is the failure; the OR gate means any one of the three branches is enough to",
+              " cause it. Each branch lists the logged reasons that point to it, with the number of failed attempts and the",
+              " share of all failed attempts in the scope. Per-station tables show where maintenance or rebalancing is",
+              " needed; a station with few failures has an unreliable top cause."),
+    tags$b("Assumptions and definitions"),
+    tags$ul(
+      tags$li("Cause mapping (docs/methods.md section 7): no_bike and no_dock -> rebalancing; bike_fault, dock_fault and",
+              " station_closed -> maintenance; app_error -> data check."),
+      tags$li("Status/attempt contradiction (KA-10): a failed rent logged no_bike in a minute whose valid, known status",
+              " shows bikes_available > 0 is moved to data check. Extension of the methods: the same rule for returns",
+              " (a failed return logged no_dock while docks_available > 0). The minute is the interval [m, m+1) that",
+              " contains the attempt time. That minute's state is the latest valid snapshot at or before the start",
+              " of the minute (the 4.1 grid rule), so a change logged later inside the same minute is not used;",
+              " this avoids false data-check flags but can miss a contradiction right at a change."),
+      tags$li("If that minute is unknown or stale (or outside the 07:00-10:00 grid), the attempt keeps its logged reason and",
+              " is counted as 'could not be checked'. With no usable status records the logged-reason tree is shown and",
+              " no reclassification is possible."),
+      tags$li("Zero failures: counts are 0 and shares are n/a; no failures observed does not mean zero risk."),
+      tags$li("Pooled weekdays count every failed attempt of every day; days with different numbers of attempts are",
+              " weighted by their failures."))
   ),
 
   nav_panel("Rebalancing",
@@ -1037,6 +1086,40 @@ server <- function(input, output, session) {
               " min. Simulated data.")
   })
   output$rel_tbl <- renderTable(reliability_display(rel_res()$res, rel_res()$rules), na = "n/a")
+
+  # ---- Diagnosis: fault trees (statistics in faulttree.R, scope and wording in prep.R)
+  dx_dates <- reactive({
+    validate(need(is.null(attempts_msg()), attempts_msg()))
+    if (identical(input$dx_scope, "all")) dates() else { req(input$date); input$date }
+  })
+  dx_attempts <- reactive(scope_attempts(sc()$attempts, dx_dates()))
+  dx_grid <- reactive({                     # NULL when status is unusable: the rule is then not applied
+    if (!is.null(status_msg())) return(NULL)
+    pooled_grid(grids(), dx_dates())
+  })
+  dx_res <- reactive({
+    a <- dx_attempts()
+    g <- dx_grid()
+    list(rent = fault_tree(a, "rent", g), `return` = fault_tree(a, "return", g),
+         st_rent = fault_tree_by_station(a, "rent", g), st_return = fault_tree_by_station(a, "return", g))
+  })
+  output$dx_head <- renderUI({
+    r <- dx_res()
+    note <- if (is.null(dx_grid())) paste("No usable status records: the logged-reason tree is shown and the",
+                                          "status/attempt rule cannot be applied.")
+            else paste0("stale_limit = ", stale_limit(), " min.")
+    help_text("Days: ", paste(dx_dates(), collapse = ", "), ". Window 07:00-10:00. ", note, " Simulated data.")
+  })
+  output$dx_tree_rent <- renderPlot(plot_fault_tree(dx_res()$rent, "Rent failed"))
+  output$dx_tree_return <- renderPlot(plot_fault_tree(dx_res()$`return`, "Return failed"))
+  output$dx_text_rent <- renderText(fault_summary_text(dx_res()$rent))
+  output$dx_text_return <- renderText(fault_summary_text(dx_res()$`return`))
+  output$dx_action_rent <- renderTable(fault_action_display(dx_res()$rent), na = "n/a")
+  output$dx_action_return <- renderTable(fault_action_display(dx_res()$`return`), na = "n/a")
+  output$dx_reason_rent <- renderTable(fault_reason_display(dx_res()$rent), na = "n/a")
+  output$dx_reason_return <- renderTable(fault_reason_display(dx_res()$`return`), na = "n/a")
+  output$dx_station_rent <- renderTable(fault_station_display(dx_res()$st_rent), na = "n/a")
+  output$dx_station_return <- renderTable(fault_station_display(dx_res()$st_return), na = "n/a")
 
   # ---- Rebalancing
   plan <- reactive({

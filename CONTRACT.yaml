@@ -295,15 +295,15 @@ tasks:
   - id: H-17
     title: Qualitative fault trees and the cause mapping (Diagnosis tab)
     points: "supports 25 - Tool Implementation: valid analyses (tier 3)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 08:01"
     owns: ["app/faulttree.R", "tests/test-faulttree.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-faulttree.R')" passes, including KA-10, the
       contradiction rule, and zero failures showing counts of 0 with shares NA;
       Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-faulttree.R 56 and test_dir 961 pass (KA-10 60/30/10, the contradiction rule 50/30/20, zero failures counts 0 with shares NA); stats-reviewer PASS (real-data counts and 0 contradictions recomputed from raw files); Playwright shows the Diagnosis tab trees on planted_shift"
 
   - id: H-18
     title: Task status updates in the web page (session only, no database)

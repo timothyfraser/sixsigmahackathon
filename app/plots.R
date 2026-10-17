@@ -266,3 +266,44 @@ plot_forecast_risk <- function(d, title, caption) {
     ggplot2::labs(title = title, x = "station", y = "probability of at least one unusable minute", caption = caption) +
     ggplot2::theme_minimal() + ggplot2::theme(legend.position = "bottom")
 }
+
+# Qualitative fault tree (top event -> OR gate -> three actions -> logged-reason leaves).
+# ft = faulttree.R fault_tree() result. Drawing only: counts and shares come from there.
+plot_fault_tree <- function(ft, title) {
+  pct <- function(s, n) ifelse(is.na(s), paste0("n/a (", n, ")"), paste0(sprintf("%.0f", 100 * s), "% (", n, ")"))
+  acts <- ft$by_action
+  acts$y <- c(3, 2, 1) * 2                              # rebalancing on top, data check at the bottom
+  acts$label <- paste0(acts$action, "\n", pct(acts$share, acts$count))
+  top_label <- paste0(if (ft$type == "rent") "RENT FAILED" else "RETURN FAILED", "\n", ft$n_failed, " / ", ft$n, " failed")
+  nodes <- rbind(data.frame(x = -0.5, y = 4, label = top_label, kind = "top event"),
+                 data.frame(x = 2, y = acts$y, label = acts$label, kind = "action"))
+  gate <- data.frame(x = 1, y = 4, label = "OR", kind = "gate")
+  lv <- ft$tree
+  if (nrow(lv) > 0) {
+    lv$y <- acts$y[match(lv$action, acts$action)]
+    lv$k <- stats::ave(seq_len(nrow(lv)), lv$action, FUN = seq_along)
+    lv$y <- lv$y + 0.45 * (lv$k - 1) - 0.2 * (stats::ave(lv$k, lv$action, FUN = max) - 1)
+    leaves <- data.frame(x = 4, y = lv$y, label = paste0(lv$leaf, "\n", pct(lv$share, lv$count)), kind = "logged reason")
+    edges <- data.frame(x = 2.3, xend = 3.68, y = acts$y[match(lv$action, acts$action)], yend = lv$y)
+  } else {
+    leaves <- data.frame(x = numeric(0), y = numeric(0), label = character(0), kind = character(0))
+    edges <- data.frame(x = numeric(0), xend = numeric(0), y = numeric(0), yend = numeric(0))
+  }
+  edges <- rbind(edges, data.frame(x = 0.1, xend = 0.85, y = 4, yend = 4),
+                 data.frame(x = 1.15, xend = 1.4, y = 4, yend = 4),
+                 data.frame(x = 1.4, xend = 1.4, y = min(acts$y), yend = max(acts$y)),
+                 data.frame(x = 1.4, xend = 1.7, y = acts$y, yend = acts$y))
+  all_nodes <- rbind(nodes, gate, leaves)
+  ggplot2::ggplot() +
+    ggplot2::geom_segment(data = edges, ggplot2::aes(x = x, xend = xend, y = y, yend = yend), colour = "grey40") +
+    ggplot2::geom_label(data = all_nodes, ggplot2::aes(x = x, y = y, label = label, fill = kind),
+                        size = 3.2, linewidth = 0.2, lineheight = 0.95) +
+    ggplot2::scale_fill_manual(values = c("top event" = "#fdd0a2", gate = "#ffffff", action = "#c6dbef",
+                                          "logged reason" = "#e5f5e0"), guide = "none") +
+    # wide limits so the boxes are not clipped in a half-width card
+    ggplot2::scale_x_continuous(limits = c(-1.3, 5.3)) +
+    ggplot2::labs(title = title, caption = "Qualitative: shares of failed attempts in the scope; no probabilities.") +
+    ggplot2::theme_void() +
+    ggplot2::theme(plot.title = ggplot2::element_text(face = "bold"),
+                   plot.caption = ggplot2::element_text(hjust = 0), plot.caption.position = "plot")
+}

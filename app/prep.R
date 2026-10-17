@@ -665,3 +665,66 @@ reliability_display <- function(results, rules) {
   }
   do.call(rbind, lapply(names(results), one))
 }
+
+# ---------------------------------------------------------------- 13. Diagnosis display (H-17)
+# Scope and wording only; every number comes from app/faulttree.R.
+
+# Attempts that fall inside the 07:00-10:00 window of the given dates (one date or all weekdays).
+scope_attempts <- function(attempts, dates, start = "07:00", end = "10:00", tz = APP_TZ) {
+  if (length(dates) == 0) return(attempts[0, ])
+  secs <- as.numeric(attempts$timestamp)
+  keep <- rep(FALSE, length(secs))
+  for (d in dates) {
+    b <- window_bounds(d, start, end, tz)
+    keep <- keep | (!is.na(secs) & secs >= as.numeric(b$start) & secs < as.numeric(b$end))
+  }
+  attempts[keep, ]
+}
+
+# Stack the day grids of the chosen dates into one grid (station + minute is unique across days).
+pooled_grid <- function(grids, dates) {
+  if (length(dates) == 0) return(NULL)
+  do.call(rbind, unname(grids[dates]))
+}
+
+# "60.0% (6)" or "n/a" (a share that is not defined).
+share_count_text <- function(share, count) {
+  ifelse(is.na(share), paste0("n/a (", count, ")"), paste0(sprintf("%.1f", 100 * share), "% (", count, ")"))
+}
+
+# Action table: counts and shares of failed attempts after the contradiction rule, with the logged view.
+fault_action_display <- function(ft) {
+  data.frame(action = ft$by_action$action,
+             `as logged (before the status rule)` = share_count_text(ft$logged_by_action$share, ft$logged_by_action$count),
+             `after the status rule` = share_count_text(ft$by_action$share, ft$by_action$count),
+             check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+# Logged reasons with their action.
+fault_reason_display <- function(ft) {
+  data.frame(`logged reason` = ft$by_reason$reason, `points to` = ft$by_reason$action,
+             `failed attempts (share)` = share_count_text(ft$by_reason$share, ft$by_reason$count),
+             check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+# One line per failure type: n, failed, failed share, the rule counts.
+fault_summary_text <- function(ft) {
+  label <- if (ft$type == "rent") "Rent" else "Return"
+  share <- if (is.na(ft$failed_share)) paste0("n/a (", ft$failed_share_reason, ")")
+           else paste0(sprintf("%.1f", 100 * ft$failed_share), "%")
+  rule <- if (!ft$rule_applied) "status/attempt rule not applied (no usable status records)."
+          else paste0(ft$reclassified, " reclassified as data check (status contradicts the log); ",
+                      ft$not_checked, " could not be checked (unknown minute); ", ft$checked, " checked.")
+  paste0(label, " failures: ", ft$n_failed, " of ", ft$n, " attempts failed (", share, "). ", rule,
+         if (nzchar(ft$shares_reason)) paste0(" Shares: ", ft$shares_reason, ".") else "")
+}
+
+# Per-station table text: counts per action and the top cause.
+fault_station_display <- function(st, top = 10) {
+  if (nrow(st) == 0) return(data.frame(note = "No failed attempts in this scope."))
+  st <- utils::head(st, top)
+  st <- as_whole_numbers(st, c("n_failed", "rebalancing", "maintenance", "data check", "data_check"))
+  names(st)[names(st) == "n_failed"] <- "failed attempts"
+  names(st)[names(st) == "top_cause"] <- "top cause"
+  st
+}
