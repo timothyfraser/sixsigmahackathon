@@ -45,9 +45,9 @@ tasks:
   - id: H-02
     title: Two or three test datasets plus a codebook
     points: "10 - Tool Documentation: 2-3 working test datasets (5), codebook and README for the data (5)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: in_progress
+    owner: "Codex (local H-02 generation and validation)"
+    started_at: "2026-10-16"
     owns: ["data/"]
     definition_of_done: >
       ls data/*.csv lists 2 or 3 files (e.g. in control, planted shift, edge
