@@ -1,0 +1,1621 @@
+city,location_id,mode,dockID,distance
+jersey_city,JC-U01,pickup,City Hall,0.4914675985660503
+jersey_city,JC-U01,pickup,York St & Marin Blvd,0.6065892426171879
+jersey_city,JC-U01,pickup,Grove St PATH,0.36044667006370573
+jersey_city,JC-U01,pickup,Columbus Drive,0.5650479034747704
+jersey_city,JC-U01,pickup,Marin Light Rail,0.7529479374987319
+jersey_city,JC-U01,pickup,Van Vorst Park,0.49163969399227725
+jersey_city,JC-U01,pickup,Manila & 1st,0.24128248881853995
+jersey_city,JC-U01,pickup,Newark Ave,0.2741583460506045
+jersey_city,JC-U01,pickup,Grand St,0.8427761565455206
+jersey_city,JC-U01,pickup,Washington St & Morgan St,0.65300606417465
+jersey_city,JC-U01,pickup,Warren St,0.47736623687610824
+jersey_city,JC-U01,pickup,JC Medical Center,0.7459305905761877
+jersey_city,JC-U01,pickup,Jersey & 3rd,0.15038815902825906
+jersey_city,JC-U01,pickup,Montgomery St,0.6243181750589933
+jersey_city,JC-U01,pickup,Morris Canal,1.0433895168663756
+jersey_city,JC-U01,pickup,Dixon Mills,0.4748744648000814
+jersey_city,JC-U01,pickup,Exchange Pl,0.8827560295012249
+jersey_city,JC-U01,pickup,Essex Light Rail,1.0688659814389694
+jersey_city,JC-U01,pickup,Jersey & 6th St,0.17322426661765716
+jersey_city,JC-U01,pickup,Paulus Hook,1.0978594529454904
+jersey_city,JC-U01,pickup,Brunswick St,0.3750321939158412
+jersey_city,JC-U01,pickup,Washington St,0.5377157648066393
+jersey_city,JC-U01,pickup,Monmouth & 6th,0.35805387901682656
+jersey_city,JC-U01,pickup,Hamilton Park,0.29017736143438644
+jersey_city,JC-U01,pickup,Brunswick & 6th,0.45069007299626973
+jersey_city,JC-U01,pickup,Liberty Light Rail,1.3510238537696349
+jersey_city,JC-U01,pickup,Newport PATH,0.7500187622402598
+jersey_city,JC-U02,pickup,City Hall,0.6231690197154325
+jersey_city,JC-U02,pickup,York St & Marin Blvd,0.6700489851512988
+jersey_city,JC-U02,pickup,Grove St PATH,0.7200689266105423
+jersey_city,JC-U02,pickup,Columbus Drive,0.9273019040360065
+jersey_city,JC-U02,pickup,Marin Light Rail,0.8059018082814503
+jersey_city,JC-U02,pickup,Van Vorst Park,0.3932097274350278
+jersey_city,JC-U02,pickup,Manila & 1st,0.7487565733320151
+jersey_city,JC-U02,pickup,Newark Ave,0.5660015208590261
+jersey_city,JC-U02,pickup,Grand St,0.978889706824444
+jersey_city,JC-U02,pickup,Washington St & Morgan St,1.099756613425759
+jersey_city,JC-U02,pickup,Warren St,0.9897789740983669
+jersey_city,JC-U02,pickup,JC Medical Center,0.5506729734774657
+jersey_city,JC-U02,pickup,Jersey & 3rd,0.6540411610775901
+jersey_city,JC-U02,pickup,Montgomery St,0.21713038693761216
+jersey_city,JC-U02,pickup,Morris Canal,1.1414857814013382
+jersey_city,JC-U02,pickup,Dixon Mills,0.3469865255851117
+jersey_city,JC-U02,pickup,Exchange Pl,1.0983584010788203
+jersey_city,JC-U02,pickup,Essex Light Rail,1.194739522890433
+jersey_city,JC-U02,pickup,Jersey & 6th St,0.7856909166622522
+jersey_city,JC-U02,pickup,Paulus Hook,1.2436518469630278
+jersey_city,JC-U02,pickup,Brunswick St,0.43507295888917913
+jersey_city,JC-U02,pickup,Washington St,1.2996337533322666
+jersey_city,JC-U02,pickup,Monmouth & 6th,0.6312429022057057
+jersey_city,JC-U02,pickup,Hamilton Park,0.9798550709706101
+jersey_city,JC-U02,pickup,Brunswick & 6th,0.5547493775468215
+jersey_city,JC-U02,pickup,Liberty Light Rail,0.801602416324816
+jersey_city,JC-U02,pickup,Newport PATH,1.5264804823251443
+jersey_city,JC-U03,pickup,City Hall,0.3883351399176071
+jersey_city,JC-U03,pickup,York St & Marin Blvd,0.5034567839687446
+jersey_city,JC-U03,pickup,Grove St PATH,0.2573142114152624
+jersey_city,JC-U03,pickup,Columbus Drive,0.4619154448263272
+jersey_city,JC-U03,pickup,Marin Light Rail,0.6498154788502885
+jersey_city,JC-U03,pickup,Van Vorst Park,0.5279817323244349
+jersey_city,JC-U03,pickup,Manila & 1st,0.11493048054420077
+jersey_city,JC-U03,pickup,Newark Ave,0.3115207886405867
+jersey_city,JC-U03,pickup,Grand St,0.7396436978970772
+jersey_city,JC-U03,pickup,Washington St & Morgan St,0.5232885792183419
+jersey_city,JC-U03,pickup,Warren St,0.3419633055420137
+jersey_city,JC-U03,pickup,JC Medical Center,0.783235969190028
+jersey_city,JC-U03,pickup,Jersey & 3rd,0.18974716155850757
+jersey_city,JC-U03,pickup,Montgomery St,0.6634709662526972
+jersey_city,JC-U03,pickup,Morris Canal,0.9402570582179324
+jersey_city,JC-U03,pickup,Dixon Mills,0.5140272559937852
+jersey_city,JC-U03,pickup,Exchange Pl,0.7796235708527817
+jersey_city,JC-U03,pickup,Essex Light Rail,0.9657335227905259
+jersey_city,JC-U03,pickup,Jersey & 6th St,0.3089353328257073
+jersey_city,JC-U03,pickup,Paulus Hook,0.994726994297047
+jersey_city,JC-U03,pickup,Brunswick St,0.4502636163513475
+jersey_city,JC-U03,pickup,Washington St,0.5020490834198901
+jersey_city,JC-U03,pickup,Monmouth & 6th,0.4937649452248765
+jersey_city,JC-U03,pickup,Hamilton Park,0.4248975713037362
+jersey_city,JC-U03,pickup,Brunswick & 6th,0.565787894617397
+jersey_city,JC-U03,pickup,Liberty Light Rail,1.3883292323834753
+jersey_city,JC-U03,pickup,Newport PATH,0.7143520808535105
+jersey_city,JC-U04,pickup,City Hall,0.36604270505839226
+jersey_city,JC-U04,pickup,York St & Marin Blvd,0.30231532444799397
+jersey_city,JC-U04,pickup,Grove St PATH,0.40419166437653525
+jersey_city,JC-U04,pickup,Columbus Drive,0.17149517996191166
+jersey_city,JC-U04,pickup,Marin Light Rail,0.4535618398891169
+jersey_city,JC-U04,pickup,Van Vorst Park,0.565717012373361
+jersey_city,JC-U04,pickup,Manila & 1st,0.5395843897937528
+jersey_city,JC-U04,pickup,Newark Ave,0.6342337518976285
+jersey_city,JC-U04,pickup,Grand St,0.11020488412982407
+jersey_city,JC-U04,pickup,Washington St & Morgan St,0.1985783847064053
+jersey_city,JC-U04,pickup,Warren St,0.3680802840288173
+jersey_city,JC-U04,pickup,JC Medical Center,0.7820766018624584
+jersey_city,JC-U04,pickup,Jersey & 3rd,0.7448193769218509
+jersey_city,JC-U04,pickup,Montgomery St,0.7512288399445636
+jersey_city,JC-U04,pickup,Morris Canal,0.31915017778038063
+jersey_city,JC-U04,pickup,Dixon Mills,0.7976419743919286
+jersey_city,JC-U04,pickup,Exchange Pl,0.16636875418439548
+jersey_city,JC-U04,pickup,Essex Light Rail,0.3428824931526519
+jersey_city,JC-U04,pickup,Jersey & 6th St,0.8762783546045212
+jersey_city,JC-U04,pickup,Paulus Hook,0.3741810552620861
+jersey_city,JC-U04,pickup,Brunswick St,0.9199654720022054
+jersey_city,JC-U04,pickup,Washington St,0.5547789926228818
+jersey_city,JC-U04,pickup,Monmouth & 6th,0.9913556645571415
+jersey_city,JC-U04,pickup,Hamilton Park,1.0232069621530768
+jersey_city,JC-U04,pickup,Brunswick & 6th,1.0396323928657003
+jersey_city,JC-U04,pickup,Liberty Light Rail,1.3759387259963967
+jersey_city,JC-U04,pickup,Newport PATH,0.7816257216157594
+jersey_city,JC-U05,pickup,City Hall,0.6739173129645893
+jersey_city,JC-U05,pickup,York St & Marin Blvd,0.5236749079875611
+jersey_city,JC-U05,pickup,Grove St PATH,0.7060125608661332
+jersey_city,JC-U05,pickup,Columbus Drive,0.4733160764515095
+jersey_city,JC-U05,pickup,Marin Light Rail,0.5118894943881623
+jersey_city,JC-U05,pickup,Van Vorst Park,0.8481257129186127
+jersey_city,JC-U05,pickup,Manila & 1st,0.841405286283351
+jersey_city,JC-U05,pickup,Newark Ave,0.9360546483872266
+jersey_city,JC-U05,pickup,Grand St,0.2195599400644947
+jersey_city,JC-U05,pickup,Washington St & Morgan St,0.49791363596464705
+jersey_city,JC-U05,pickup,Warren St,0.6699011805184152
+jersey_city,JC-U05,pickup,JC Medical Center,0.9131315383750882
+jersey_city,JC-U05,pickup,Jersey & 3rd,1.046640273411449
+jersey_city,JC-U05,pickup,Montgomery St,1.0347863697752389
+jersey_city,JC-U05,pickup,Morris Canal,0.3295105485739782
+jersey_city,JC-U05,pickup,Dixon Mills,1.0994628708815264
+jersey_city,JC-U05,pickup,Exchange Pl,0.16466297111499353
+jersey_city,JC-U05,pickup,Essex Light Rail,0.18736540663294932
+jersey_city,JC-U05,pickup,Jersey & 6th St,1.1780992510941193
+jersey_city,JC-U05,pickup,Paulus Hook,0.07219856617521186
+jersey_city,JC-U05,pickup,Brunswick St,1.2217863684918033
+jersey_city,JC-U05,pickup,Washington St,0.8046826054604644
+jersey_city,JC-U05,pickup,Monmouth & 6th,1.2931765610467398
+jersey_city,JC-U05,pickup,Hamilton Park,1.3250278586426747
+jersey_city,JC-U05,pickup,Brunswick & 6th,1.3414532893552986
+jersey_city,JC-U05,pickup,Liberty Light Rail,1.5036883297775494
+jersey_city,JC-U05,pickup,Newport PATH,1.0315833433751602
+jersey_city,JC-U06,pickup,City Hall,0.6862487519557968
+jersey_city,JC-U06,pickup,York St & Marin Blvd,0.8013703960069345
+jersey_city,JC-U06,pickup,Grove St PATH,0.5552278234534521
+jersey_city,JC-U06,pickup,Columbus Drive,0.7598290568645171
+jersey_city,JC-U06,pickup,Marin Light Rail,0.9477290908884785
+jersey_city,JC-U06,pickup,Van Vorst Park,0.8243134596521928
+jersey_city,JC-U06,pickup,Manila & 1st,0.412480315518846
+jersey_city,JC-U06,pickup,Newark Ave,0.60683211171052
+jersey_city,JC-U06,pickup,Grand St,1.0375573099352668
+jersey_city,JC-U06,pickup,Washington St & Morgan St,0.7913042271495198
+jersey_city,JC-U06,pickup,Warren St,0.6355051022262683
+jersey_city,JC-U06,pickup,JC Medical Center,1.078604356236103
+jersey_city,JC-U06,pickup,Jersey & 3rd,0.48216642394477954
+jersey_city,JC-U06,pickup,Montgomery St,0.9366880675999383
+jersey_city,JC-U06,pickup,Morris Canal,1.238170670256122
+jersey_city,JC-U06,pickup,Dixon Mills,0.787244357341026
+jersey_city,JC-U06,pickup,Exchange Pl,1.0775371828909717
+jersey_city,JC-U06,pickup,Essex Light Rail,1.2636471348287157
+jersey_city,JC-U06,pickup,Jersey & 6th St,0.35917992102243573
+jersey_city,JC-U06,pickup,Paulus Hook,1.292640606335237
+jersey_city,JC-U06,pickup,Brunswick St,0.682336354839132
+jersey_city,JC-U06,pickup,Washington St,0.49529945141499726
+jersey_city,JC-U06,pickup,Monmouth & 6th,0.4821415835203471
+jersey_city,JC-U06,pickup,Hamilton Park,0.1312969999168114
+jersey_city,JC-U06,pickup,Brunswick & 6th,0.55784249227932
+jersey_city,JC-U06,pickup,Liberty Light Rail,1.68369761942955
+jersey_city,JC-U06,pickup,Newport PATH,0.5638242734818869
+jersey_city,JC-U07,pickup,City Hall,0.5969030374127242
+jersey_city,JC-U07,pickup,York St & Marin Blvd,0.446660632435696
+jersey_city,JC-U07,pickup,Grove St PATH,0.6289982853142679
+jersey_city,JC-U07,pickup,Columbus Drive,0.39630180089964434
+jersey_city,JC-U07,pickup,Marin Light Rail,0.4347486952499596
+jersey_city,JC-U07,pickup,Van Vorst Park,0.7711114373667477
+jersey_city,JC-U07,pickup,Manila & 1st,0.7643910107314857
+jersey_city,JC-U07,pickup,Newark Ave,0.8590403728353614
+jersey_city,JC-U07,pickup,Grand St,0.14254566451262948
+jersey_city,JC-U07,pickup,Washington St & Morgan St,0.42089936041278186
+jersey_city,JC-U07,pickup,Warren St,0.59288690496655
+jersey_city,JC-U07,pickup,JC Medical Center,0.8359907392368854
+jersey_city,JC-U07,pickup,Jersey & 3rd,0.9696259978595837
+jersey_city,JC-U07,pickup,Montgomery St,0.9577720942233737
+jersey_city,JC-U07,pickup,Morris Canal,0.25554543295298343
+jersey_city,JC-U07,pickup,Dixon Mills,1.0224485953296611
+jersey_city,JC-U07,pickup,Exchange Pl,0.2283689187449875
+jersey_city,JC-U07,pickup,Essex Light Rail,0.11340029101195447
+jersey_city,JC-U07,pickup,Jersey & 6th St,1.1010849755422538
+jersey_city,JC-U07,pickup,Paulus Hook,0.14926097841920902
+jersey_city,JC-U07,pickup,Brunswick St,1.1447720929399379
+jersey_city,JC-U07,pickup,Washington St,0.727668329908599
+jersey_city,JC-U07,pickup,Monmouth & 6th,1.2161622854948744
+jersey_city,JC-U07,pickup,Hamilton Park,1.2480135830908095
+jersey_city,JC-U07,pickup,Brunswick & 6th,1.2644390138034332
+jersey_city,JC-U07,pickup,Liberty Light Rail,1.4265475306393465
+jersey_city,JC-U07,pickup,Newport PATH,0.9545690678232946
+jersey_city,JC-U08,pickup,City Hall,0.7829262521911432
+jersey_city,JC-U08,pickup,York St & Marin Blvd,0.864218556011165
+jersey_city,JC-U08,pickup,Grove St PATH,0.8654536486005873
+jersey_city,JC-U08,pickup,Columbus Drive,1.087181489716394
+jersey_city,JC-U08,pickup,Marin Light Rail,0.955769122543819
+jersey_city,JC-U08,pickup,Van Vorst Park,0.5368300196385439
+jersey_city,JC-U08,pickup,Manila & 1st,0.8828395265149179
+jersey_city,JC-U08,pickup,Newark Ave,0.7000844740419291
+jersey_city,JC-U08,pickup,Grand St,1.1478603145454427
+jersey_city,JC-U08,pickup,Washington St & Morgan St,1.241596530730521
+jersey_city,JC-U08,pickup,Warren St,1.1238619272812698
+jersey_city,JC-U08,pickup,JC Medical Center,0.6322221132335902
+jersey_city,JC-U08,pickup,Jersey & 3rd,0.7881241142604932
+jersey_city,JC-U08,pickup,Montgomery St,0.35897972713835974
+jersey_city,JC-U08,pickup,Morris Canal,1.291816123744177
+jersey_city,JC-U08,pickup,Dixon Mills,0.4810694787680147
+jersey_city,JC-U08,pickup,Exchange Pl,1.2582379867592082
+jersey_city,JC-U08,pickup,Essex Light Rail,1.3450698652332718
+jersey_city,JC-U08,pickup,Jersey & 6th St,0.9197738698451552
+jersey_city,JC-U08,pickup,Paulus Hook,1.4219588615265328
+jersey_city,JC-U08,pickup,Brunswick St,0.5691559120720822
+jersey_city,JC-U08,pickup,Washington St,1.4337167065151692
+jersey_city,JC-U08,pickup,Monmouth & 6th,0.7653258553886088
+jersey_city,JC-U08,pickup,Hamilton Park,1.1139380241535133
+jersey_city,JC-U08,pickup,Brunswick & 6th,0.6888323307297244
+jersey_city,JC-U08,pickup,Liberty Light Rail,0.7264246189086284
+jersey_city,JC-U08,pickup,Newport PATH,1.660563435508047
+jersey_city,JC-U09,pickup,City Hall,0.23966069753642966
+jersey_city,JC-U09,pickup,York St & Marin Blvd,0.3547823415875673
+jersey_city,JC-U09,pickup,Grove St PATH,0.10863976903408501
+jersey_city,JC-U09,pickup,Columbus Drive,0.3132410024451497
+jersey_city,JC-U09,pickup,Marin Light Rail,0.501141036469111
+jersey_city,JC-U09,pickup,Van Vorst Park,0.4104770067311619
+jersey_city,JC-U09,pickup,Manila & 1st,0.058683185471549236
+jersey_city,JC-U09,pickup,Newark Ave,0.2048298782078208
+jersey_city,JC-U09,pickup,Grand St,0.5909692555159
+jersey_city,JC-U09,pickup,Washington St & Morgan St,0.38066706997945865
+jersey_city,JC-U09,pickup,Warren St,0.28379894477470774
+jersey_city,JC-U09,pickup,JC Medical Center,0.6450328223973604
+jersey_city,JC-U09,pickup,Jersey & 3rd,0.31180049472658106
+jersey_city,JC-U09,pickup,Montgomery St,0.5819450878430087
+jersey_city,JC-U09,pickup,Morris Canal,0.7915826158367552
+jersey_city,JC-U09,pickup,Dixon Mills,0.43250137758409657
+jersey_city,JC-U09,pickup,Exchange Pl,0.6309491284716041
+jersey_city,JC-U09,pickup,Essex Light Rail,0.8170590804093485
+jersey_city,JC-U09,pickup,Jersey & 6th St,0.44325947240925134
+jersey_city,JC-U09,pickup,Paulus Hook,0.8460525519158696
+jersey_city,JC-U09,pickup,Brunswick St,0.4896244857048376
+jersey_city,JC-U09,pickup,Washington St,0.6074389833332022
+jersey_city,JC-U09,pickup,Monmouth & 6th,0.5610146782597737
+jersey_city,JC-U09,pickup,Hamilton Park,0.573572013684914
+jersey_city,JC-U09,pickup,Brunswick & 6th,0.6092914065683326
+jersey_city,JC-U09,pickup,Liberty Light Rail,1.2501260855908076
+jersey_city,JC-U09,pickup,Newport PATH,0.8342857123260798
+jersey_city,JC-U10,pickup,City Hall,0.7261466046536612
+jersey_city,JC-U10,pickup,York St & Marin Blvd,0.8412682487047989
+jersey_city,JC-U10,pickup,Grove St PATH,0.5951256761513165
+jersey_city,JC-U10,pickup,Columbus Drive,0.7997269095623815
+jersey_city,JC-U10,pickup,Marin Light Rail,0.9876269435863428
+jersey_city,JC-U10,pickup,Van Vorst Park,0.6576281842643104
+jersey_city,JC-U10,pickup,Manila & 1st,0.47596149490615064
+jersey_city,JC-U10,pickup,Newark Ave,0.43538115232978375
+jersey_city,JC-U10,pickup,Grand St,1.0774551626331312
+jersey_city,JC-U10,pickup,Washington St & Morgan St,0.8640263754839701
+jersey_city,JC-U10,pickup,Warren St,0.7082272505607187
+jersey_city,JC-U10,pickup,JC Medical Center,0.907153396855367
+jersey_city,JC-U10,pickup,Jersey & 3rd,0.3101057994819596
+jersey_city,JC-U10,pickup,Montgomery St,0.7834640017421461
+jersey_city,JC-U10,pickup,Morris Canal,1.2780685229539865
+jersey_city,JC-U10,pickup,Dixon Mills,0.6340202914832339
+jersey_city,JC-U10,pickup,Exchange Pl,1.1174350355888358
+jersey_city,JC-U10,pickup,Essex Light Rail,1.3035449875265803
+jersey_city,JC-U10,pickup,Jersey & 6th St,0.1863260218855471
+jersey_city,JC-U10,pickup,Paulus Hook,1.3325384590331015
+jersey_city,JC-U10,pickup,Brunswick St,0.5296272215120917
+jersey_city,JC-U10,pickup,Washington St,0.5680215997494475
+jersey_city,JC-U10,pickup,Monmouth & 6th,0.3299845422788764
+jersey_city,JC-U10,pickup,Hamilton Park,0.0569130614495877
+jersey_city,JC-U10,pickup,Brunswick & 6th,0.4060997974590244
+jersey_city,JC-U10,pickup,Liberty Light Rail,1.5122466600488143
+jersey_city,JC-U10,pickup,Newport PATH,0.6616007039109377
+jersey_city,JC-U01,return,City Hall,0.6177759474480892
+jersey_city,JC-U01,return,York St & Marin Blvd,0.7707997180151409
+jersey_city,JC-U01,return,Grove St PATH,0.4926530024192596
+jersey_city,JC-U01,return,Columbus Drive,0.7368953906621999
+jersey_city,JC-U01,return,Marin Light Rail,0.9122018413892091
+jersey_city,JC-U01,return,Van Vorst Park,0.4986743626149183
+jersey_city,JC-U01,return,Manila & 1st,0.4153349573327885
+jersey_city,JC-U01,return,Newark Ave,0.2822145348858277
+jersey_city,JC-U01,return,Grand St,0.9906263981019604
+jersey_city,JC-U01,return,Washington St & Morgan St,0.7669210367881928
+jersey_city,JC-U01,return,Warren St,0.5793832832280877
+jersey_city,JC-U01,return,JC Medical Center,0.7386452137474008
+jersey_city,JC-U01,return,Jersey & 3rd,0.31352928757491555
+jersey_city,JC-U01,return,Montgomery St,0.8358879110004399
+jersey_city,JC-U01,return,Morris Canal,1.1958249183777068
+jersey_city,JC-U01,return,Dixon Mills,0.5054357825410775
+jersey_city,JC-U01,return,Exchange Pl,1.0305079779793822
+jersey_city,JC-U01,return,Essex Light Rail,1.2192022481630793
+jersey_city,JC-U01,return,Jersey & 6th St,0.17543362496251136
+jersey_city,JC-U01,return,Paulus Hook,1.2540798593657594
+jersey_city,JC-U01,return,Brunswick St,0.3757886950786439
+jersey_city,JC-U01,return,Washington St,0.5408180626169704
+jersey_city,JC-U01,return,Monmouth & 6th,0.3612543118470234
+jersey_city,JC-U01,return,Hamilton Park,0.5956753474831944
+jersey_city,JC-U01,return,Brunswick & 6th,0.6450895035538784
+jersey_city,JC-U01,return,Liberty Light Rail,1.7192028178655976
+jersey_city,JC-U01,return,Newport PATH,0.7757113072052867
+jersey_city,JC-U02,return,City Hall,0.6396144093599601
+jersey_city,JC-U02,return,York St & Marin Blvd,0.6661841327753829
+jersey_city,JC-U02,return,Grove St PATH,0.746012869793334
+jersey_city,JC-U02,return,Columbus Drive,0.9731329716435484
+jersey_city,JC-U02,return,Marin Light Rail,0.8075862561494512
+jersey_city,JC-U02,return,Van Vorst Park,0.39425287842945406
+jersey_city,JC-U02,return,Manila & 1st,0.8069241454651058
+jersey_city,JC-U02,return,Newark Ave,0.6110875843431828
+jersey_city,JC-U02,return,Grand St,0.9801696176331479
+jersey_city,JC-U02,return,Washington St & Morgan St,1.151150176148901
+jersey_city,JC-U02,return,Warren St,1.0494856117079845
+jersey_city,JC-U02,return,JC Medical Center,0.5502728107097199
+jersey_city,JC-U02,return,Jersey & 3rd,0.69482897380964
+jersey_city,JC-U02,return,Montgomery St,0.22317808833929192
+jersey_city,JC-U02,return,Morris Canal,1.1713640169673976
+jersey_city,JC-U02,return,Dixon Mills,0.39906790555019095
+jersey_city,JC-U02,return,Exchange Pl,1.123329363316149
+jersey_city,JC-U02,return,Essex Light Rail,1.2224101202136752
+jersey_city,JC-U02,return,Jersey & 6th St,0.8255865545285754
+jersey_city,JC-U02,return,Paulus Hook,1.2622730350927187
+jersey_city,JC-U02,return,Brunswick St,0.6146295944660259
+jersey_city,JC-U02,return,Washington St,1.3734637234871168
+jersey_city,JC-U02,return,Monmouth & 6th,0.66878978075621
+jersey_city,JC-U02,return,Hamilton Park,1.153670792815125
+jersey_city,JC-U02,return,Brunswick & 6th,0.9315497911413881
+jersey_city,JC-U02,return,Liberty Light Rail,1.234393883530022
+jersey_city,JC-U02,return,Newport PATH,1.6083569680754328
+jersey_city,JC-U03,return,City Hall,0.382437156444092
+jersey_city,JC-U03,return,York St & Marin Blvd,0.5354609270111436
+jersey_city,JC-U03,return,Grove St PATH,0.2573142114152624
+jersey_city,JC-U03,return,Columbus Drive,0.5015565996582029
+jersey_city,JC-U03,return,Marin Light Rail,0.6768630503852119
+jersey_city,JC-U03,return,Van Vorst Park,0.537253690595262
+jersey_city,JC-U03,return,Manila & 1st,0.3762447769756205
+jersey_city,JC-U03,return,Newark Ave,0.32079386286617134
+jersey_city,JC-U03,return,Grand St,0.7552876070979634
+jersey_city,JC-U03,return,Washington St & Morgan St,0.5315822457841956
+jersey_city,JC-U03,return,Warren St,0.34404449222409067
+jersey_city,JC-U03,return,JC Medical Center,0.7772245417277444
+jersey_city,JC-U03,return,Jersey & 3rd,0.5001838215319737
+jersey_city,JC-U03,return,Montgomery St,0.8744672389807836
+jersey_city,JC-U03,return,Morris Canal,0.9604861273737103
+jersey_city,JC-U03,return,Dixon Mills,0.5440151105214212
+jersey_city,JC-U03,return,Exchange Pl,0.795169186975385
+jersey_city,JC-U03,return,Essex Light Rail,0.9838634571590819
+jersey_city,JC-U03,return,Jersey & 6th St,0.4110999707996935
+jersey_city,JC-U03,return,Paulus Hook,1.0187410683617624
+jersey_city,JC-U03,return,Brunswick St,0.53720898001769
+jersey_city,JC-U03,return,Washington St,0.670051698281321
+jersey_city,JC-U03,return,Monmouth & 6th,0.5913691663078742
+jersey_city,JC-U03,return,Hamilton Park,0.831638133005021
+jersey_city,JC-U03,return,Brunswick & 6th,0.8541291766930522
+jersey_city,JC-U03,return,Liberty Light Rail,1.7577821458459413
+jersey_city,JC-U03,return,Newport PATH,0.9049449428696373
+jersey_city,JC-U04,return,City Hall,0.4032631712780045
+jersey_city,JC-U04,return,York St & Marin Blvd,0.33037373978707896
+jersey_city,JC-U04,return,Grove St PATH,0.4055724200474273
+jersey_city,JC-U04,return,Columbus Drive,0.1747837748103693
+jersey_city,JC-U04,return,Marin Light Rail,0.46236046164654654
+jersey_city,JC-U04,return,Van Vorst Park,0.583933095968914
+jersey_city,JC-U04,return,Manila & 1st,0.7424883038381114
+jersey_city,JC-U04,return,Newark Ave,0.6679760534031596
+jersey_city,JC-U04,return,Grand St,0.11020488412982407
+jersey_city,JC-U04,return,Washington St & Morgan St,0.3659422833624626
+jersey_city,JC-U04,return,Warren St,0.3817134918861588
+jersey_city,JC-U04,return,JC Medical Center,0.7700541596806105
+jersey_city,JC-U04,return,Jersey & 3rd,1.02472223578031
+jersey_city,JC-U04,return,Montgomery St,0.941148853613936
+jersey_city,JC-U04,return,Morris Canal,0.315403404405571
+jersey_city,JC-U04,return,Dixon Mills,0.798790095860409
+jersey_city,JC-U04,return,Exchange Pl,0.16636875418439548
+jersey_city,JC-U04,return,Essex Light Rail,0.35244538671035114
+jersey_city,JC-U04,return,Jersey & 6th St,0.9356383850480297
+jersey_city,JC-U04,return,Paulus Hook,0.39020114612659096
+jersey_city,JC-U04,return,Brunswick St,0.9956865147292953
+jersey_city,JC-U04,return,Washington St,0.6653638157548672
+jersey_city,JC-U04,return,Monmouth & 6th,1.0498467010194792
+jersey_city,JC-U04,return,Hamilton Park,1.358441307109326
+jersey_city,JC-U04,return,Brunswick & 6th,1.3126067114046578
+jersey_city,JC-U04,return,Liberty Light Rail,1.7506117637988075
+jersey_city,JC-U04,return,Newport PATH,0.9002570603431835
+jersey_city,JC-U05,return,City Hall,0.7179275330766045
+jersey_city,JC-U05,return,York St & Marin Blvd,0.5413489725081727
+jersey_city,JC-U05,return,Grove St PATH,0.7078292496361026
+jersey_city,JC-U05,return,Columbus Drive,0.4770406043990447
+jersey_city,JC-U05,return,Marin Light Rail,0.5806059979144359
+jersey_city,JC-U05,return,Van Vorst Park,0.898597457767514
+jersey_city,JC-U05,return,Manila & 1st,1.0447451334267868
+jersey_city,JC-U05,return,Newark Ave,0.9702328829918347
+jersey_city,JC-U05,return,Grand St,0.2210483070708732
+jersey_city,JC-U05,return,Washington St & Morgan St,0.5226420055054526
+jersey_city,JC-U05,return,Warren St,0.6839703214748342
+jersey_city,JC-U05,return,JC Medical Center,0.8998019873835855
+jersey_city,JC-U05,return,Jersey & 3rd,1.3269790653689852
+jersey_city,JC-U05,return,Montgomery St,1.0870922947892387
+jersey_city,JC-U05,return,Morris Canal,0.32641125887121475
+jersey_city,JC-U05,return,Dixon Mills,1.1010469254490842
+jersey_city,JC-U05,return,Exchange Pl,0.30675117589051554
+jersey_city,JC-U05,return,Essex Light Rail,0.18736540663294932
+jersey_city,JC-U05,return,Jersey & 6th St,1.2378952146367044
+jersey_city,JC-U05,return,Paulus Hook,0.06858564369759389
+jersey_city,JC-U05,return,Brunswick St,1.2979433443179706
+jersey_city,JC-U05,return,Washington St,0.8057462374609874
+jersey_city,JC-U05,return,Monmouth & 6th,1.3521035306081546
+jersey_city,JC-U05,return,Hamilton Park,1.6606981366980007
+jersey_city,JC-U05,return,Brunswick & 6th,1.6148635409933332
+jersey_city,JC-U05,return,Liberty Light Rail,1.8803595915017826
+jersey_city,JC-U05,return,Newport PATH,1.0406394820493035
+jersey_city,JC-U06,return,City Hall,0.6803507684822816
+jersey_city,JC-U06,return,York St & Marin Blvd,0.8333745390493333
+jersey_city,JC-U06,return,Grove St PATH,0.5552278234534521
+jersey_city,JC-U06,return,Columbus Drive,0.7994702116963923
+jersey_city,JC-U06,return,Marin Light Rail,0.9747766624234017
+jersey_city,JC-U06,return,Van Vorst Park,0.8348988154205036
+jersey_city,JC-U06,return,Manila & 1st,0.6741583890138102
+jersey_city,JC-U06,return,Newark Ave,0.6184389876914129
+jersey_city,JC-U06,return,Grand St,1.0532012191361526
+jersey_city,JC-U06,return,Washington St & Morgan St,0.8054263306371383
+jersey_city,JC-U06,return,Warren St,0.6419581042622802
+jersey_city,JC-U06,return,JC Medical Center,1.074869666552986
+jersey_city,JC-U06,return,Jersey & 3rd,0.6482511082661485
+jersey_city,JC-U06,return,Montgomery St,1.1706743975450793
+jersey_city,JC-U06,return,Morris Canal,1.258399739411899
+jersey_city,JC-U06,return,Dixon Mills,0.8402222690857167
+jersey_city,JC-U06,return,Exchange Pl,1.0930827990135743
+jersey_city,JC-U06,return,Essex Light Rail,1.2817770691972714
+jersey_city,JC-U06,return,Jersey & 6th St,0.36325366203274106
+jersey_city,JC-U06,return,Paulus Hook,1.3166546803999517
+jersey_city,JC-U06,return,Brunswick St,0.7105105157698771
+jersey_city,JC-U06,return,Washington St,0.5045485779323202
+jersey_city,JC-U06,return,Monmouth & 6th,0.5488304317940074
+jersey_city,JC-U06,return,Hamilton Park,0.5360318716769235
+jersey_city,JC-U06,return,Brunswick & 6th,0.585827705553142
+jersey_city,JC-U06,return,Liberty Light Rail,2.0554272706711836
+jersey_city,JC-U06,return,Newport PATH,0.7394418225206364
+jersey_city,JC-U07,return,City Hall,0.6407867339384018
+jersey_city,JC-U07,return,York St & Marin Blvd,0.46420817336996995
+jersey_city,JC-U07,return,Grove St PATH,0.6306884504979
+jersey_city,JC-U07,return,Columbus Drive,0.3998998052608421
+jersey_city,JC-U07,return,Marin Light Rail,0.5034651987762332
+jersey_city,JC-U07,return,Van Vorst Park,0.8214566586293113
+jersey_city,JC-U07,return,Manila & 1st,0.9676043342885841
+jersey_city,JC-U07,return,Newark Ave,0.8930920838536321
+jersey_city,JC-U07,return,Grand St,0.1439075079326705
+jersey_city,JC-U07,return,Washington St & Morgan St,0.44550120636724994
+jersey_city,JC-U07,return,Warren St,0.6068295223366317
+jersey_city,JC-U07,return,JC Medical Center,0.8226611882453828
+jersey_city,JC-U07,return,Jersey & 3rd,1.249838266230783
+jersey_city,JC-U07,return,Montgomery St,1.009951495651036
+jersey_city,JC-U07,return,Morris Canal,0.25722899662733056
+jersey_city,JC-U07,return,Dixon Mills,1.0239061263108817
+jersey_city,JC-U07,return,Exchange Pl,0.22961037675231297
+jersey_city,JC-U07,return,Essex Light Rail,0.11922165897439059
+jersey_city,JC-U07,return,Jersey & 6th St,1.1607544154985021
+jersey_city,JC-U07,return,Paulus Hook,0.14572644283579655
+jersey_city,JC-U07,return,Brunswick St,1.220802545179768
+jersey_city,JC-U07,return,Washington St,0.7286054383227847
+jersey_city,JC-U07,return,Monmouth & 6th,1.2749627314699519
+jersey_city,JC-U07,return,Hamilton Park,1.5835573375597984
+jersey_city,JC-U07,return,Brunswick & 6th,1.5377227418551305
+jersey_city,JC-U07,return,Liberty Light Rail,1.8032187923635798
+jersey_city,JC-U07,return,Newport PATH,0.9634986829111009
+jersey_city,JC-U08,return,City Hall,0.7777368606937848
+jersey_city,JC-U08,return,York St & Marin Blvd,0.8911575025285464
+jersey_city,JC-U08,return,Grove St PATH,0.8841353211271589
+jersey_city,JC-U08,return,Columbus Drive,1.1112554229773735
+jersey_city,JC-U08,return,Marin Light Rail,0.9727742796891481
+jersey_city,JC-U08,return,Van Vorst Park,0.5452754752717628
+jersey_city,JC-U08,return,Manila & 1st,0.9334872239345865
+jersey_city,JC-U08,return,Newark Ave,0.7388848954467073
+jersey_city,JC-U08,return,Grand St,1.148112405857604
+jersey_city,JC-U08,return,Washington St & Morgan St,1.289272627482725
+jersey_city,JC-U08,return,Warren St,1.1760486901774654
+jersey_city,JC-U08,return,JC Medical Center,0.6435263268960938
+jersey_city,JC-U08,return,Jersey & 3rd,0.8213920522791207
+jersey_city,JC-U08,return,Montgomery St,0.4578771338931547
+jersey_city,JC-U08,return,Morris Canal,1.3380333807924147
+jersey_city,JC-U08,return,Dixon Mills,0.4945098360913009
+jersey_city,JC-U08,return,Exchange Pl,1.2614518146499736
+jersey_city,JC-U08,return,Essex Light Rail,1.3895908462885134
+jersey_city,JC-U08,return,Jersey & 6th St,0.9521496329980562
+jersey_city,JC-U08,return,Paulus Hook,1.4307384557364338
+jersey_city,JC-U08,return,Brunswick St,0.7411926729355067
+jersey_city,JC-U08,return,Washington St,1.5000268019565974
+jersey_city,JC-U08,return,Monmouth & 6th,0.7953528592256908
+jersey_city,JC-U08,return,Hamilton Park,1.2802338712846066
+jersey_city,JC-U08,return,Brunswick & 6th,1.0581128696108693
+jersey_city,JC-U08,return,Liberty Light Rail,1.1311930373061647
+jersey_city,JC-U08,return,Newport PATH,1.7349200465449135
+jersey_city,JC-U09,return,City Hall,0.23376271406291463
+jersey_city,JC-U09,return,York St & Marin Blvd,0.38678648462996595
+jersey_city,JC-U09,return,Grove St PATH,0.10863976903408501
+jersey_city,JC-U09,return,Columbus Drive,0.3528821572770253
+jersey_city,JC-U09,return,Marin Light Rail,0.5281886080040342
+jersey_city,JC-U09,return,Van Vorst Park,0.4698740522025425
+jersey_city,JC-U09,return,Manila & 1st,0.22757033459444304
+jersey_city,JC-U09,return,Newark Ave,0.37013198184112844
+jersey_city,JC-U09,return,Grand St,0.6066131647167857
+jersey_city,JC-U09,return,Washington St & Morgan St,0.38379388880315835
+jersey_city,JC-U09,return,Warren St,0.3868624551228458
+jersey_city,JC-U09,return,JC Medical Center,0.6559951159142392
+jersey_city,JC-U09,return,Jersey & 3rd,0.5495219405069307
+jersey_city,JC-U09,return,Montgomery St,0.8270898098475644
+jersey_city,JC-U09,return,Morris Canal,0.8118116849925326
+jersey_city,JC-U09,return,Dixon Mills,0.5018574448470667
+jersey_city,JC-U09,return,Exchange Pl,0.6464947445942074
+jersey_city,JC-U09,return,Essex Light Rail,0.8351890147779042
+jersey_city,JC-U09,return,Jersey & 6th St,0.4604380897746506
+jersey_city,JC-U09,return,Paulus Hook,0.8700666259805848
+jersey_city,JC-U09,return,Brunswick St,0.5865470989926473
+jersey_city,JC-U09,return,Washington St,0.7190692858101003
+jersey_city,JC-U09,return,Monmouth & 6th,0.6407072852828314
+jersey_city,JC-U09,return,Hamilton Park,0.8809762519799783
+jersey_city,JC-U09,return,Brunswick & 6th,0.9034672956680095
+jersey_city,JC-U09,return,Liberty Light Rail,1.636552720032436
+jersey_city,JC-U09,return,Newport PATH,0.9539625303984166
+jersey_city,JC-U10,return,City Hall,0.8343786187799197
+jersey_city,JC-U10,return,York St & Marin Blvd,0.9874023893469714
+jersey_city,JC-U10,return,Grove St PATH,0.7092556737510902
+jersey_city,JC-U10,return,Columbus Drive,0.9534980619940304
+jersey_city,JC-U10,return,Marin Light Rail,1.1288045127210398
+jersey_city,JC-U10,return,Van Vorst Park,0.6591501717799118
+jersey_city,JC-U10,return,Manila & 1st,0.5758107664977818
+jersey_city,JC-U10,return,Newark Ave,0.4426903440508211
+jersey_city,JC-U10,return,Grand St,1.2072290694337904
+jersey_city,JC-U10,return,Washington St & Morgan St,0.9821138877397151
+jersey_city,JC-U10,return,Warren St,0.8182388697898816
+jersey_city,JC-U10,return,JC Medical Center,0.8991210229123943
+jersey_city,JC-U10,return,Jersey & 3rd,0.472502464625557
+jersey_city,JC-U10,return,Montgomery St,0.9949257539044881
+jersey_city,JC-U10,return,Morris Canal,1.4124275897095369
+jersey_city,JC-U10,return,Dixon Mills,0.6644736254451253
+jersey_city,JC-U10,return,Exchange Pl,1.2471106493112134
+jersey_city,JC-U10,return,Essex Light Rail,1.4358049194949105
+jersey_city,JC-U10,return,Jersey & 6th St,0.1875050183921495
+jersey_city,JC-U10,return,Paulus Hook,1.4706825306975908
+jersey_city,JC-U10,return,Brunswick St,0.5347618721292855
+jersey_city,JC-U10,return,Washington St,0.6812361350348969
+jersey_city,JC-U10,return,Monmouth & 6th,0.3730183849027582
+jersey_city,JC-U10,return,Hamilton Park,0.3628636464916074
+jersey_city,JC-U10,return,Brunswick & 6th,0.4100156586618928
+jersey_city,JC-U10,return,Liberty Light Rail,1.8796786270305916
+jersey_city,JC-U10,return,Newport PATH,0.9161293796232132
+milwaukee,MKE-U01,pickup,411 East Wisconsin ,0.6979366448603319
+milwaukee,MKE-U01,pickup,Water & Wisconsin,0.5338116468485988
+milwaukee,MKE-U01,pickup,Jefferson & Clybourn,0.8540699240268885
+milwaukee,MKE-U01,pickup,777 East Wisconsin,0.8330822619536273
+milwaukee,MKE-U01,pickup,Cathedral Square,0.5979179925001755
+milwaukee,MKE-U01,pickup,Veolia,0.6701104106765982
+milwaukee,MKE-U01,pickup,Broadway & St Paul,0.8119460087570104
+milwaukee,MKE-U01,pickup,MSOE Library,0.4538641359252779
+milwaukee,MKE-U01,pickup,Red Arrow Park,0.25189354034213973
+milwaukee,MKE-U01,pickup,Postman Square,0.5183071691636906
+milwaukee,MKE-U01,pickup,Mason & Prospect,0.9143778102391855
+milwaukee,MKE-U01,pickup,Couture,1.1011155327884703
+milwaukee,MKE-U01,pickup,State & Van Buren,0.5245644557415661
+milwaukee,MKE-U01,pickup,Kilbourn & Marshall,0.7037416543401045
+milwaukee,MKE-U01,pickup,Plankinton & St Paul,0.9070498725836258
+milwaukee,MKE-U01,pickup,MSOE Diercks Hall,0.25115720784902
+milwaukee,MKE-U01,pickup,MLK & Wisconsin,0.6387181090622305
+milwaukee,MKE-U01,pickup,MLK & State,0.3597947896251285
+milwaukee,MKE-U01,pickup,War Memorial,1.1895872227795057
+milwaukee,MKE-U01,pickup,Zeidler Union Square Park,0.8207396125548866
+milwaukee,MKE-U01,pickup,Summerfest Midgate,1.273090935748995
+milwaukee,MKE-U01,pickup,Vel R. Phillips & Wisconsin,0.699443794436303
+milwaukee,MKE-U01,pickup,East Juneau Post Office,0.3549639319677938
+milwaukee,MKE-U01,pickup,Discovery World,1.2336554482395752
+milwaukee,MKE-U01,pickup,Erie & Menomonee,1.0485117311571357
+milwaukee,MKE-U01,pickup,Juneau & Water,0.04177583243834869
+milwaukee,MKE-U01,pickup,Vel R. Phillips & Kilbourn,0.5315640037799251
+milwaukee,MKE-U02,pickup,411 East Wisconsin ,0.7696645507272302
+milwaukee,MKE-U02,pickup,Water & Wisconsin,0.9347624050228893
+milwaukee,MKE-U02,pickup,Jefferson & Clybourn,0.9230427149307452
+milwaukee,MKE-U02,pickup,777 East Wisconsin,0.6349812883204727
+milwaukee,MKE-U02,pickup,Cathedral Square,0.5527219781829816
+milwaukee,MKE-U02,pickup,Veolia,1.1298006413707014
+milwaukee,MKE-U02,pickup,Broadway & St Paul,1.1225087135693081
+milwaukee,MKE-U02,pickup,MSOE Library,0.5356740596166021
+milwaukee,MKE-U02,pickup,Red Arrow Park,0.7724969012123055
+milwaukee,MKE-U02,pickup,Postman Square,0.9900890721638825
+milwaukee,MKE-U02,pickup,Mason & Prospect,0.41950933071735474
+milwaukee,MKE-U02,pickup,Couture,0.7056796221329479
+milwaukee,MKE-U02,pickup,State & Van Buren,0.371133960381986
+milwaukee,MKE-U02,pickup,Kilbourn & Marshall,0.31968963745741713
+milwaukee,MKE-U02,pickup,Plankinton & St Paul,1.3440041184209717
+milwaukee,MKE-U02,pickup,MSOE Diercks Hall,0.5736239301259567
+milwaukee,MKE-U02,pickup,MLK & Wisconsin,1.1510503249128266
+milwaukee,MKE-U02,pickup,MLK & State,0.9384043202846138
+milwaukee,MKE-U02,pickup,War Memorial,0.6720074812977165
+milwaukee,MKE-U02,pickup,Zeidler Union Square Park,1.324314521157983
+milwaukee,MKE-U02,pickup,Summerfest Midgate,1.0204880502341722
+milwaukee,MKE-U02,pickup,Vel R. Phillips & Wisconsin,1.2149268899122028
+milwaukee,MKE-U02,pickup,East Juneau Post Office,0.34338396717717523
+milwaukee,MKE-U02,pickup,Discovery World,0.7667235459835668
+milwaukee,MKE-U02,pickup,Erie & Menomonee,1.4317703475707093
+milwaukee,MKE-U02,pickup,Juneau & Water,0.7128622189482471
+milwaukee,MKE-U02,pickup,Vel R. Phillips & Kilbourn,1.0791336319794391
+milwaukee,MKE-U03,pickup,411 East Wisconsin ,0.39256111478920075
+milwaukee,MKE-U03,pickup,Water & Wisconsin,0.5655257739630297
+milwaukee,MKE-U03,pickup,Jefferson & Clybourn,0.24419758916942438
+milwaukee,MKE-U03,pickup,777 East Wisconsin,0.393372127848514
+milwaukee,MKE-U03,pickup,Cathedral Square,0.5082142567822993
+milwaukee,MKE-U03,pickup,Veolia,0.6392399646701425
+milwaukee,MKE-U03,pickup,Broadway & St Paul,0.2848583986149203
+milwaukee,MKE-U03,pickup,MSOE Library,0.6436633041187603
+milwaukee,MKE-U03,pickup,Red Arrow Park,0.8646932693278536
+milwaukee,MKE-U03,pickup,Postman Square,0.8390930698649552
+milwaukee,MKE-U03,pickup,Mason & Prospect,0.6193212895822242
+milwaukee,MKE-U03,pickup,Couture,0.4005435291596223
+milwaukee,MKE-U03,pickup,State & Van Buren,0.7348618809715355
+milwaukee,MKE-U03,pickup,Kilbourn & Marshall,0.7514502742252562
+milwaukee,MKE-U03,pickup,Plankinton & St Paul,0.4894848606897807
+milwaukee,MKE-U03,pickup,MSOE Diercks Hall,0.8541149426835651
+milwaukee,MKE-U03,pickup,MLK & Wisconsin,0.8704424369361861
+milwaukee,MKE-U03,pickup,MLK & State,1.0159362390809388
+milwaukee,MKE-U03,pickup,War Memorial,0.8520877232551384
+milwaukee,MKE-U03,pickup,Zeidler Union Square Park,0.8364889136013245
+milwaukee,MKE-U03,pickup,Summerfest Midgate,0.1915819722596299
+milwaukee,MKE-U03,pickup,Vel R. Phillips & Wisconsin,0.9679886936482764
+milwaukee,MKE-U03,pickup,East Juneau Post Office,0.8475923591787083
+milwaukee,MKE-U03,pickup,Discovery World,0.5193867198624502
+milwaukee,MKE-U03,pickup,Erie & Menomonee,0.4155925315931345
+milwaukee,MKE-U03,pickup,Juneau & Water,1.1012967970784004
+milwaukee,MKE-U03,pickup,Vel R. Phillips & Kilbourn,1.0516111407379871
+milwaukee,MKE-U04,pickup,411 East Wisconsin ,0.8319697002734254
+milwaukee,MKE-U04,pickup,Water & Wisconsin,0.6627707197781062
+milwaukee,MKE-U04,pickup,Jefferson & Clybourn,0.9862568117208983
+milwaukee,MKE-U04,pickup,777 East Wisconsin,0.9685229151204457
+milwaukee,MKE-U04,pickup,Cathedral Square,0.7715568881748406
+milwaukee,MKE-U04,pickup,Veolia,0.6134099635537517
+milwaukee,MKE-U04,pickup,Broadway & St Paul,0.936101205060694
+milwaukee,MKE-U04,pickup,MSOE Library,0.6275030315999433
+milwaukee,MKE-U04,pickup,Red Arrow Park,0.4176135757306377
+milwaukee,MKE-U04,pickup,Postman Square,0.4353272911788121
+milwaukee,MKE-U04,pickup,Mason & Prospect,1.0820656211785966
+milwaukee,MKE-U04,pickup,Couture,1.233928612081309
+milwaukee,MKE-U04,pickup,State & Van Buren,0.6990841087326545
+milwaukee,MKE-U04,pickup,Kilbourn & Marshall,0.878261307331193
+milwaukee,MKE-U04,pickup,Plankinton & St Paul,0.8513738922523852
+milwaukee,MKE-U04,pickup,MSOE Diercks Hall,0.42479610352368524
+milwaukee,MKE-U04,pickup,MLK & Wisconsin,0.46775223530702265
+milwaukee,MKE-U04,pickup,MLK & State,0.1988037140781493
+milwaukee,MKE-U04,pickup,War Memorial,1.357275033718917
+milwaukee,MKE-U04,pickup,Zeidler Union Square Park,0.6497737387996787
+milwaukee,MKE-U04,pickup,Summerfest Midgate,1.400151489048889
+milwaukee,MKE-U04,pickup,Vel R. Phillips & Wisconsin,0.5271426031957487
+milwaukee,MKE-U04,pickup,East Juneau Post Office,0.5294835849588821
+milwaukee,MKE-U04,pickup,Discovery World,1.3669769375326402
+milwaukee,MKE-U04,pickup,Erie & Menomonee,1.1680994281797235
+milwaukee,MKE-U04,pickup,Juneau & Water,0.1546127435845565
+milwaukee,MKE-U04,pickup,Vel R. Phillips & Kilbourn,0.3585328766850022
+milwaukee,MKE-U05,pickup,411 East Wisconsin ,0.47222605911971954
+milwaukee,MKE-U05,pickup,Water & Wisconsin,0.31463329446386096
+milwaukee,MKE-U05,pickup,Jefferson & Clybourn,0.4769936013869073
+milwaukee,MKE-U05,pickup,777 East Wisconsin,0.6087191470586413
+milwaukee,MKE-U05,pickup,Cathedral Square,0.6521497692040379
+milwaukee,MKE-U05,pickup,Veolia,0.12521492033198559
+milwaukee,MKE-U05,pickup,Broadway & St Paul,0.42644016319752903
+milwaukee,MKE-U05,pickup,MSOE Library,0.6734087037064336
+milwaukee,MKE-U05,pickup,Red Arrow Park,0.48435234408308386
+milwaukee,MKE-U05,pickup,Postman Square,0.2218145616391235
+milwaukee,MKE-U05,pickup,Mason & Prospect,0.8301373149680957
+milwaukee,MKE-U05,pickup,Couture,0.7252060755401132
+milwaukee,MKE-U05,pickup,State & Van Buren,0.8463905883695153
+milwaukee,MKE-U05,pickup,Kilbourn & Marshall,0.8694676646999618
+milwaukee,MKE-U05,pickup,Plankinton & St Paul,0.2921810049984597
+milwaukee,MKE-U05,pickup,MSOE Diercks Hall,0.7414395524763199
+milwaukee,MKE-U05,pickup,MLK & Wisconsin,0.1898163087786607
+milwaukee,MKE-U05,pickup,MLK & State,0.4108850128409032
+milwaukee,MKE-U05,pickup,War Memorial,1.1071291410814528
+milwaukee,MKE-U05,pickup,Zeidler Union Square Park,0.15790284662623694
+milwaukee,MKE-U05,pickup,Summerfest Midgate,0.8904904471857237
+milwaukee,MKE-U05,pickup,Vel R. Phillips & Wisconsin,0.28640025534206004
+milwaukee,MKE-U05,pickup,East Juneau Post Office,0.9591210665766882
+milwaukee,MKE-U05,pickup,Discovery World,0.8608994503891916
+milwaukee,MKE-U05,pickup,Erie & Menomonee,0.6556174503174435
+milwaukee,MKE-U05,pickup,Juneau & Water,0.6925506308018097
+milwaukee,MKE-U05,pickup,Vel R. Phillips & Kilbourn,0.4380895794096668
+milwaukee,MKE-U06,pickup,411 East Wisconsin ,0.4006242332151121
+milwaukee,MKE-U06,pickup,Water & Wisconsin,0.5780944459362738
+milwaukee,MKE-U06,pickup,Jefferson & Clybourn,0.35703192881997337
+milwaukee,MKE-U06,pickup,777 East Wisconsin,0.26449275429697344
+milwaukee,MKE-U06,pickup,Cathedral Square,0.4998828255305378
+milwaukee,MKE-U06,pickup,Veolia,0.6587736257846247
+milwaukee,MKE-U06,pickup,Broadway & St Paul,0.5541253352181575
+milwaukee,MKE-U06,pickup,MSOE Library,0.6463436534591382
+milwaukee,MKE-U06,pickup,Red Arrow Park,0.8758564764834366
+milwaukee,MKE-U06,pickup,Postman Square,0.8552384701682558
+milwaukee,MKE-U06,pickup,Mason & Prospect,0.25166394974085515
+milwaukee,MKE-U06,pickup,Couture,0.09819821795880153
+milwaukee,MKE-U06,pickup,State & Van Buren,0.6071536366896596
+milwaukee,MKE-U06,pickup,Kilbourn & Marshall,0.4807498633008168
+milwaukee,MKE-U06,pickup,Plankinton & St Paul,0.7706343854716089
+milwaukee,MKE-U06,pickup,MSOE Diercks Hall,0.8567952920239431
+milwaukee,MKE-U06,pickup,MLK & Wisconsin,0.8865878372394866
+milwaukee,MKE-U06,pickup,MLK & State,1.0320816393842394
+milwaukee,MKE-U06,pickup,War Memorial,0.4162007479295307
+milwaukee,MKE-U06,pickup,Zeidler Union Square Park,0.878768194778787
+milwaukee,MKE-U06,pickup,Summerfest Midgate,0.40289638390639365
+milwaukee,MKE-U06,pickup,Vel R. Phillips & Wisconsin,0.984134093951577
+milwaukee,MKE-U06,pickup,East Juneau Post Office,0.7840639692287353
+milwaukee,MKE-U06,pickup,Discovery World,0.14003410223664164
+milwaukee,MKE-U06,pickup,Erie & Menomonee,0.8189462205021798
+milwaukee,MKE-U06,pickup,Juneau & Water,1.1124600042339834
+milwaukee,MKE-U06,pickup,Vel R. Phillips & Kilbourn,1.0677565410412877
+milwaukee,MKE-U07,pickup,411 East Wisconsin ,0.6075415822783555
+milwaukee,MKE-U07,pickup,Water & Wisconsin,0.5514557621901958
+milwaukee,MKE-U07,pickup,Jefferson & Clybourn,0.45607904744737426
+milwaukee,MKE-U07,pickup,777 East Wisconsin,0.7379247157742547
+milwaukee,MKE-U07,pickup,Cathedral Square,0.8486526470794148
+milwaukee,MKE-U07,pickup,Veolia,0.622241835070034
+milwaukee,MKE-U07,pickup,Broadway & St Paul,0.26344883034660693
+milwaukee,MKE-U07,pickup,MSOE Library,0.8909123933152554
+milwaukee,MKE-U07,pickup,Red Arrow Park,0.8518792395694081
+milwaukee,MKE-U07,pickup,Postman Square,0.8220949402648468
+milwaukee,MKE-U07,pickup,Mason & Prospect,0.9629533280282792
+milwaukee,MKE-U07,pickup,Couture,0.7381348446730086
+milwaukee,MKE-U07,pickup,State & Van Buren,1.0535308655674893
+milwaukee,MKE-U07,pickup,Kilbourn & Marshall,1.0766079418979362
+milwaukee,MKE-U07,pickup,Plankinton & St Paul,0.4490110101632828
+milwaukee,MKE-U07,pickup,MSOE Diercks Hall,0.9685064016130914
+milwaukee,MKE-U07,pickup,MLK & Wisconsin,0.8534443073360776
+milwaukee,MKE-U07,pickup,MLK & State,0.9989381094808303
+milwaukee,MKE-U07,pickup,War Memorial,1.128719108706364
+milwaukee,MKE-U07,pickup,Zeidler Union Square Park,0.8175842925261841
+milwaukee,MKE-U07,pickup,Summerfest Midgate,0.36445726771706277
+milwaukee,MKE-U07,pickup,Vel R. Phillips & Wisconsin,0.950990564048168
+milwaukee,MKE-U07,pickup,East Juneau Post Office,1.166261343774662
+milwaukee,MKE-U07,pickup,Discovery World,0.7944664012735738
+milwaukee,MKE-U07,pickup,Erie & Menomonee,0.07632675851023633
+milwaukee,MKE-U07,pickup,Juneau & Water,1.08804440340247
+milwaukee,MKE-U07,pickup,Vel R. Phillips & Kilbourn,1.0346130111378786
+milwaukee,MKE-U08,pickup,411 East Wisconsin ,0.585481797570742
+milwaukee,MKE-U08,pickup,Water & Wisconsin,0.762629443579277
+milwaukee,MKE-U08,pickup,Jefferson & Clybourn,0.4378809344410946
+milwaukee,MKE-U08,pickup,777 East Wisconsin,0.4544385573757627
+milwaukee,MKE-U08,pickup,Cathedral Square,0.6894816296124645
+milwaukee,MKE-U08,pickup,Veolia,0.8399210232578688
+milwaukee,MKE-U08,pickup,Broadway & St Paul,0.599336360230451
+milwaukee,MKE-U08,pickup,MSOE Library,0.8349790609850878
+milwaukee,MKE-U08,pickup,Red Arrow Park,1.0603914741264397
+milwaukee,MKE-U08,pickup,Postman Square,1.0392650578110332
+milwaukee,MKE-U08,pickup,Mason & Prospect,0.4851846863759031
+milwaukee,MKE-U08,pickup,Couture,0.23912602313245324
+milwaukee,MKE-U08,pickup,State & Van Buren,0.7978859658815651
+milwaukee,MKE-U08,pickup,Kilbourn & Marshall,0.7142705999358651
+milwaukee,MKE-U08,pickup,Plankinton & St Paul,0.8064000948920914
+milwaukee,MKE-U08,pickup,MSOE Diercks Hall,1.0454306995498925
+milwaukee,MKE-U08,pickup,MLK & Wisconsin,1.0706144248822635
+milwaukee,MKE-U08,pickup,MLK & State,1.2161082270270163
+milwaukee,MKE-U08,pickup,War Memorial,0.6299042481330775
+milwaukee,MKE-U08,pickup,Zeidler Union Square Park,1.0389935245171618
+milwaukee,MKE-U08,pickup,Summerfest Midgate,0.16647773333149804
+milwaukee,MKE-U08,pickup,Vel R. Phillips & Wisconsin,1.168160681594354
+milwaukee,MKE-U08,pickup,East Juneau Post Office,0.9742004501920115
+milwaukee,MKE-U08,pickup,Discovery World,0.2968364963015613
+milwaukee,MKE-U08,pickup,Erie & Menomonee,0.5820337816925806
+milwaukee,MKE-U08,pickup,Juneau & Water,1.2969950018769867
+milwaukee,MKE-U08,pickup,Vel R. Phillips & Kilbourn,1.2517831286840655
+milwaukee,MKE-U09,pickup,411 East Wisconsin ,0.841975505435179
+milwaukee,MKE-U09,pickup,Water & Wisconsin,0.7287317954712064
+milwaukee,MKE-U09,pickup,Jefferson & Clybourn,1.0000852083054212
+milwaukee,MKE-U09,pickup,777 East Wisconsin,0.9515035357528723
+milwaukee,MKE-U09,pickup,Cathedral Square,0.7163392662994206
+milwaukee,MKE-U09,pickup,Veolia,0.8662042934617341
+milwaukee,MKE-U09,pickup,Broadway & St Paul,0.9787342567938548
+milwaukee,MKE-U09,pickup,MSOE Library,0.5722854097245232
+milwaukee,MKE-U09,pickup,Red Arrow Park,0.44032010058226995
+milwaukee,MKE-U09,pickup,Postman Square,0.7144010519488267
+milwaukee,MKE-U09,pickup,Mason & Prospect,1.0327990840384307
+milwaukee,MKE-U09,pickup,Couture,1.223117772132944
+milwaukee,MKE-U09,pickup,State & Van Buren,0.6429857295408113
+milwaukee,MKE-U09,pickup,Kilbourn & Marshall,0.8221629281393498
+milwaukee,MKE-U09,pickup,Plankinton & St Paul,1.1031437553687617
+milwaukee,MKE-U09,pickup,MSOE Diercks Hall,0.36957848164826523
+milwaukee,MKE-U09,pickup,MLK & Wisconsin,0.8241360197845045
+milwaukee,MKE-U09,pickup,MLK & State,0.5440599903095032
+milwaukee,MKE-U09,pickup,War Memorial,1.308008496578751
+milwaukee,MKE-U09,pickup,Zeidler Union Square Park,1.0061575232771607
+milwaukee,MKE-U09,pickup,Summerfest Midgate,1.401424658477405
+milwaukee,MKE-U09,pickup,Vel R. Phillips & Wisconsin,0.8842267201838326
+milwaukee,MKE-U09,pickup,East Juneau Post Office,0.4733852057670391
+milwaukee,MKE-U09,pickup,Discovery World,1.3525571377947945
+milwaukee,MKE-U09,pickup,Erie & Menomonee,1.244605613942272
+milwaukee,MKE-U09,pickup,Juneau & Water,0.237869715223485
+milwaukee,MKE-U09,pickup,Vel R. Phillips & Kilbourn,0.7134670447600178
+milwaukee,MKE-U10,pickup,411 East Wisconsin ,0.43104665988425117
+milwaukee,MKE-U10,pickup,Water & Wisconsin,0.27858645907382346
+milwaukee,MKE-U10,pickup,Jefferson & Clybourn,0.28173834687070715
+milwaukee,MKE-U10,pickup,777 East Wisconsin,0.5635840151975875
+milwaukee,MKE-U10,pickup,Cathedral Square,0.6719653857501926
+milwaukee,MKE-U10,pickup,Veolia,0.3123414814369347
+milwaukee,MKE-U10,pickup,Broadway & St Paul,0.07929543478740121
+milwaukee,MKE-U10,pickup,MSOE Library,0.7093279310834539
+milwaukee,MKE-U10,pickup,Red Arrow Park,0.5509039187323294
+milwaukee,MKE-U10,pickup,Postman Square,0.5121945866317472
+milwaukee,MKE-U10,pickup,Mason & Prospect,0.788612627451612
+milwaukee,MKE-U10,pickup,Couture,0.5765730405342679
+milwaukee,MKE-U10,pickup,State & Van Buren,0.8747215016179838
+milwaukee,MKE-U10,pickup,Kilbourn & Marshall,0.8977985779484303
+milwaukee,MKE-U10,pickup,Plankinton & St Paul,0.15102519079164983
+milwaukee,MKE-U10,pickup,MSOE Diercks Hall,0.7784300523349005
+milwaukee,MKE-U10,pickup,MLK & Wisconsin,0.5435439537029779
+milwaukee,MKE-U10,pickup,MLK & State,0.6890377558477309
+milwaukee,MKE-U10,pickup,War Memorial,1.03096945023592
+milwaukee,MKE-U10,pickup,Zeidler Union Square Park,0.5068295467542184
+milwaukee,MKE-U10,pickup,Summerfest Midgate,0.5258347910134318
+milwaukee,MKE-U10,pickup,Vel R. Phillips & Wisconsin,0.6410902104150684
+milwaukee,MKE-U10,pickup,East Juneau Post Office,0.9874519798251566
+milwaukee,MKE-U10,pickup,Discovery World,0.698268446843232
+milwaukee,MKE-U10,pickup,Erie & Menomonee,0.28668887552575983
+milwaukee,MKE-U10,pickup,Juneau & Water,0.7781440497693708
+milwaukee,MKE-U10,pickup,Vel R. Phillips & Kilbourn,0.7247126575047795
+milwaukee,MKE-U01,return,411 East Wisconsin ,0.7231750725990096
+milwaukee,MKE-U01,return,Water & Wisconsin,0.5454503663263133
+milwaukee,MKE-U01,return,Jefferson & Clybourn,0.878272055954701
+milwaukee,MKE-U01,return,777 East Wisconsin,1.0052734372106624
+milwaukee,MKE-U01,return,Cathedral Square,0.6381880471877227
+milwaukee,MKE-U01,return,Veolia,0.6839216275085401
+milwaukee,MKE-U01,return,Broadway & St Paul,0.829225391016398
+milwaukee,MKE-U01,return,MSOE Library,0.6189206102253526
+milwaukee,MKE-U01,return,Red Arrow Park,0.3437284066376938
+milwaukee,MKE-U01,return,Postman Square,0.5139609530766
+milwaukee,MKE-U01,return,Mason & Prospect,0.9486899246501465
+milwaukee,MKE-U01,return,Couture,1.1436612382453986
+milwaukee,MKE-U01,return,State & Van Buren,0.555566656029119
+milwaukee,MKE-U01,return,Kilbourn & Marshall,0.7461746476780828
+milwaukee,MKE-U01,return,Plankinton & St Paul,0.9353657229263805
+milwaukee,MKE-U01,return,MSOE Diercks Hall,0.2890347631698241
+milwaukee,MKE-U01,return,MLK & Wisconsin,0.649664408199757
+milwaukee,MKE-U01,return,MLK & State,0.3607113133241155
+milwaukee,MKE-U01,return,War Memorial,1.3546687331861775
+milwaukee,MKE-U01,return,Zeidler Union Square Park,0.8356697771117358
+milwaukee,MKE-U01,return,Summerfest Midgate,1.2979264096067602
+milwaukee,MKE-U01,return,Vel R. Phillips & Wisconsin,0.7348569751807944
+milwaukee,MKE-U01,return,East Juneau Post Office,0.3821426322230537
+milwaukee,MKE-U01,return,Discovery World,1.2871405314106417
+milwaukee,MKE-U01,return,Erie & Menomonee,1.0731973646342914
+milwaukee,MKE-U01,return,Juneau & Water,0.13168331768731817
+milwaukee,MKE-U01,return,Vel R. Phillips & Kilbourn,0.5370263507237001
+milwaukee,MKE-U02,return,411 East Wisconsin ,0.7742476268776608
+milwaukee,MKE-U02,return,Water & Wisconsin,0.9434883610030845
+milwaukee,MKE-U02,return,Jefferson & Clybourn,0.9292046482858658
+milwaukee,MKE-U02,return,777 East Wisconsin,0.8011910150214311
+milwaukee,MKE-U02,return,Cathedral Square,0.5668880138971963
+milwaukee,MKE-U02,return,Veolia,1.1443567072243996
+milwaukee,MKE-U02,return,Broadway & St Paul,1.1350366339154638
+milwaukee,MKE-U02,return,MSOE Library,0.5306374283871982
+milwaukee,MKE-U02,return,Red Arrow Park,0.747429457352944
+milwaukee,MKE-U02,return,Postman Square,1.0327238424939318
+milwaukee,MKE-U02,return,Mason & Prospect,0.41799731547837676
+milwaukee,MKE-U02,return,Couture,0.8146225777236116
+milwaukee,MKE-U02,return,State & Van Buren,0.36151148913082565
+milwaukee,MKE-U02,return,Kilbourn & Marshall,0.424942151965376
+milwaukee,MKE-U02,return,Plankinton & St Paul,1.371233311733983
+milwaukee,MKE-U02,return,MSOE Diercks Hall,0.5677565687677651
+milwaukee,MKE-U02,return,MLK & Wisconsin,1.1729272198396095
+milwaukee,MKE-U02,return,MLK & State,0.9352224131692405
+milwaukee,MKE-U02,return,War Memorial,0.8239761240144075
+milwaukee,MKE-U02,return,Zeidler Union Square Park,1.3516070377519531
+milwaukee,MKE-U02,return,Summerfest Midgate,1.1583378643720166
+milwaukee,MKE-U02,return,Vel R. Phillips & Wisconsin,1.2581197868206473
+milwaukee,MKE-U02,return,East Juneau Post Office,0.34338396717717523
+milwaukee,MKE-U02,return,Discovery World,0.9581018708888543
+milwaukee,MKE-U02,return,Erie & Menomonee,1.4659735206181734
+milwaukee,MKE-U02,return,Juneau & Water,0.8111913736190629
+milwaukee,MKE-U02,return,Vel R. Phillips & Kilbourn,1.1115374505688254
+milwaukee,MKE-U03,return,411 East Wisconsin ,0.5154270491646817
+milwaukee,MKE-U03,return,Water & Wisconsin,0.6986102464007027
+milwaukee,MKE-U03,return,Jefferson & Clybourn,0.3657617059261205
+milwaukee,MKE-U03,return,777 East Wisconsin,0.39207685189006725
+milwaukee,MKE-U03,return,Cathedral Square,0.6405331587110664
+milwaukee,MKE-U03,return,Veolia,0.7718967506804698
+milwaukee,MKE-U03,return,Broadway & St Paul,0.41412332865675977
+milwaukee,MKE-U03,return,MSOE Library,0.787352995995646
+milwaukee,MKE-U03,return,Red Arrow Park,0.9965876329019231
+milwaukee,MKE-U03,return,Postman Square,1.0223009609946248
+milwaukee,MKE-U03,return,Mason & Prospect,0.6376921252247091
+milwaukee,MKE-U03,return,Couture,0.43980681572397706
+milwaukee,MKE-U03,return,State & Van Buren,0.7552737959554067
+milwaukee,MKE-U03,return,Kilbourn & Marshall,0.7839766197445383
+milwaukee,MKE-U03,return,Plankinton & St Paul,0.6306753087823377
+milwaukee,MKE-U03,return,MSOE Diercks Hall,1.0123707760470904
+milwaukee,MKE-U03,return,MLK & Wisconsin,0.9993078933566558
+milwaukee,MKE-U03,return,MLK & State,1.1963454295971618
+milwaukee,MKE-U03,return,War Memorial,1.0352137729515973
+milwaukee,MKE-U03,return,Zeidler Union Square Park,0.9914281491686335
+milwaukee,MKE-U03,return,Summerfest Midgate,0.19786260168475336
+milwaukee,MKE-U03,return,Vel R. Phillips & Wisconsin,1.0858874302887565
+milwaukee,MKE-U03,return,East Juneau Post Office,0.9070773085989182
+milwaukee,MKE-U03,return,Discovery World,0.5268932805093718
+milwaukee,MKE-U03,return,Erie & Menomonee,0.43608456367838405
+milwaukee,MKE-U03,return,Juneau & Water,1.2764917745908615
+milwaukee,MKE-U03,return,Vel R. Phillips & Kilbourn,1.2676406154222193
+milwaukee,MKE-U04,return,411 East Wisconsin ,0.86819977939369
+milwaukee,MKE-U04,return,Water & Wisconsin,0.6901994782276005
+milwaukee,MKE-U04,return,Jefferson & Clybourn,1.0232967627493814
+milwaukee,MKE-U04,return,777 East Wisconsin,1.1502981440053424
+milwaukee,MKE-U04,return,Cathedral Square,0.7859828057355974
+milwaukee,MKE-U04,return,Veolia,0.6318510431911664
+milwaukee,MKE-U04,return,Broadway & St Paul,0.9739745029176853
+milwaukee,MKE-U04,return,MSOE Library,0.7667153687732271
+milwaukee,MKE-U04,return,Red Arrow Park,0.49152316518556816
+milwaukee,MKE-U04,return,Postman Square,0.424497940866427
+milwaukee,MKE-U04,return,Mason & Prospect,1.0964846831980204
+milwaukee,MKE-U04,return,Couture,1.2886859450400792
+milwaukee,MKE-U04,return,State & Van Buren,0.7033614145769936
+milwaukee,MKE-U04,return,Kilbourn & Marshall,0.8939694062259574
+milwaukee,MKE-U04,return,Plankinton & St Paul,0.931545727170166
+milwaukee,MKE-U04,return,MSOE Diercks Hall,0.4368295217176989
+milwaukee,MKE-U04,return,MLK & Wisconsin,0.47153616632153067
+milwaukee,MKE-U04,return,MLK & State,0.1949362317251055
+milwaukee,MKE-U04,return,War Memorial,1.5024634917340514
+milwaukee,MKE-U04,return,Zeidler Union Square Park,0.6575415352335098
+milwaukee,MKE-U04,return,Summerfest Midgate,1.4429511164014404
+milwaukee,MKE-U04,return,Vel R. Phillips & Wisconsin,0.5567287333025683
+milwaukee,MKE-U04,return,East Juneau Post Office,0.5299373907709283
+milwaukee,MKE-U04,return,Discovery World,1.4321652382053223
+milwaukee,MKE-U04,return,Erie & Menomonee,1.2179464765355779
+milwaukee,MKE-U04,return,Juneau & Water,0.1546127435845565
+milwaukee,MKE-U04,return,Vel R. Phillips & Kilbourn,0.3558491615067945
+milwaukee,MKE-U05,return,411 East Wisconsin ,0.4807322159512489
+milwaukee,MKE-U05,return,Water & Wisconsin,0.31907554535083676
+milwaukee,MKE-U05,return,Jefferson & Clybourn,0.48160732283184887
+milwaukee,MKE-U05,return,777 East Wisconsin,0.6095181377373041
+milwaukee,MKE-U05,return,Cathedral Square,0.7187673975382967
+milwaukee,MKE-U05,return,Veolia,0.1286317714083193
+milwaukee,MKE-U05,return,Broadway & St Paul,0.4321044947727177
+milwaukee,MKE-U05,return,MSOE Library,0.8723532533043202
+milwaukee,MKE-U05,return,Red Arrow Park,0.598598476881846
+milwaukee,MKE-U05,return,Postman Square,0.35548733964067425
+milwaukee,MKE-U05,return,Mason & Prospect,0.855133411071946
+milwaukee,MKE-U05,return,Couture,0.748519590040057
+milwaukee,MKE-U05,return,State & Van Buren,0.9644997213891966
+milwaukee,MKE-U05,return,Kilbourn & Marshall,0.9932025451783282
+milwaukee,MKE-U05,return,Plankinton & St Paul,0.30735843878008956
+milwaukee,MKE-U05,return,MSOE Diercks Hall,0.8473751535999972
+milwaukee,MKE-U05,return,MLK & Wisconsin,0.18272012027298157
+milwaukee,MKE-U05,return,MLK & State,0.46526208073136616
+milwaukee,MKE-U05,return,War Memorial,1.2755219015158452
+milwaukee,MKE-U05,return,Zeidler Union Square Park,0.1582066526856256
+milwaukee,MKE-U05,return,Summerfest Midgate,0.9012616764839086
+milwaukee,MKE-U05,return,Vel R. Phillips & Wisconsin,0.2692331278996309
+milwaukee,MKE-U05,return,East Juneau Post Office,1.0587167715592396
+milwaukee,MKE-U05,return,Discovery World,0.8919988832052997
+milwaukee,MKE-U05,return,Erie & Menomonee,0.676076468390611
+milwaukee,MKE-U05,return,Juneau & Water,0.7942910473929361
+milwaukee,MKE-U05,return,Vel R. Phillips & Kilbourn,0.5365572665564237
+milwaukee,MKE-U06,return,411 East Wisconsin ,0.4005451877631499
+milwaukee,MKE-U06,return,Water & Wisconsin,0.5839425997770137
+milwaukee,MKE-U06,return,Jefferson & Clybourn,0.3641531238012167
+milwaukee,MKE-U06,return,777 East Wisconsin,0.2734066613793153
+milwaukee,MKE-U06,return,Cathedral Square,0.5218629682003143
+milwaukee,MKE-U06,return,Veolia,0.6596702296180502
+milwaukee,MKE-U06,return,Broadway & St Paul,0.5547767126156883
+milwaukee,MKE-U06,return,MSOE Library,0.6686828054848938
+milwaukee,MKE-U06,return,Red Arrow Park,0.8804648349398271
+milwaukee,MKE-U06,return,Postman Square,0.9077641436872899
+milwaukee,MKE-U06,return,Mason & Prospect,0.3934520451133849
+milwaukee,MKE-U06,return,Couture,0.051057931790540335
+milwaukee,MKE-U06,return,State & Van Buren,0.6366036054446547
+milwaukee,MKE-U06,return,Kilbourn & Marshall,0.6653064292337862
+milwaukee,MKE-U06,return,Plankinton & St Paul,0.7909527325241434
+milwaukee,MKE-U06,return,MSOE Diercks Hall,0.8950243484793453
+milwaukee,MKE-U06,return,MLK & Wisconsin,0.8847710760493209
+milwaukee,MKE-U06,return,MLK & State,1.0818086122898267
+milwaukee,MKE-U06,return,War Memorial,0.5884994122487159
+milwaukee,MKE-U06,return,Zeidler Union Square Park,0.8792016281062139
+milwaukee,MKE-U06,return,Summerfest Midgate,0.3777332218858084
+milwaukee,MKE-U06,return,Vel R. Phillips & Wisconsin,0.9713506129814217
+milwaukee,MKE-U06,return,East Juneau Post Office,0.7884071180881662
+milwaukee,MKE-U06,return,Discovery World,0.1711335350527498
+milwaukee,MKE-U06,return,Erie & Menomonee,0.8061542139719696
+milwaukee,MKE-U06,return,Juneau & Water,1.1616793623901327
+milwaukee,MKE-U06,return,Vel R. Phillips & Kilbourn,1.153103798114884
+milwaukee,MKE-U07,return,411 East Wisconsin ,0.6180560009599011
+milwaukee,MKE-U07,return,Water & Wisconsin,0.5551913450223072
+milwaukee,MKE-U07,return,Jefferson & Clybourn,0.46909846836817765
+milwaukee,MKE-U07,return,777 East Wisconsin,0.7434303908387747
+milwaukee,MKE-U07,return,Cathedral Square,0.8573467878483091
+milwaukee,MKE-U07,return,Veolia,0.6284778493020743
+milwaukee,MKE-U07,return,Broadway & St Paul,0.26344883034660693
+milwaukee,MKE-U07,return,MSOE Library,1.0134593466721145
+milwaukee,MKE-U07,return,Red Arrow Park,0.8599636409139798
+milwaukee,MKE-U07,return,Postman Square,0.8788820596162293
+milwaukee,MKE-U07,return,Mason & Prospect,0.9890456641734165
+milwaukee,MKE-U07,return,Couture,0.7516709213526119
+milwaukee,MKE-U07,return,State & Van Buren,1.1030791116992094
+milwaukee,MKE-U07,return,Kilbourn & Marshall,1.1317819354883407
+milwaukee,MKE-U07,return,Plankinton & St Paul,0.48000081047218485
+milwaukee,MKE-U07,return,MSOE Diercks Hall,0.9909952312530611
+milwaukee,MKE-U07,return,MLK & Wisconsin,0.8558889919782603
+milwaukee,MKE-U07,return,MLK & State,1.0529265282187663
+milwaukee,MKE-U07,return,War Memorial,1.3230322146125382
+milwaukee,MKE-U07,return,Zeidler Union Square Park,0.848009247790238
+milwaukee,MKE-U07,return,Summerfest Midgate,0.3878207733809716
+milwaukee,MKE-U07,return,Vel R. Phillips & Wisconsin,0.942468528910361
+milwaukee,MKE-U07,return,East Juneau Post Office,1.199822864927034
+milwaukee,MKE-U07,return,Discovery World,0.8136992379946753
+milwaukee,MKE-U07,return,Erie & Menomonee,0.08421582424709809
+milwaukee,MKE-U07,return,Juneau & Water,1.1330728732124655
+milwaukee,MKE-U07,return,Vel R. Phillips & Kilbourn,1.1242217140438233
+milwaukee,MKE-U08,return,411 East Wisconsin ,0.6001243889532991
+milwaukee,MKE-U08,return,Water & Wisconsin,0.7833075861893201
+milwaukee,MKE-U08,return,Jefferson & Clybourn,0.45045904571473794
+milwaukee,MKE-U08,return,777 East Wisconsin,0.4737157663939717
+milwaukee,MKE-U08,return,Cathedral Square,0.722172073214971
+milwaukee,MKE-U08,return,Veolia,0.8565940904690872
+milwaukee,MKE-U08,return,Broadway & St Paul,0.6410826345292094
+milwaukee,MKE-U08,return,MSOE Library,0.8689919104995506
+milwaukee,MKE-U08,return,Red Arrow Park,1.0807739399544836
+milwaukee,MKE-U08,return,Postman Square,1.1069983007832422
+milwaukee,MKE-U08,return,Mason & Prospect,0.6208420157586467
+milwaukee,MKE-U08,return,Couture,0.23460537100080955
+milwaukee,MKE-U08,return,State & Van Buren,0.8369127104593113
+milwaukee,MKE-U08,return,Kilbourn & Marshall,0.8656155342484428
+milwaukee,MKE-U08,return,Plankinton & St Paul,0.8772586544376647
+milwaukee,MKE-U08,return,MSOE Diercks Hall,1.0953334534940018
+milwaukee,MKE-U08,return,MLK & Wisconsin,1.0840052331452732
+milwaukee,MKE-U08,return,MLK & State,1.281042769385779
+milwaukee,MKE-U08,return,War Memorial,0.7980337072254108
+milwaukee,MKE-U08,return,Zeidler Union Square Park,1.076125488957251
+milwaukee,MKE-U08,return,Summerfest Midgate,0.25541721223805314
+milwaukee,MKE-U08,return,Vel R. Phillips & Wisconsin,1.1705847700773737
+milwaukee,MKE-U08,return,East Juneau Post Office,0.9887162231028228
+milwaukee,MKE-U08,return,Discovery World,0.28919554818785254
+milwaukee,MKE-U08,return,Erie & Menomonee,0.6838382043242144
+milwaukee,MKE-U08,return,Juneau & Water,1.361189114379479
+milwaukee,MKE-U08,return,Vel R. Phillips & Kilbourn,1.3523379552108366
+milwaukee,MKE-U09,return,411 East Wisconsin ,0.8682020190985056
+milwaukee,MKE-U09,return,Water & Wisconsin,0.7513099806774793
+milwaukee,MKE-U09,return,Jefferson & Clybourn,1.023299002454197
+milwaukee,MKE-U09,return,777 East Wisconsin,1.1408054009697062
+milwaukee,MKE-U09,return,Cathedral Square,0.7506157967813315
+milwaukee,MKE-U09,return,Veolia,0.889781241859706
+milwaukee,MKE-U09,return,Broadway & St Paul,0.9826171945152606
+milwaukee,MKE-U09,return,MSOE Library,0.7143652112713333
+milwaukee,MKE-U09,return,Red Arrow Park,0.5495880209888598
+milwaukee,MKE-U09,return,Postman Square,0.7198205674277659
+milwaukee,MKE-U09,return,Mason & Prospect,1.068861442338939
+milwaukee,MKE-U09,return,Couture,1.2752857658634147
+milwaukee,MKE-U09,return,State & Van Buren,0.6510112570751
+milwaukee,MKE-U09,return,Kilbourn & Marshall,0.8416192487240638
+milwaukee,MKE-U09,return,Plankinton & St Paul,1.1412253372775467
+milwaukee,MKE-U09,return,MSOE Diercks Hall,0.3844793642158051
+milwaukee,MKE-U09,return,MLK & Wisconsin,0.8479990636503804
+milwaukee,MKE-U09,return,MLK & State,0.5644805753258553
+milwaukee,MKE-U09,return,War Memorial,1.47484025087497
+milwaukee,MKE-U09,return,Zeidler Union Square Park,1.0340044325623592
+milwaukee,MKE-U09,return,Summerfest Midgate,1.435842402858772
+milwaukee,MKE-U09,return,Vel R. Phillips & Wisconsin,0.9331916306314177
+milwaukee,MKE-U09,return,East Juneau Post Office,0.4775872332690346
+milwaukee,MKE-U09,return,Discovery World,1.4187650590286578
+milwaukee,MKE-U09,return,Erie & Menomonee,1.2790569789854567
+milwaukee,MKE-U09,return,Juneau & Water,0.3285985655565957
+milwaukee,MKE-U09,return,Vel R. Phillips & Kilbourn,0.7323120588356438
+milwaukee,MKE-U10,return,411 East Wisconsin ,0.44034642579792854
+milwaukee,MKE-U10,return,Water & Wisconsin,0.2787967101632709
+milwaukee,MKE-U10,return,Jefferson & Clybourn,0.29343571001319735
+milwaukee,MKE-U10,return,777 East Wisconsin,0.5691323475839838
+milwaukee,MKE-U10,return,Cathedral Square,0.6784017793096847
+milwaukee,MKE-U10,return,Veolia,0.313969372037794
+milwaukee,MKE-U10,return,Broadway & St Paul,0.08107968740572007
+milwaukee,MKE-U10,return,MSOE Library,0.8319876350757083
+milwaukee,MKE-U10,return,Red Arrow Park,0.585987286624136
+milwaukee,MKE-U10,return,Postman Square,0.5643735823519492
+milwaukee,MKE-U10,return,Mason & Prospect,0.8147476209186256
+milwaukee,MKE-U10,return,Couture,0.6175337774458648
+milwaukee,MKE-U10,return,State & Van Buren,0.9241341031605846
+milwaukee,MKE-U10,return,Kilbourn & Marshall,0.9528369269497162
+milwaukee,MKE-U10,return,Plankinton & St Paul,0.16295070884236731
+milwaukee,MKE-U10,return,MSOE Diercks Hall,0.8070095353713852
+milwaukee,MKE-U10,return,MLK & Wisconsin,0.5413805147139803
+milwaukee,MKE-U10,return,MLK & State,0.7384180509544858
+milwaukee,MKE-U10,return,War Memorial,1.2129407346734853
+milwaukee,MKE-U10,return,Zeidler Union Square Park,0.533500770525958
+milwaukee,MKE-U10,return,Summerfest Midgate,0.5331094396017585
+milwaukee,MKE-U10,return,Vel R. Phillips & Wisconsin,0.627960051646081
+milwaukee,MKE-U10,return,East Juneau Post Office,1.0183511533306275
+milwaukee,MKE-U10,return,Discovery World,0.7046202422312596
+milwaukee,MKE-U10,return,Erie & Menomonee,0.30078235055027863
+milwaukee,MKE-U10,return,Juneau & Water,0.818564395948186
+milwaukee,MKE-U10,return,Vel R. Phillips & Kilbourn,0.8097132367795434
+tampa,TPA-U01,pickup,East Madison Street & North Florida Avenue,0.49320085472885095
+tampa,TPA-U01,pickup,East Kennedy Boulevard & North Florida Avenue,0.43960188265057776
+tampa,TPA-U01,pickup,East Madison Street & North Franklin Street,0.5464538619744536
+tampa,TPA-U01,pickup,East Twiggs Street & North Florida Avenue,0.5436110741944018
+tampa,TPA-U01,pickup,East Kennedy Boulevard & North Franklin Street,0.49382288461415746
+tampa,TPA-U01,pickup,East Twiggs Street & North Franklin Street,0.6005693045123338
+tampa,TPA-U01,pickup,East Jackson Street & North Florida Avenue,0.38656395282289163
+tampa,TPA-U01,pickup,East Madison Street & North Morgan Street,0.3830371766492637
+tampa,TPA-U01,pickup,East Kennedy Boulevard & North Morgan Street,0.3288397370826586
+tampa,TPA-U01,pickup,East Jackson Street & North Franklin Street,0.4411662110542886
+tampa,TPA-U01,pickup,East Madison Street & North Tampa Street,0.6026205480029019
+tampa,TPA-U01,pickup,East Twiggs Street & North Morgan Street,0.43377147596319243
+tampa,TPA-U01,pickup,East Zack Street & North Florida Avenue,0.5939243332955764
+tampa,TPA-U01,pickup,East Kennedy Boulevard & North Tampa Street,0.5490636709846368
+tampa,TPA-U01,pickup,East Twiggs Street & North Tampa Street,0.6540001184215932
+tampa,TPA-U01,pickup,East Zack Street & North Franklin Street,0.647361965983489
+tampa,TPA-U01,pickup,East Jackson Street & North Morgan Street,0.27609813236260494
+tampa,TPA-U01,pickup,East Washington Street & North Florida Avenue,0.43589224889188416
+tampa,TPA-U01,pickup,East Jackson Street & North Tampa Street,0.49628451671603446
+tampa,TPA-U01,pickup,East Madison Street & Pierce Street,0.3282811092503585
+tampa,TPA-U01,pickup,East Zack Street & North Morgan Street,0.4837738325025982
+tampa,TPA-U01,pickup,East Kennedy Boulevard & Pierce Street,0.2740904944051431
+tampa,TPA-U01,pickup,East Twiggs Street & Pierce Street,0.3786625338722256
+tampa,TPA-U01,pickup,East Zack Street & North Tampa Street,0.7045430764693006
+tampa,TPA-U01,pickup,East Madison Street & North Ashley Drive,0.6530274188455757
+tampa,TPA-U01,pickup,North Florida Avenue & Polk Street,0.6432621880243704
+tampa,TPA-U01,pickup,East Kennedy Boulevard & North Ashley Drive,0.598163176255016
+tampa,TPA-U02,pickup,East Madison Street & North Florida Avenue,0.39728942977135495
+tampa,TPA-U02,pickup,East Kennedy Boulevard & North Florida Avenue,0.45237897071782474
+tampa,TPA-U02,pickup,East Madison Street & North Franklin Street,0.37454067366361027
+tampa,TPA-U02,pickup,East Twiggs Street & North Florida Avenue,0.34197504956600916
+tampa,TPA-U02,pickup,East Kennedy Boulevard & North Franklin Street,0.4291218729393931
+tampa,TPA-U02,pickup,East Twiggs Street & North Franklin Street,0.317687265895171
+tampa,TPA-U02,pickup,East Jackson Street & North Florida Avenue,0.5093329022457328
+tampa,TPA-U02,pickup,East Madison Street & North Morgan Street,0.5038705074192239
+tampa,TPA-U02,pickup,East Kennedy Boulevard & North Morgan Street,0.5585192570737271
+tampa,TPA-U02,pickup,East Jackson Street & North Franklin Street,0.48836296745670904
+tampa,TPA-U02,pickup,East Madison Street & North Tampa Street,0.42533330364656236
+tampa,TPA-U02,pickup,East Twiggs Street & North Morgan Street,0.44887674812742695
+tampa,TPA-U02,pickup,East Zack Street & North Florida Avenue,0.28567085167937195
+tampa,TPA-U02,pickup,East Kennedy Boulevard & North Tampa Street,0.47991438113278323
+tampa,TPA-U02,pickup,East Twiggs Street & North Tampa Street,0.36975618329426374
+tampa,TPA-U02,pickup,East Zack Street & North Franklin Street,0.2624208659447102
+tampa,TPA-U02,pickup,East Jackson Street & North Morgan Street,0.6155064527958061
+tampa,TPA-U02,pickup,East Washington Street & North Florida Avenue,0.56168522804657
+tampa,TPA-U02,pickup,East Jackson Street & North Tampa Street,0.5360758995046384
+tampa,TPA-U02,pickup,East Madison Street & Pierce Street,0.5546390056042252
+tampa,TPA-U02,pickup,East Zack Street & North Morgan Street,0.39386473781209225
+tampa,TPA-U02,pickup,East Kennedy Boulevard & Pierce Street,0.6091850646911413
+tampa,TPA-U02,pickup,East Twiggs Street & Pierce Street,0.49940835349139145
+tampa,TPA-U02,pickup,East Zack Street & North Tampa Street,0.31500988978045613
+tampa,TPA-U02,pickup,East Madison Street & North Ashley Drive,0.47726259485941447
+tampa,TPA-U02,pickup,North Florida Avenue & Polk Street,0.23551779193803038
+tampa,TPA-U02,pickup,East Kennedy Boulevard & North Ashley Drive,0.5320338942716929
+tampa,TPA-U03,pickup,East Madison Street & North Florida Avenue,0.4470342976941634
+tampa,TPA-U03,pickup,East Kennedy Boulevard & North Florida Avenue,0.39194475674769363
+tampa,TPA-U03,pickup,East Madison Street & North Franklin Street,0.3944220917822699
+tampa,TPA-U03,pickup,East Twiggs Street & North Florida Avenue,0.5023486778995092
+tampa,TPA-U03,pickup,East Kennedy Boulevard & North Franklin Street,0.34020527203138967
+tampa,TPA-U03,pickup,East Twiggs Street & North Franklin Street,0.4495389027919231
+tampa,TPA-U03,pickup,East Jackson Street & North Florida Avenue,0.3349908252197857
+tampa,TPA-U03,pickup,East Madison Street & North Morgan Street,0.55508079310196
+tampa,TPA-U03,pickup,East Kennedy Boulevard & North Morgan Street,0.5004320434474568
+tampa,TPA-U03,pickup,East Jackson Street & North Franklin Street,0.2849066783340349
+tampa,TPA-U03,pickup,East Madison Street & North Tampa Street,0.34082824598344874
+tampa,TPA-U03,pickup,East Twiggs Street & North Morgan Street,0.6104604623282043
+tampa,TPA-U03,pickup,East Zack Street & North Florida Avenue,0.5581002202414024
+tampa,TPA-U03,pickup,East Kennedy Boulevard & North Tampa Street,0.28594989104414414
+tampa,TPA-U03,pickup,East Twiggs Street & North Tampa Street,0.39641338773916956
+tampa,TPA-U03,pickup,East Zack Street & North Franklin Street,0.5047733953534809
+tampa,TPA-U03,pickup,East Jackson Street & North Morgan Street,0.4434448477253779
+tampa,TPA-U03,pickup,East Washington Street & North Florida Avenue,0.2826384994189486
+tampa,TPA-U03,pickup,East Jackson Street & North Tampa Street,0.22978837267228897
+tampa,TPA-U03,pickup,East Madison Street & Pierce Street,0.6080550695275216
+tampa,TPA-U03,pickup,East Zack Street & North Morgan Street,0.6661437365776357
+tampa,TPA-U03,pickup,East Kennedy Boulevard & Pierce Street,0.5541963643047058
+tampa,TPA-U03,pickup,East Twiggs Street & Pierce Street,0.6632857216403554
+tampa,TPA-U03,pickup,East Zack Street & North Tampa Street,0.4517798901991942
+tampa,TPA-U03,pickup,East Madison Street & North Ashley Drive,0.3724220222203792
+tampa,TPA-U03,pickup,North Florida Avenue & Polk Street,0.6080841417604691
+tampa,TPA-U03,pickup,East Kennedy Boulevard & North Ashley Drive,0.3175577796298195
+tampa,TPA-U04,pickup,East Madison Street & North Florida Avenue,0.6568793591738633
+tampa,TPA-U04,pickup,East Kennedy Boulevard & North Florida Avenue,0.6017898182273935
+tampa,TPA-U04,pickup,East Madison Street & North Franklin Street,0.7090489456987482
+tampa,TPA-U04,pickup,East Twiggs Street & North Florida Avenue,0.712193739379209
+tampa,TPA-U04,pickup,East Kennedy Boulevard & North Franklin Street,0.6558230123175617
+tampa,TPA-U04,pickup,East Twiggs Street & North Franklin Street,0.7659023534671875
+tampa,TPA-U04,pickup,East Jackson Street & North Florida Avenue,0.5448358866994855
+tampa,TPA-U04,pickup,East Madison Street & North Morgan Street,0.5882727649861345
+tampa,TPA-U04,pickup,East Kennedy Boulevard & North Morgan Street,0.5336240153316313
+tampa,TPA-U04,pickup,East Jackson Street & North Franklin Street,0.5986428723337023
+tampa,TPA-U04,pickup,East Madison Street & North Tampa Street,0.727791210698804
+tampa,TPA-U04,pickup,East Twiggs Street & North Morgan Street,0.6436524342123787
+tampa,TPA-U04,pickup,East Zack Street & North Florida Avenue,0.7684979372658461
+tampa,TPA-U04,pickup,East Kennedy Boulevard & North Tampa Street,0.6729128557594993
+tampa,TPA-U04,pickup,East Twiggs Street & North Tampa Street,0.7833763524545249
+tampa,TPA-U04,pickup,East Zack Street & North Franklin Street,0.8205756049765307
+tampa,TPA-U04,pickup,East Jackson Street & North Morgan Street,0.47663681960955223
+tampa,TPA-U04,pickup,East Washington Street & North Florida Avenue,0.4924835608986483
+tampa,TPA-U04,pickup,East Jackson Street & North Tampa Street,0.6167513373876441
+tampa,TPA-U04,pickup,East Madison Street & Pierce Street,0.6412470414116961
+tampa,TPA-U04,pickup,East Zack Street & North Morgan Street,0.6993357084618101
+tampa,TPA-U04,pickup,East Kennedy Boulevard & Pierce Street,0.5872901924278817
+tampa,TPA-U04,pickup,East Twiggs Street & Pierce Street,0.6964776935245298
+tampa,TPA-U04,pickup,East Zack Street & North Tampa Street,0.8387428549145493
+tampa,TPA-U04,pickup,East Madison Street & North Ashley Drive,0.7593849869357344
+tampa,TPA-U04,pickup,North Florida Avenue & Polk Street,0.8186509970071877
+tampa,TPA-U04,pickup,East Kennedy Boulevard & North Ashley Drive,0.7045207443451748
+tampa,TPA-U05,pickup,East Madison Street & North Florida Avenue,0.6214143473110919
+tampa,TPA-U05,pickup,East Kennedy Boulevard & North Florida Avenue,0.6765038882575617
+tampa,TPA-U05,pickup,East Madison Street & North Franklin Street,0.674527083635479
+tampa,TPA-U05,pickup,East Twiggs Street & North Florida Avenue,0.5662940252789552
+tampa,TPA-U05,pickup,East Kennedy Boulevard & North Franklin Street,0.7289480992567272
+tampa,TPA-U05,pickup,East Twiggs Street & North Franklin Street,0.618915691918382
+tampa,TPA-U05,pickup,East Jackson Street & North Florida Avenue,0.7332141289437416
+tampa,TPA-U05,pickup,East Madison Street & North Morgan Street,0.5128079907597004
+tampa,TPA-U05,pickup,East Kennedy Boulevard & North Morgan Street,0.5661605057749667
+tampa,TPA-U05,pickup,East Jackson Street & North Franklin Street,0.7864786592399385
+tampa,TPA-U05,pickup,East Madison Street & North Tampa Street,0.7278917187910371
+tampa,TPA-U05,pickup,East Twiggs Street & North Morgan Street,0.45742832153345625
+tampa,TPA-U05,pickup,East Zack Street & North Florida Avenue,0.5104916053022746
+tampa,TPA-U05,pickup,East Kennedy Boulevard & North Tampa Street,0.7824727962772582
+tampa,TPA-U05,pickup,East Twiggs Street & North Tampa Street,0.6723145984387384
+tampa,TPA-U05,pickup,East Zack Street & North Franklin Street,0.5637600997679124
+tampa,TPA-U05,pickup,East Jackson Street & North Morgan Street,0.6230834078949614
+tampa,TPA-U05,pickup,East Washington Street & North Florida Avenue,0.7855664547445788
+tampa,TPA-U05,pickup,East Jackson Street & North Tampa Street,0.8386343146491134
+tampa,TPA-U05,pickup,East Madison Street & Pierce Street,0.45847318609281756
+tampa,TPA-U05,pickup,East Zack Street & North Morgan Street,0.40200028023676254
+tampa,TPA-U05,pickup,East Kennedy Boulevard & Pierce Street,0.5130192451797336
+tampa,TPA-U05,pickup,East Twiggs Street & Pierce Street,0.4032425339799838
+tampa,TPA-U05,pickup,East Zack Street & North Tampa Street,0.6205801952639667
+tampa,TPA-U05,pickup,East Madison Street & North Ashley Drive,0.78062302850314
+tampa,TPA-U05,pickup,North Florida Avenue & Polk Street,0.460338545560933
+tampa,TPA-U05,pickup,East Kennedy Boulevard & North Ashley Drive,0.8345923094161676
+tampa,TPA-U06,pickup,East Madison Street & North Florida Avenue,0.5926992586168185
+tampa,TPA-U06,pickup,East Kennedy Boulevard & North Florida Avenue,0.6477887995632883
+tampa,TPA-U06,pickup,East Madison Street & North Franklin Street,0.5722498388128529
+tampa,TPA-U06,pickup,East Twiggs Street & North Florida Avenue,0.5373848784114728
+tampa,TPA-U06,pickup,East Kennedy Boulevard & North Franklin Street,0.6268310380886357
+tampa,TPA-U06,pickup,East Twiggs Street & North Franklin Street,0.5153964310444136
+tampa,TPA-U06,pickup,East Jackson Street & North Florida Avenue,0.7047427310911963
+tampa,TPA-U06,pickup,East Madison Street & North Morgan Street,0.6441350481157577
+tampa,TPA-U06,pickup,East Kennedy Boulevard & North Morgan Street,0.6987837977702609
+tampa,TPA-U06,pickup,East Jackson Street & North Franklin Street,0.6860721326059518
+tampa,TPA-U06,pickup,East Madison Street & North Tampa Street,0.623042468795805
+tampa,TPA-U06,pickup,East Twiggs Street & North Morgan Street,0.5887553788895135
+tampa,TPA-U06,pickup,East Zack Street & North Florida Avenue,0.48108068052483555
+tampa,TPA-U06,pickup,East Kennedy Boulevard & North Tampa Street,0.6776235462820261
+tampa,TPA-U06,pickup,East Twiggs Street & North Tampa Street,0.5674653484435064
+tampa,TPA-U06,pickup,East Zack Street & North Franklin Street,0.46013003109395273
+tampa,TPA-U06,pickup,East Jackson Street & North Morgan Street,0.7557709934923399
+tampa,TPA-U06,pickup,East Washington Street & North Florida Avenue,0.7570950568920335
+tampa,TPA-U06,pickup,East Jackson Street & North Tampa Street,0.7337850646538814
+tampa,TPA-U06,pickup,East Madison Street & Pierce Street,0.6916071283918752
+tampa,TPA-U06,pickup,East Zack Street & North Morgan Street,0.5330721046400821
+tampa,TPA-U06,pickup,East Kennedy Boulevard & Pierce Street,0.7461531874787913
+tampa,TPA-U06,pickup,East Twiggs Street & Pierce Street,0.6363764762790415
+tampa,TPA-U06,pickup,East Zack Street & North Tampa Street,0.5127190549296987
+tampa,TPA-U06,pickup,East Madison Street & North Ashley Drive,0.6749717600086571
+tampa,TPA-U06,pickup,North Florida Avenue & Polk Street,0.43092762078349395
+tampa,TPA-U06,pickup,East Kennedy Boulevard & North Ashley Drive,0.7297430594209355
+tampa,TPA-U07,pickup,East Madison Street & North Florida Avenue,0.4937499817095597
+tampa,TPA-U07,pickup,East Kennedy Boulevard & North Florida Avenue,0.4533761228516404
+tampa,TPA-U07,pickup,East Madison Street & North Franklin Street,0.44049697446395714
+tampa,TPA-U07,pickup,East Twiggs Street & North Florida Avenue,0.5487285484724115
+tampa,TPA-U07,pickup,East Kennedy Boulevard & North Franklin Street,0.3991551208880607
+tampa,TPA-U07,pickup,East Twiggs Street & North Franklin Street,0.4928689765263797
+tampa,TPA-U07,pickup,East Jackson Street & North Florida Avenue,0.4987772761191441
+tampa,TPA-U07,pickup,East Madison Street & North Morgan Street,0.6042432410379249
+tampa,TPA-U07,pickup,East Kennedy Boulevard & North Morgan Street,0.5641382684195596
+tampa,TPA-U07,pickup,East Jackson Street & North Franklin Street,0.4441750178877471
+tampa,TPA-U07,pickup,East Madison Street & North Tampa Street,0.3841367816683594
+tampa,TPA-U07,pickup,East Twiggs Street & North Morgan Street,0.6583740885304117
+tampa,TPA-U07,pickup,East Zack Street & North Florida Avenue,0.601430293975859
+tampa,TPA-U07,pickup,East Kennedy Boulevard & North Tampa Street,0.3439143345175814
+tampa,TPA-U07,pickup,East Twiggs Street & North Tampa Street,0.4394381626171202
+tampa,TPA-U07,pickup,East Zack Street & North Franklin Street,0.5481034690879376
+tampa,TPA-U07,pickup,East Jackson Street & North Morgan Street,0.6092430965794308
+tampa,TPA-U07,pickup,East Washington Street & North Florida Avenue,0.5503343293228011
+tampa,TPA-U07,pickup,East Jackson Street & North Tampa Street,0.38905671222600124
+tampa,TPA-U07,pickup,East Madison Street & Pierce Street,0.6593707875587023
+tampa,TPA-U07,pickup,East Zack Street & North Morgan Street,0.7115807947688371
+tampa,TPA-U07,pickup,East Kennedy Boulevard & Pierce Street,0.6188875110970751
+tampa,TPA-U07,pickup,East Twiggs Street & Pierce Street,0.7134830306213784
+tampa,TPA-U07,pickup,East Zack Street & North Tampa Street,0.49417458461001357
+tampa,TPA-U07,pickup,East Madison Street & North Ashley Drive,0.3311297325527188
+tampa,TPA-U07,pickup,North Florida Avenue & Polk Street,0.6514142154949257
+tampa,TPA-U07,pickup,East Kennedy Boulevard & North Ashley Drive,0.2905726521539953
+tampa,TPA-U08,pickup,East Madison Street & North Florida Avenue,0.710935652305085
+tampa,TPA-U08,pickup,East Kennedy Boulevard & North Florida Avenue,0.6561958270725367
+tampa,TPA-U08,pickup,East Madison Street & North Franklin Street,0.7636427624173029
+tampa,TPA-U08,pickup,East Twiggs Street & North Florida Avenue,0.7662500325104308
+tampa,TPA-U08,pickup,East Kennedy Boulevard & North Franklin Street,0.7104168290361164
+tampa,TPA-U08,pickup,East Twiggs Street & North Franklin Street,0.8204961701857422
+tampa,TPA-U08,pickup,East Jackson Street & North Florida Avenue,0.5995037707329939
+tampa,TPA-U08,pickup,East Madison Street & North Morgan Street,0.6067455284387517
+tampa,TPA-U08,pickup,East Kennedy Boulevard & North Morgan Street,0.5520967787842486
+tampa,TPA-U08,pickup,East Jackson Street & North Franklin Street,0.6541060289643909
+tampa,TPA-U08,pickup,East Madison Street & North Tampa Street,0.8128799622756298
+tampa,TPA-U08,pickup,East Twiggs Street & North Morgan Street,0.662125197664996
+tampa,TPA-U08,pickup,East Zack Street & North Florida Avenue,0.8225542303970679
+tampa,TPA-U08,pickup,East Kennedy Boulevard & North Tampa Street,0.758001607336325
+tampa,TPA-U08,pickup,East Twiggs Street & North Tampa Street,0.8684651040313506
+tampa,TPA-U08,pickup,East Zack Street & North Franklin Street,0.8746318981077524
+tampa,TPA-U08,pickup,East Jackson Street & North Morgan Street,0.49510958306216957
+tampa,TPA-U08,pickup,East Washington Street & North Florida Avenue,0.5483366923080905
+tampa,TPA-U08,pickup,East Jackson Street & North Tampa Street,0.7018400889644698
+tampa,TPA-U08,pickup,East Madison Street & Pierce Street,0.6066867375960736
+tampa,TPA-U08,pickup,East Zack Street & North Morgan Street,0.7178084719144273
+tampa,TPA-U08,pickup,East Kennedy Boulevard & Pierce Street,0.5521406785091575
+tampa,TPA-U08,pickup,East Twiggs Street & Pierce Street,0.6619173897089073
+tampa,TPA-U08,pickup,East Zack Street & North Tampa Street,0.923831606491375
+tampa,TPA-U08,pickup,East Madison Street & North Ashley Drive,0.8444737385125601
+tampa,TPA-U08,pickup,North Florida Avenue & Polk Street,0.8727072901384094
+tampa,TPA-U08,pickup,East Kennedy Boulevard & North Ashley Drive,0.7896094959220005
+tampa,TPA-U09,pickup,East Madison Street & North Florida Avenue,0.8432885686190589
+tampa,TPA-U09,pickup,East Kennedy Boulevard & North Florida Avenue,0.7896895965407855
+tampa,TPA-U09,pickup,East Madison Street & North Franklin Street,0.8965415758646615
+tampa,TPA-U09,pickup,East Twiggs Street & North Florida Avenue,0.8294177788522527
+tampa,TPA-U09,pickup,East Kennedy Boulevard & North Franklin Street,0.8439105985043652
+tampa,TPA-U09,pickup,East Twiggs Street & North Franklin Street,0.8863760091701847
+tampa,TPA-U09,pickup,East Jackson Street & North Florida Avenue,0.8210185200405852
+tampa,TPA-U09,pickup,East Madison Street & North Morgan Street,0.7331248905394715
+tampa,TPA-U09,pickup,East Kennedy Boulevard & North Morgan Street,0.6789274509728663
+tampa,TPA-U09,pickup,East Jackson Street & North Franklin Street,0.8756207782719821
+tampa,TPA-U09,pickup,East Madison Street & North Tampa Street,0.9527082618931096
+tampa,TPA-U09,pickup,East Twiggs Street & North Morgan Street,0.7195781806210434
+tampa,TPA-U09,pickup,East Zack Street & North Florida Avenue,0.872928743237762
+tampa,TPA-U09,pickup,East Kennedy Boulevard & North Tampa Street,0.8991513848748446
+tampa,TPA-U09,pickup,East Twiggs Street & North Tampa Street,0.9398068230794441
+tampa,TPA-U09,pickup,East Zack Street & North Franklin Street,0.9263663759256748
+tampa,TPA-U09,pickup,East Jackson Street & North Morgan Street,0.7105526995802984
+tampa,TPA-U09,pickup,East Washington Street & North Florida Avenue,0.8665251194119523
+tampa,TPA-U09,pickup,East Jackson Street & North Tampa Street,0.9307390839337282
+tampa,TPA-U09,pickup,East Madison Street & Pierce Street,0.6783688231405663
+tampa,TPA-U09,pickup,East Zack Street & North Morgan Street,0.762778242444784
+tampa,TPA-U09,pickup,East Kennedy Boulevard & Pierce Street,0.6241782082953509
+tampa,TPA-U09,pickup,East Twiggs Street & Pierce Street,0.6644692385300767
+tampa,TPA-U09,pickup,East Zack Street & North Tampa Street,0.9835474864114864
+tampa,TPA-U09,pickup,East Madison Street & North Ashley Drive,1.0046411586927282
+tampa,TPA-U09,pickup,North Florida Avenue & Polk Street,0.9191231404501303
+tampa,TPA-U09,pickup,East Kennedy Boulevard & North Ashley Drive,0.9525128104860628
+tampa,TPA-U10,pickup,East Madison Street & North Florida Avenue,0.6636285138297869
+tampa,TPA-U10,pickup,East Kennedy Boulevard & North Florida Avenue,0.6136025104477257
+tampa,TPA-U10,pickup,East Madison Street & North Franklin Street,0.6103755065841843
+tampa,TPA-U10,pickup,East Twiggs Street & North Florida Avenue,0.7186070805926383
+tampa,TPA-U10,pickup,East Kennedy Boulevard & North Franklin Street,0.559381508484146
+tampa,TPA-U10,pickup,East Twiggs Street & North Franklin Street,0.662747508646607
+tampa,TPA-U10,pickup,East Jackson Street & North Florida Avenue,0.6520066161139215
+tampa,TPA-U10,pickup,East Madison Street & North Morgan Street,0.7741217731581522
+tampa,TPA-U10,pickup,East Kennedy Boulevard & North Morgan Street,0.7243646560156449
+tampa,TPA-U10,pickup,East Jackson Street & North Franklin Street,0.5974043578825246
+tampa,TPA-U10,pickup,East Madison Street & North Tampa Street,0.5540153137885866
+tampa,TPA-U10,pickup,East Twiggs Street & North Morgan Street,0.8282526206506385
+tampa,TPA-U10,pickup,East Zack Street & North Florida Avenue,0.7713088260960864
+tampa,TPA-U10,pickup,East Kennedy Boulevard & North Tampa Street,0.5041407221136667
+tampa,TPA-U10,pickup,East Twiggs Street & North Tampa Street,0.6093166947373476
+tampa,TPA-U10,pickup,East Zack Street & North Franklin Street,0.7179820012081649
+tampa,TPA-U10,pickup,East Jackson Street & North Morgan Street,0.7624724365742083
+tampa,TPA-U10,pickup,East Washington Street & North Florida Avenue,0.6671051837904793
+tampa,TPA-U10,pickup,East Jackson Street & North Tampa Street,0.5422860522207785
+tampa,TPA-U10,pickup,East Madison Street & Pierce Street,0.8292493196789296
+tampa,TPA-U10,pickup,East Zack Street & North Morgan Street,0.8814593268890645
+tampa,TPA-U10,pickup,East Kennedy Boulevard & Pierce Street,0.7791138986931605
+tampa,TPA-U10,pickup,East Twiggs Street & Pierce Street,0.8833615627416053
+tampa,TPA-U10,pickup,East Zack Street & North Tampa Street,0.6640531167302407
+tampa,TPA-U10,pickup,East Madison Street & North Ashley Drive,0.501008264672946
+tampa,TPA-U10,pickup,North Florida Avenue & Polk Street,0.8212927476151531
+tampa,TPA-U10,pickup,East Kennedy Boulevard & North Ashley Drive,0.4507792965024484
+tampa,TPA-U01,return,East Madison Street & North Florida Avenue,0.4946872794061381
+tampa,TPA-U01,return,East Kennedy Boulevard & North Florida Avenue,0.44030741599118883
+tampa,TPA-U01,return,East Madison Street & North Franklin Street,0.5479402866517408
+tampa,TPA-U01,return,East Twiggs Street & North Florida Avenue,0.5493127105577007
+tampa,TPA-U01,return,East Kennedy Boulevard & North Franklin Street,0.49452841795476854
+tampa,TPA-U01,return,East Twiggs Street & North Franklin Street,0.60479369442018
+tampa,TPA-U01,return,East Jackson Street & North Florida Avenue,0.4245475964370658
+tampa,TPA-U01,return,East Madison Street & North Morgan Street,0.3841940200777729
+tampa,TPA-U01,return,East Kennedy Boulevard & North Morgan Street,0.3295452704232697
+tampa,TPA-U01,return,East Jackson Street & North Franklin Street,0.4510606790490195
+tampa,TPA-U01,return,East Madison Street & North Tampa Street,0.6043004794473384
+tampa,TPA-U01,return,East Twiggs Street & North Morgan Street,0.43947311232649133
+tampa,TPA-U01,return,East Zack Street & North Florida Avenue,0.6037101636206423
+tampa,TPA-U01,return,East Kennedy Boulevard & North Tampa Street,0.5497692043252479
+tampa,TPA-U01,return,East Twiggs Street & North Tampa Street,0.6582245083294395
+tampa,TPA-U01,return,East Zack Street & North Franklin Street,0.657147796308555
+tampa,TPA-U01,return,East Jackson Street & North Morgan Street,0.28589795149338865
+tampa,TPA-U01,return,East Washington Street & North Florida Avenue,0.44192280033922837
+tampa,TPA-U01,return,East Jackson Street & North Tampa Street,0.5057260319176209
+tampa,TPA-U01,return,East Madison Street & Pierce Street,0.43932156659855026
+tampa,TPA-U01,return,East Zack Street & North Morgan Street,0.4935596628276643
+tampa,TPA-U01,return,East Kennedy Boulevard & Pierce Street,0.2747960277457542
+tampa,TPA-U01,return,East Twiggs Street & Pierce Street,0.3843641702355245
+tampa,TPA-U01,return,East Zack Street & North Tampa Street,0.7143289067943666
+tampa,TPA-U01,return,East Madison Street & North Ashley Drive,0.657307528562979
+tampa,TPA-U01,return,North Florida Avenue & Polk Street,0.6538632233619839
+tampa,TPA-U01,return,East Kennedy Boulevard & North Ashley Drive,0.6031306299364662
+tampa,TPA-U02,return,East Madison Street & North Florida Avenue,0.4277936809092128
+tampa,TPA-U02,return,East Kennedy Boulevard & North Florida Avenue,0.5883529764958836
+tampa,TPA-U02,return,East Madison Street & North Franklin Street,0.37454067366361027
+tampa,TPA-U02,return,East Twiggs Street & North Florida Avenue,0.374645496213103
+tampa,TPA-U02,return,East Kennedy Boulevard & North Franklin Street,0.4291218729393931
+tampa,TPA-U02,return,East Twiggs Street & North Franklin Street,0.317687265895171
+tampa,TPA-U02,return,East Jackson Street & North Florida Avenue,0.542965225688106
+tampa,TPA-U02,return,East Madison Street & North Morgan Street,0.5352808807206355
+tampa,TPA-U02,return,East Kennedy Boulevard & North Morgan Street,0.5899296303751387
+tampa,TPA-U02,return,East Jackson Street & North Franklin Street,0.48836296745670904
+tampa,TPA-U02,return,East Madison Street & North Tampa Street,0.4267032215601513
+tampa,TPA-U02,return,East Twiggs Street & North Morgan Street,0.4799012114943913
+tampa,TPA-U02,return,East Zack Street & North Florida Avenue,0.31585849863262305
+tampa,TPA-U02,return,East Kennedy Boulevard & North Tampa Street,0.4815815764994559
+tampa,TPA-U02,return,East Twiggs Street & North Tampa Street,0.37111807980443046
+tampa,TPA-U02,return,East Zack Street & North Franklin Street,0.2624208659447102
+tampa,TPA-U02,return,East Jackson Street & North Morgan Street,0.6469168260972177
+tampa,TPA-U02,return,East Washington Street & North Florida Avenue,0.810930213184904
+tampa,TPA-U02,return,East Jackson Street & North Tampa Street,0.537743094871311
+tampa,TPA-U02,return,East Madison Street & Pierce Street,0.5848425340539148
+tampa,TPA-U02,return,East Zack Street & North Morgan Street,0.42421793724495993
+tampa,TPA-U02,return,East Kennedy Boulevard & Pierce Street,0.639388593140831
+tampa,TPA-U02,return,East Twiggs Street & Pierce Street,0.5296118819410811
+tampa,TPA-U02,return,East Zack Street & North Tampa Street,0.3159860826575145
+tampa,TPA-U02,return,East Madison Street & North Ashley Drive,0.47971027067579186
+tampa,TPA-U02,return,North Florida Avenue & Polk Street,0.26798280240640004
+tampa,TPA-U02,return,East Kennedy Boulevard & North Ashley Drive,0.5349430021106741
+tampa,TPA-U03,return,East Madison Street & North Florida Avenue,0.4813378606601758
+tampa,TPA-U03,return,East Kennedy Boulevard & North Florida Avenue,0.426248319713706
+tampa,TPA-U03,return,East Madison Street & North Franklin Street,0.4829001455720865
+tampa,TPA-U03,return,East Twiggs Street & North Florida Avenue,0.5366522408655215
+tampa,TPA-U03,return,East Kennedy Boulevard & North Franklin Street,0.4283189462963037
+tampa,TPA-U03,return,East Twiggs Street & North Franklin Street,0.5397535533405258
+tampa,TPA-U03,return,East Jackson Street & North Florida Avenue,0.3692943881857981
+tampa,TPA-U03,return,East Madison Street & North Morgan Street,0.591396154022667
+tampa,TPA-U03,return,East Kennedy Boulevard & North Morgan Street,0.5367474043681638
+tampa,TPA-U03,return,East Jackson Street & North Franklin Street,0.37238773692377314
+tampa,TPA-U03,return,East Madison Street & North Tampa Street,0.43607989866947133
+tampa,TPA-U03,return,East Twiggs Street & North Morgan Street,0.6464918390967308
+tampa,TPA-U03,return,East Zack Street & North Florida Avenue,0.5929564387521586
+tampa,TPA-U03,return,East Kennedy Boulevard & North Tampa Street,0.398675973094821
+tampa,TPA-U03,return,East Twiggs Street & North Tampa Street,0.49229409268490415
+tampa,TPA-U03,return,East Zack Street & North Franklin Street,0.5950199532909867
+tampa,TPA-U03,return,East Jackson Street & North Morgan Street,0.47976020864608476
+tampa,TPA-U03,return,East Washington Street & North Florida Avenue,0.316942062384961
+tampa,TPA-U03,return,East Jackson Street & North Tampa Street,0.3172694312620273
+tampa,TPA-U03,return,East Madison Street & Pierce Street,0.6465237005434443
+tampa,TPA-U03,return,East Zack Street & North Morgan Street,0.7021751133461622
+tampa,TPA-U03,return,East Kennedy Boulevard & Pierce Street,0.7010697596303604
+tampa,TPA-U03,return,East Twiggs Street & Pierce Street,0.7016007811876975
+tampa,TPA-U03,return,East Zack Street & North Tampa Street,0.5485596586158202
+tampa,TPA-U03,return,East Madison Street & North Ashley Drive,0.38307284955383075
+tampa,TPA-U03,return,North Florida Avenue & Polk Street,0.6431094984935002
+tampa,TPA-U03,return,East Kennedy Boulevard & North Ashley Drive,0.3282086069632711
+tampa,TPA-U04,return,East Madison Street & North Florida Avenue,0.6568793591738633
+tampa,TPA-U04,return,East Kennedy Boulevard & North Florida Avenue,0.6017898182273935
+tampa,TPA-U04,return,East Madison Street & North Franklin Street,0.710132366419466
+tampa,TPA-U04,return,East Twiggs Street & North Florida Avenue,0.712193739379209
+tampa,TPA-U04,return,East Kennedy Boulevard & North Franklin Street,0.6560108201909732
+tampa,TPA-U04,return,East Twiggs Street & North Franklin Street,0.7669857741879053
+tampa,TPA-U04,return,East Jackson Street & North Florida Avenue,0.5448358866994855
+tampa,TPA-U04,return,East Madison Street & North Morgan Street,0.5620744981228893
+tampa,TPA-U04,return,East Kennedy Boulevard & North Morgan Street,0.5074257484683862
+tampa,TPA-U04,return,East Jackson Street & North Franklin Street,0.6107766829264244
+tampa,TPA-U04,return,East Madison Street & North Tampa Street,0.7664925592150637
+tampa,TPA-U04,return,East Twiggs Street & North Morgan Street,0.6174541673491336
+tampa,TPA-U04,return,East Zack Street & North Florida Avenue,0.7684979372658461
+tampa,TPA-U04,return,East Kennedy Boulevard & North Tampa Street,0.7112516065614526
+tampa,TPA-U04,return,East Twiggs Street & North Tampa Street,0.8204165880971647
+tampa,TPA-U04,return,East Zack Street & North Franklin Street,0.8219355699537589
+tampa,TPA-U04,return,East Jackson Street & North Morgan Street,0.4504385527463073
+tampa,TPA-U04,return,East Washington Street & North Florida Avenue,0.4924835608986483
+tampa,TPA-U04,return,East Jackson Street & North Tampa Street,0.6654420357950259
+tampa,TPA-U04,return,East Madison Street & Pierce Street,0.6172020446436667
+tampa,TPA-U04,return,East Zack Street & North Morgan Street,0.6731374415985649
+tampa,TPA-U04,return,East Kennedy Boulevard & Pierce Street,0.6582300399591128
+tampa,TPA-U04,return,East Twiggs Street & Pierce Street,0.6725631094401003
+tampa,TPA-U04,return,East Zack Street & North Tampa Street,0.8791166804395705
+tampa,TPA-U04,return,East Madison Street & North Ashley Drive,0.7951158396697984
+tampa,TPA-U04,return,North Florida Avenue & Polk Street,0.8186509970071877
+tampa,TPA-U04,return,East Kennedy Boulevard & North Ashley Drive,0.7402515970792387
+tampa,TPA-U05,return,East Madison Street & North Florida Avenue,0.6254267346163571
+tampa,TPA-U05,return,East Kennedy Boulevard & North Florida Avenue,0.6798633760995654
+tampa,TPA-U05,return,East Madison Street & North Franklin Street,0.6786797418619598
+tampa,TPA-U05,return,East Twiggs Street & North Florida Avenue,0.5695195868169067
+tampa,TPA-U05,return,East Kennedy Boulevard & North Franklin Street,0.7332609411377427
+tampa,TPA-U05,return,East Twiggs Street & North Franklin Street,0.6228512477676179
+tampa,TPA-U05,return,East Jackson Street & North Florida Avenue,0.7647380711974024
+tampa,TPA-U05,return,East Madison Street & North Morgan Street,0.5149334752879918
+tampa,TPA-U05,return,East Kennedy Boulevard & North Morgan Street,0.5691012305316462
+tampa,TPA-U05,return,East Jackson Street & North Franklin Street,0.791251153809356
+tampa,TPA-U05,return,East Madison Street & North Tampa Street,0.7318672034325981
+tampa,TPA-U05,return,East Twiggs Street & North Morgan Street,0.4596799885856974
+tampa,TPA-U05,return,East Zack Street & North Florida Avenue,0.5141472151292442
+tampa,TPA-U05,return,East Kennedy Boulevard & North Tampa Street,0.7867455583719029
+tampa,TPA-U05,return,East Twiggs Street & North Tampa Street,0.6762820616768773
+tampa,TPA-U05,return,East Zack Street & North Franklin Street,0.567584847817157
+tampa,TPA-U05,return,East Jackson Street & North Morgan Street,0.6260884262537252
+tampa,TPA-U05,return,East Washington Street & North Florida Avenue,0.7917737286589972
+tampa,TPA-U05,return,East Jackson Street & North Tampa Street,0.8429070767437581
+tampa,TPA-U05,return,East Madison Street & Pierce Street,0.45980592876721454
+tampa,TPA-U05,return,East Zack Street & North Morgan Street,0.40399671433626605
+tampa,TPA-U05,return,East Kennedy Boulevard & Pierce Street,0.5143519878541306
+tampa,TPA-U05,return,East Twiggs Street & Pierce Street,0.40457527665438076
+tampa,TPA-U05,return,East Zack Street & North Tampa Street,0.6246749065324878
+tampa,TPA-U05,return,East Madison Street & North Ashley Drive,0.7848742525482387
+tampa,TPA-U05,return,North Florida Avenue & Polk Street,0.5643002748705858
+tampa,TPA-U05,return,East Kennedy Boulevard & North Ashley Drive,0.8401069839831211
+tampa,TPA-U06,return,East Madison Street & North Florida Avenue,0.6255028460584555
+tampa,TPA-U06,return,East Kennedy Boulevard & North Florida Avenue,0.7860621416451263
+tampa,TPA-U06,return,East Madison Street & North Franklin Street,0.5722498388128529
+tampa,TPA-U06,return,East Twiggs Street & North Florida Avenue,0.5723546613623456
+tampa,TPA-U06,return,East Kennedy Boulevard & North Franklin Street,0.6268310380886357
+tampa,TPA-U06,return,East Twiggs Street & North Franklin Street,0.5153964310444136
+tampa,TPA-U06,return,East Jackson Street & North Florida Avenue,0.7406743908373488
+tampa,TPA-U06,return,East Madison Street & North Morgan Street,0.6467344705357487
+tampa,TPA-U06,return,East Kennedy Boulevard & North Morgan Street,0.7013832201902519
+tampa,TPA-U06,return,East Jackson Street & North Franklin Street,0.6860721326059518
+tampa,TPA-U06,return,East Madison Street & North Tampa Street,0.6244123867093938
+tampa,TPA-U06,return,East Twiggs Street & North Morgan Street,0.5913548013095045
+tampa,TPA-U06,return,East Zack Street & North Florida Avenue,0.5135676637818656
+tampa,TPA-U06,return,East Kennedy Boulevard & North Tampa Street,0.6792907416486985
+tampa,TPA-U06,return,East Twiggs Street & North Tampa Street,0.568827244953673
+tampa,TPA-U06,return,East Zack Street & North Franklin Street,0.46013003109395273
+tampa,TPA-U06,return,East Jackson Street & North Morgan Street,0.7583704159123309
+tampa,TPA-U06,return,East Washington Street & North Florida Avenue,0.9240557183176029
+tampa,TPA-U06,return,East Jackson Street & North Tampa Street,0.7354522600205537
+tampa,TPA-U06,return,East Madison Street & Pierce Street,0.6962961238690281
+tampa,TPA-U06,return,East Zack Street & North Morgan Street,0.5356715270600731
+tampa,TPA-U06,return,East Kennedy Boulevard & Pierce Street,0.7508421829559442
+tampa,TPA-U06,return,East Twiggs Street & Pierce Street,0.6410654717561943
+tampa,TPA-U06,return,East Zack Street & North Tampa Street,0.5136952478067571
+tampa,TPA-U06,return,East Madison Street & North Ashley Drive,0.6774194358250344
+tampa,TPA-U06,return,North Florida Avenue & Polk Street,0.4656919675556426
+tampa,TPA-U06,return,East Kennedy Boulevard & North Ashley Drive,0.7326521672599168
+tampa,TPA-U07,return,East Madison Street & North Florida Avenue,0.5129104452660082
+tampa,TPA-U07,return,East Kennedy Boulevard & North Florida Avenue,0.557788772257524
+tampa,TPA-U07,return,East Madison Street & North Franklin Street,0.45965743802040554
+tampa,TPA-U07,return,East Twiggs Street & North Florida Avenue,0.5682248254713539
+tampa,TPA-U07,return,East Kennedy Boulevard & North Franklin Street,0.41692985194817916
+tampa,TPA-U07,return,East Twiggs Street & North Franklin Street,0.5129422531495
+tampa,TPA-U07,return,East Jackson Street & North Florida Avenue,0.504773058568858
+tampa,TPA-U07,return,East Madison Street & North Morgan Street,0.6234037045943734
+tampa,TPA-U07,return,East Kennedy Boulevard & North Morgan Street,0.6690108384703854
+tampa,TPA-U07,return,East Jackson Street & North Franklin Street,0.45017080033746104
+tampa,TPA-U07,return,East Madison Street & North Tampa Street,0.4032972452248078
+tampa,TPA-U07,return,East Twiggs Street & North Morgan Street,0.6780644237025631
+tampa,TPA-U07,return,East Zack Street & North Florida Avenue,0.6216462857878736
+tampa,TPA-U07,return,East Kennedy Boulevard & North Tampa Street,0.36589331965015753
+tampa,TPA-U07,return,East Twiggs Street & North Tampa Street,0.4595114392402406
+tampa,TPA-U07,return,East Zack Street & North Franklin Street,0.5682086530999609
+tampa,TPA-U07,return,East Jackson Street & North Morgan Street,0.6152388790291448
+tampa,TPA-U07,return,East Washington Street & North Florida Avenue,0.6519796371135322
+tampa,TPA-U07,return,East Jackson Street & North Tampa Street,0.3950524946757152
+tampa,TPA-U07,return,East Madison Street & Pierce Street,0.6785312511151508
+tampa,TPA-U07,return,East Zack Street & North Morgan Street,0.7317967865808517
+tampa,TPA-U07,return,East Kennedy Boulevard & Pierce Street,0.7330773102020669
+tampa,TPA-U07,return,East Twiggs Street & Pierce Street,0.7331733657935299
+tampa,TPA-U07,return,East Zack Street & North Tampa Street,0.5157770051711568
+tampa,TPA-U07,return,East Madison Street & North Ashley Drive,0.35029019610916723
+tampa,TPA-U07,return,North Florida Avenue & Polk Street,0.6717993455292152
+tampa,TPA-U07,return,East Kennedy Boulevard & North Ashley Drive,0.29542595351860756
+tampa,TPA-U08,return,East Madison Street & North Florida Avenue,0.7163045624162041
+tampa,TPA-U08,return,East Kennedy Boulevard & North Florida Avenue,0.6612150214697343
+tampa,TPA-U08,return,East Madison Street & North Franklin Street,0.7695575696618068
+tampa,TPA-U08,return,East Twiggs Street & North Florida Avenue,0.7716189426215498
+tampa,TPA-U08,return,East Kennedy Boulevard & North Franklin Street,0.715436023433314
+tampa,TPA-U08,return,East Twiggs Street & North Franklin Street,0.826410977430246
+tampa,TPA-U08,return,East Jackson Street & North Florida Avenue,0.6042610899418263
+tampa,TPA-U08,return,East Madison Street & North Morgan Street,0.6081617113599365
+tampa,TPA-U08,return,East Kennedy Boulevard & North Morgan Street,0.5535129617054333
+tampa,TPA-U08,return,East Jackson Street & North Franklin Street,0.6702018861687652
+tampa,TPA-U08,return,East Madison Street & North Tampa Street,0.8259177624574044
+tampa,TPA-U08,return,East Twiggs Street & North Morgan Street,0.6635413805861807
+tampa,TPA-U08,return,East Zack Street & North Florida Avenue,0.8279231405081869
+tampa,TPA-U08,return,East Kennedy Boulevard & North Tampa Street,0.7706768098037934
+tampa,TPA-U08,return,East Twiggs Street & North Tampa Street,0.8798417913395055
+tampa,TPA-U08,return,East Zack Street & North Franklin Street,0.8813607731960997
+tampa,TPA-U08,return,East Jackson Street & North Morgan Street,0.49652576598335424
+tampa,TPA-U08,return,East Washington Street & North Florida Avenue,0.5519087641409891
+tampa,TPA-U08,return,East Jackson Street & North Tampa Street,0.7248672390373667
+tampa,TPA-U08,return,East Madison Street & Pierce Street,0.6632892578807138
+tampa,TPA-U08,return,East Zack Street & North Morgan Street,0.719224654835612
+tampa,TPA-U08,return,East Kennedy Boulevard & Pierce Street,0.5558403619625698
+tampa,TPA-U08,return,East Twiggs Street & Pierce Street,0.6654085044523402
+tampa,TPA-U08,return,East Zack Street & North Tampa Street,0.9385418836819113
+tampa,TPA-U08,return,East Madison Street & North Ashley Drive,0.8601149701832782
+tampa,TPA-U08,return,North Florida Avenue & Polk Street,0.8780762002495285
+tampa,TPA-U08,return,East Kennedy Boulevard & North Ashley Drive,0.8052507275927185
+tampa,TPA-U09,return,East Madison Street & North Florida Avenue,0.8484909573335975
+tampa,TPA-U09,return,East Kennedy Boulevard & North Florida Avenue,0.7941110939186482
+tampa,TPA-U09,return,East Madison Street & North Franklin Street,0.9017439645792001
+tampa,TPA-U09,return,East Twiggs Street & North Florida Avenue,0.8294177788522527
+tampa,TPA-U09,return,East Kennedy Boulevard & North Franklin Street,0.8483320958822279
+tampa,TPA-U09,return,East Twiggs Street & North Franklin Street,0.8863760091701847
+tampa,TPA-U09,return,East Jackson Street & North Florida Avenue,0.8723192361516109
+tampa,TPA-U09,return,East Madison Street & North Morgan Street,0.7379976980052322
+tampa,TPA-U09,return,East Kennedy Boulevard & North Morgan Street,0.683348948350729
+tampa,TPA-U09,return,East Jackson Street & North Franklin Street,0.8988323187635644
+tampa,TPA-U09,return,East Madison Street & North Tampa Street,0.9581041573747978
+tampa,TPA-U09,return,East Twiggs Street & North Morgan Street,0.7195781806210434
+tampa,TPA-U09,return,East Zack Street & North Florida Avenue,0.872928743237762
+tampa,TPA-U09,return,East Kennedy Boulevard & North Tampa Street,0.9035728822527073
+tampa,TPA-U09,return,East Twiggs Street & North Tampa Street,0.9398068230794441
+tampa,TPA-U09,return,East Zack Street & North Franklin Street,0.9263663759256748
+tampa,TPA-U09,return,East Jackson Street & North Morgan Street,0.7336695912079336
+tampa,TPA-U09,return,East Washington Street & North Florida Avenue,0.8986326366254005
+tampa,TPA-U09,return,East Jackson Street & North Tampa Street,0.9534976716321659
+tampa,TPA-U09,return,East Madison Street & Pierce Street,0.7196998906429104
+tampa,TPA-U09,return,East Zack Street & North Morgan Street,0.762778242444784
+tampa,TPA-U09,return,East Kennedy Boulevard & Pierce Street,0.6285997056732135
+tampa,TPA-U09,return,East Twiggs Street & Pierce Street,0.6644692385300767
+tampa,TPA-U09,return,East Zack Street & North Tampa Street,0.9835474864114864
+tampa,TPA-U09,return,East Madison Street & North Ashley Drive,1.0111112064904384
+tampa,TPA-U09,return,North Florida Avenue & Polk Street,0.9230818029791036
+tampa,TPA-U09,return,East Kennedy Boulevard & North Ashley Drive,0.9569343078639255
+tampa,TPA-U10,return,East Madison Street & North Florida Avenue,0.8151937179681227
+tampa,TPA-U10,return,East Kennedy Boulevard & North Florida Avenue,0.8600720449596385
+tampa,TPA-U10,return,East Madison Street & North Franklin Street,0.76194071072252
+tampa,TPA-U10,return,East Twiggs Street & North Florida Avenue,0.8705080981734684
+tampa,TPA-U10,return,East Kennedy Boulevard & North Franklin Street,0.7192131246502937
+tampa,TPA-U10,return,East Twiggs Street & North Franklin Street,0.8152255258516147
+tampa,TPA-U10,return,East Jackson Street & North Florida Avenue,0.8070563312709728
+tampa,TPA-U10,return,East Madison Street & North Morgan Street,0.925686977296488
+tampa,TPA-U10,return,East Kennedy Boulevard & North Morgan Street,0.9712941111725001
+tampa,TPA-U10,return,East Jackson Street & North Franklin Street,0.7524540730395758
+tampa,TPA-U10,return,East Madison Street & North Tampa Street,0.7055805179269223
+tampa,TPA-U10,return,East Twiggs Street & North Morgan Street,0.9803476964046777
+tampa,TPA-U10,return,East Zack Street & North Florida Avenue,0.9239295584899884
+tampa,TPA-U10,return,East Kennedy Boulevard & North Tampa Street,0.6681765923522719
+tampa,TPA-U10,return,East Twiggs Street & North Tampa Street,0.7617947119423553
+tampa,TPA-U10,return,East Zack Street & North Franklin Street,0.8704919258020756
+tampa,TPA-U10,return,East Jackson Street & North Morgan Street,0.9175221517312595
+tampa,TPA-U10,return,East Washington Street & North Florida Avenue,0.9248120784463237
+tampa,TPA-U10,return,East Jackson Street & North Tampa Street,0.6973357673778298
+tampa,TPA-U10,return,East Madison Street & Pierce Street,0.9808145238172653
+tampa,TPA-U10,return,East Zack Street & North Morgan Street,1.0340800592829666
+tampa,TPA-U10,return,East Kennedy Boulevard & Pierce Street,1.0353605829041812
+tampa,TPA-U10,return,East Twiggs Street & Pierce Street,1.0354566384956447
+tampa,TPA-U10,return,East Zack Street & North Tampa Street,0.8180602778732713
+tampa,TPA-U10,return,East Madison Street & North Ashley Drive,0.6525734688112818
+tampa,TPA-U10,return,North Florida Avenue & Polk Street,0.9740826182313299
+tampa,TPA-U10,return,East Kennedy Boulevard & North Ashley Drive,0.5977092262207221

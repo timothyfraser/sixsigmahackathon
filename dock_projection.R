@@ -4,7 +4,6 @@ library(ggplot2)
 CITY_TZ <- "America/Chicago"
 BIN_MINUTES <- 5
 
-milwaukee <- readRDS("data/milwaukee.rds")
 
 # ------------------------------------------------------------------
 # Timestamp handling
@@ -176,6 +175,8 @@ compute_dock_rates <- function(
 }
 
 
+if (sys.nframe() == 0L) {
+milwaukee <- readRDS("data/milwaukee.rds")
 mke_rates <- compute_dock_rates(
   milwaukee,
   bin_minutes = BIN_MINUTES,
@@ -207,6 +208,7 @@ mke_rates %>%
   ) +
   theme_bw()
 
+}
 # ------------------------------------------------------------------
 # Typical-week inventory-change projection
 # This is a historical baseline, not a calibrated probability model.
@@ -323,6 +325,91 @@ predict_dock <- function(
   )
 }
 
+# Return incentives use projected occupancy BEFORE the user's bike is added.
+return_discount <- function(projected_bikes, capacity) {
+  if (any(!is.finite(projected_bikes)) || any(!is.finite(capacity)) ||
+      any(capacity <= 0) || any(projected_bikes < 0) ||
+      any(projected_bikes > capacity)) stop("Invalid projected occupancy")
+  occupancy <- projected_bikes / capacity
+  as.integer(ifelse(occupancy < 0.25, 20L, ifelse(occupancy < 0.5, 10L, 0L)))
+}
+
+# Distance-ranked eligible docks; not a global fleet/rebalancing optimizer.
+# user_location is a saved location_id in data/optimizer/user_locations.csv.
+# stations: dockID, live_bikes, capacity (inventory measured at `now`).
+optimize_docks <- function(
+    user_location, stations, rates, mode = c("pickup", "return"),
+    now = Sys.time(),
+    user_distances = read.csv("data/optimizer/user_dock_distances.csv"),
+    travel_speed_mph = NULL, smooth_min = 30,
+    bin_minutes = 5, tz = attr(rates, "city_timezone")
+) {
+  mode <- match.arg(mode)
+  if (is.null(travel_speed_mph)) travel_speed_mph <- if (mode == "pickup") 3 else 10
+  if (length(travel_speed_mph) != 1 || !is.finite(travel_speed_mph) ||
+      travel_speed_mph <= 0) stop("Travel speed must be positive mph")
+  if (length(user_location) != 1 || is.na(user_location) || !nzchar(user_location))
+    stop("Provide one saved user location ID")
+  if (is.null(tz) || length(tz) != 1 || !tz %in% OlsonNames())
+    stop("Provide the city timezone or rates with a city_timezone attribute")
+  required <- c("dockID", "live_bikes", "capacity")
+  if (!all(required %in% names(stations)) || nrow(stations) == 0)
+    stop("stations needs dockID, live_bikes, capacity and at least one row")
+  if (anyNA(stations[required]) || anyDuplicated(stations$dockID) ||
+      any(!nzchar(as.character(stations$dockID))) ||
+      !is.numeric(stations$live_bikes) || !is.numeric(stations$capacity) ||
+      any(!is.finite(stations$live_bikes)) || any(!is.finite(stations$capacity)) ||
+      any(stations$capacity <= 0) || any(stations$live_bikes < 0) ||
+      any(stations$live_bikes > stations$capacity)) stop("Invalid station inventory")
+  if (!all(c("location_id", "mode", "dockID", "distance") %in% names(user_distances)))
+    stop("Distance input needs location_id, mode, dockID, distance in miles")
+  routes <- user_distances[user_distances$location_id == user_location &
+    user_distances$mode == mode, , drop = FALSE]
+  if (nrow(routes) == 0) stop("Unknown user location or missing route mode")
+  if (anyNA(routes$dockID) || anyDuplicated(routes$dockID) ||
+      !is.numeric(routes$distance) || any(routes$distance < 0, na.rm = TRUE) ||
+      any(is.infinite(routes$distance))) stop("Invalid or duplicate road distances")
+  if (!all(stations$dockID %in% routes$dockID)) stop("Missing station routes")
+  reference <- parse_city_time(now, tz)
+  if (length(reference) != 1 || is.na(reference)) stop("Invalid reference time")
+  result <- data.frame(dockID = as.character(stations$dockID),
+    distance_miles = routes$distance[match(stations$dockID, routes$dockID)],
+    live_bikes = stations$live_bikes, capacity = stations$capacity,
+    stringsAsFactors = FALSE)
+  result$travel_minutes <- result$distance_miles / travel_speed_mph * 60
+  result$arrival_time <- reference + result$travel_minutes * 60
+  attr(result$arrival_time, "tzone") <- tz
+  result$projected_bikes <- result$projected_spaces <- NA_real_
+  result$exclusion_reason <- ifelse(is.na(result$distance_miles), "no_route", "")
+  for (i in seq_len(nrow(result))) {
+    if (result$exclusion_reason[i] != "") next
+    projection <- predict_dock(rates, result$dockID[i], result$live_bikes[i],
+      result$capacity[i], walk_min = result$travel_minutes[i], now = reference,
+      smooth_min = smooth_min, bin_minutes = bin_minutes, tz = tz)
+    result$projected_bikes[i] <- projection["expected_bikes"]
+    result$projected_spaces[i] <- projection["expected_spaces"]
+    quantity <- if (mode == "pickup") result$projected_bikes[i] else result$projected_spaces[i]
+    if (quantity < 1) result$exclusion_reason[i] <-
+      if (mode == "pickup") "fewer_than_one_projected_bike" else "fewer_than_one_projected_space"
+  }
+  excluded <- result[result$exclusion_reason != "", , drop = FALSE]
+  result <- result[result$exclusion_reason == "", , drop = FALSE]
+  result$exclusion_reason <- NULL
+  result$projected_occupancy <- result$projected_bikes / result$capacity
+  result$discount_percent <- if (mode == "return")
+    return_discount(result$projected_bikes, result$capacity) else rep(0L, nrow(result))
+  result <- result[order(result$distance_miles, result$dockID), , drop = FALSE]
+  result$rank <- seq_len(nrow(result))
+  result <- result[c("rank", setdiff(names(result), "rank"))]
+  rownames(result) <- NULL
+  attr(result, "excluded_docks") <- excluded
+  attr(result, "user_location") <- user_location
+  attr(result, "mode") <- mode
+  attr(result, "travel_speed_mph") <- travel_speed_mph
+  result
+}
+
+if (sys.nframe() == 0L) {
 # Timezone-free example strings are interpreted as Milwaukee local time.
 # Capacity 30 matches the synthetic demo.
 
@@ -422,3 +509,4 @@ ggplot(
   ) +
   theme_bw() +
   theme(legend.position = "top")
+}

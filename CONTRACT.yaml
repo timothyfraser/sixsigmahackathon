@@ -156,3 +156,17 @@ tasks:
       testme script and the H-03 tests both pass with no extra steps; git
       grep -i "api_key" finds no real key; the Devpost entry links the repo.
     result: ""
+
+  - id: H-09
+    title: Rank available pickup and return docks with occupancy incentives
+    points: "Supports rider recommendations and network balancing"
+    status: in_progress
+    owner: "Codex + Lexi"
+    started_at: "2026-10-16"
+    owns: ["dock_projection.R", "tests/test_dock_optimizer.R", "data/optimizer/"]
+    definition_of_done: >
+      Rscript tests/test_dock_optimizer.R passes known-answer, availability,
+      distance ordering, incentive boundary, and empty-result cases;
+      data/optimizer/user_locations.csv contains 10 sourced real locations
+      per city (30 total), with 1620 walking/cycling road distances.
+    result: "READY FOR REVIEW: optimizer, 30 real user inputs, 1620 road distances, CSV demos and interactive local viewer added; optimizer checks and all 60 data cases pass; defaults 3 mph pickup and 10 mph return; viewer browser checks recorded under data/optimizer/."
