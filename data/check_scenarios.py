@@ -1,11 +1,13 @@
 """Independent H-02 acceptance checks; run from any working directory."""
 import csv
 import math
+import re
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+OFFSET = re.compile(r'T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$')
 
 def p_limits(failed, totals):
     p = sum(failed) / sum(totals)
@@ -49,6 +51,7 @@ for name in ('baseline','planted_shift','edge_case'):
             assert stations[r['station_id']]>0
         if table in ('status','attempts'):
             assert r['station_id'] in stations
+            assert OFFSET.search(r['timestamp']), r['timestamp']  # +-HH:MM offset (methods section 7)
             t=datetime.fromisoformat(r['timestamp']); assert t.utcoffset() is not None
             assert t.utcoffset().total_seconds()==-4*3600 and t.weekday()<5
             dates.add(t.date())
@@ -74,6 +77,7 @@ for name in ('baseline','planted_shift','edge_case'):
             assert r['source_station_id'] in stations and r['destination_station_id'] in stations
             assert r['source_station_id']!=r['destination_station_id']
             assert 0<=int(r['actual_quantity'])<=int(r['planned_quantity']) and int(r['planned_quantity'])>0
+            assert all(OFFSET.search(r[k]) for k in ('assigned_at','arrived_at','completed_at'))
             ts=[datetime.fromisoformat(r[k]) for k in ('assigned_at','arrived_at','completed_at')]
             assert all(t.utcoffset() is not None for t in ts) and ts==sorted(ts)
             assert r['status']=='completed' and r['van_id']
@@ -85,7 +89,7 @@ for name in ('baseline','planted_shift','edge_case'):
         assert len(vans)==2 and len(tasks)==60
     else:
         assert sorted(n for n in status_keys.values() if n>1)==[3]
-        stamp=lambda hm: f'{days[0]}T{hm}:00-0400'
+        stamp=lambda hm: f'{days[0]}T{hm}:00-04:00'
         assert ('S002',stamp('07:05')) not in status_keys
         assert all(('S002',stamp(f'07:{m:02}')) not in status_keys for m in range(10,14))
     print(f'{name}: {len(rows)} rows; {len(stations)} stations; {len(days)} weekdays; schema and scenario structure PASS')

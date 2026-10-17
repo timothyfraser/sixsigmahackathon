@@ -45,15 +45,15 @@ tasks:
   - id: H-02
     title: Two or three test datasets plus a codebook
     points: "10 - Tool Documentation: 2-3 working test datasets (5), codebook and README for the data (5)"
-    status: in_progress
-    owner: "Codex (local H-02 generation and validation)"
-    started_at: "2026-10-16"
+    status: blocked
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 22:01"
     owns: ["data/"]
     definition_of_done: >
       ls data/*.csv lists 2 or 3 files (e.g. in control, planted shift, edge
       case), and data/README.md names every one of them and describes every
       column with units and how the data would be collected for real.
-    result: ""
+    result: "blocked: data and codebook by Fangziyue Zhang (commit b07d1a3, generated with Codex); taken over to fix the timestamp offset to -04:00 only (content otherwise byte-identical); DoD check passes, waiting for human review"
 
   - id: H-03
     title: Core QC statistic as one plain, tested function

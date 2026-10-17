@@ -21,7 +21,7 @@ All files use the union schema below with `table` in {`stations`,`status`,`attem
 | latitude, longitude | stations | numeric degrees | WGS84; [-90,90], [-180,180] |
 | capacity | stations | integer docks | >0 |
 | region | stations | string | Residential, Office, Mixed |
-| timestamp | status/attempts | ISO8601 offset | America/New_York |
+| timestamp | status/attempts | ISO 8601 with a `+-HH:MM` offset, e.g. `2026-09-21T07:00:00-04:00` | America/New_York |
 | bikes_available, docks_available | status | integer counts | >=0; sum <= capacity |
 | is_renting, is_returning | status | boolean | Service-enabled flags |
 | attempt_id | attempts | string | Unique |
@@ -33,7 +33,7 @@ All files use the union schema below with `table` in {`stations`,`status`,`attem
 | source_station_id, destination_station_id | tasks | string | Existing distinct stations |
 | planned_quantity | tasks | integer bikes | >0 |
 | actual_quantity | tasks | integer bikes | 0..planned, required when completed |
-| assigned_at, arrived_at, completed_at | tasks | ISO8601 offset | Ordered timestamps; required according to task state |
+| assigned_at, arrived_at, completed_at | tasks | ISO 8601 with a `+-HH:MM` offset | Ordered timestamps; required according to task state |
 | status | tasks | enum | planned / assigned / in_progress / completed / cancelled |
 
 Missing-value rules: empty means not applicable or missing, **never zero**. For station status, reject missing/negative counts, unknown station IDs and capacity violations. Identical duplicate snapshots are deduplicated; all differing rows at a station/timestamp are rejected. Unknown minutes are excluded from numerator and denominator. Early warning means 0 < bikes <= 2 or 0 < docks <= 2 and is not itself failure. Failure means zero bikes or disabled renting, zero docks or disabled returning. Either-unusable is the union.
@@ -47,7 +47,9 @@ For real deployment, obtain the station registry (IDs, coordinates, capacity and
 
 ## Additional local checks
 
-After generation, run `python3 tests/validate_schema.py` and `python3 data/check_scenarios.py` from the repository root. The second command checks scenario dimensions, references, booleans, reason codes, offset timestamps, intentional edge conflicts/gaps, and day-11 return-p and I-MR signals against the first ten weekdays. It verifies KA-2 and KA-3 arithmetic and degenerate limits before applying them. This is independent fixture validation; the application loader and simulation engine are not present on this branch and are not verified by these checks.
+After generation, run `python3 tests/validate_schema.py` and `python3 data/check_scenarios.py` from the repository root. The second command checks scenario dimensions, references, booleans, reason codes, offset timestamps, intentional edge conflicts/gaps, and day-11 return-p and I-MR signals against the first ten weekdays. It verifies KA-2 and KA-3 arithmetic and degenerate limits before applying them. This is independent fixture validation. The application loader (`load_scenario()` in `app/qc.R`) is checked separately: it reads all three files and rejects only the three intentional conflicting duplicates in `edge_case.csv`. The simulation engine (`app/sim.R`) does not exist yet and is not verified here.
+
+Timestamp fix: the first version of these files (commit b07d1a3) wrote the offset as `-0400`, which the loader rejects. The generator now writes `-04:00`; nothing else in the three files changed.
 
 `data/run_h02.command` regenerates (overwriting the three CSVs) and runs both validators. It uses Rscript from PATH, or an executable specified with RSCRIPT_BIN. In the original local task workspace it also recognizes the isolated runtime at ../../work/r-runtime/bin/Rscript relative to the repository. No runtime is bundled in this repository.
 

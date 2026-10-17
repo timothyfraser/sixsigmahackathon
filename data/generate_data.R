@@ -5,7 +5,8 @@ cols <- c('table','data_source','station_id','station_name','latitude','longitud
 # Mutable row storage avoids repeatedly copying a growing list.
 rows <- new.env(hash=TRUE, parent=emptyenv()); row_count <- 0L
 add <- function(...) { x <- as.list(c(...)); y <- setNames(as.list(rep('',length(cols))),cols); for(k in names(x)) y[[k]] <- as.character(x[[k]]); y$table <- as.character(x$table); y$data_source <- 'simulated'; row_count <<- row_count + 1L; assign(as.character(row_count), y, envir=rows) }
-fmt <- function(t) format(t,'%Y-%m-%dT%H:%M:%S%z',tz='America/New_York')
+# ISO 8601 with a +-HH:MM offset (e.g. -04:00), as docs/methods.md section 7 requires; %z alone gives -0400.
+fmt <- function(t) sub('([+-][0-9]{2})([0-9]{2})$','\\1:\\2',format(t,'%Y-%m-%dT%H:%M:%S%z',tz='America/New_York'))
 dates <- seq(as.Date('2026-09-21'),as.Date('2026-10-16'),by='day'); dates <- dates[as.POSIXlt(dates)$wday %in% 1:5]
 run <- function(scenario) {
  rows <<- new.env(hash=TRUE, parent=emptyenv()); row_count <<- 0L; edge <- scenario=='edge_case'; n <- if(edge) 2L else 25L; ds <- if(edge) dates[1] else dates
