@@ -217,15 +217,15 @@ tasks:
   - id: H-11
     title: c chart, X-bar/R for response time, Cpu with an operator-entered USL
     points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 00:21"
     owns: ["app/qc.R", "tests/test-capability.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-capability.R')" passes, including KA-6,
       KA-7, R-bar = 0, a missing USL and an out-of-control chart (each NA with a reason) and
       the dispersion warning above 1.5; Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-capability.R 114 and test_dir 581 pass (KA-6, KA-7 incl. Cpu 0.927, R-bar = 0, missing USL, out of control, c dispersion warning); stats-reviewer PASS; Playwright shows the c, X-bar/R and capability cards on baseline; known: empty USL/LSL inputs give 2 browser warnings; check-in confirmed by YuCiciFu 2026-10-17"
 
   - id: H-12
     title: Historical Kaplan-Meier, RMST and F(10/20/30) (History panel)

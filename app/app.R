@@ -36,6 +36,7 @@ cached <- function(key, value) {
 # What pauses when a record type cannot be used (see table_block_message in prep.R).
 NEEDS_STATUS <- "the map, the minute grid, the station views, the I-MR chart and rebalancing"
 NEEDS_ATTEMPTS <- "the failure rates and the p charts"
+NEEDS_TASKS <- "the X-bar/R chart of response time and the capability indices"
 
 help_text <- function(...) tags$p(class = "text-muted small", ...)
 # A card that keeps its natural height (the page scrolls instead of squeezing cards).
@@ -49,6 +50,15 @@ dispersion_box <- function(d) {
   alert_box(paste0("Dispersion check on the baseline: X2 = ", sprintf("%.1f", d$chi_sq), " on ", d$df,
                    " df, ratio X2/df = ", sprintf("%.2f", d$ratio), ", chi-square p ",
                    if (startsWith(p_text, "<")) p_text else paste("=", p_text), ". ", note, "."),
+            if (isTRUE(d$warning)) "warning" else "info")
+}
+
+# The c chart's Poisson check (computed in qc.R c_dispersion; shown here only).
+c_dispersion_box <- function(d) {
+  if (is.na(d$ratio)) return(alert_box(paste("Dispersion check:", d$note), "secondary"))
+  alert_box(paste0("Dispersion check on the baseline: variance ", sprintf("%.2f", d$variance), " / mean ",
+                   sprintf("%.2f", d$mean), " = ", sprintf("%.2f", d$ratio), ". ",
+                   toupper(substr(d$note, 1, 1)), substring(d$note, 2), "."),
             if (isTRUE(d$warning)) "warning" else "info")
 }
 
@@ -144,7 +154,42 @@ ui <- page_navbar(
                    " change from the previous window. Windows below the minimum coverage are left out."),
          uiOutput("imr_note"), plotOutput("imr_i_plot", height = 350), plotOutput("imr_mr_plot", height = 300),
          tableOutput("imr_tbl")),
-    panel_card(card_header("Windows excluded from the I-MR chart"), tableOutput("excluded_tbl"))
+    panel_card(card_header("Windows excluded from the I-MR and c charts"), tableOutput("excluded_tbl")),
+    panel_card(card_header("c chart: anomaly onsets per rush window (fixed station set)"),
+         help_text("An anomaly onset is a station-minute that is unusable (empty, full or switched off) right",
+                   " after a minute that was known and usable at the same station. A switch across a gap of",
+                   " unknown data is not counted. One point per included weekday window (same inclusion and",
+                   " baseline as the I-MR chart); red points are beyond the 3-sigma limits or in a run of 8.",
+                   " The box below checks the Poisson assumption behind the limits.",
+                   " In control here does NOT mean the stations are healthy: a long outage adds only one onset",
+                   " and then none, so this chart counts how often stations break, not how long they stay",
+                   " broken. See the I-MR chart for the level of unusable time."),
+         uiOutput("c_note"), plotOutput("c_plot", height = 350), tableOutput("c_tbl")),
+    panel_card(card_header("X-bar and R chart: van response time (minutes from assigned to arrived)"),
+         help_text("Each point is one weekday rush window (07:00-10:00 New York). A subgroup is the first 3",
+                   " completed tasks of the window, ordered by assigned_at; windows with fewer than 3 are",
+                   " dropped and listed below. Limits use the baseline subgroups only: X-bar limits",
+                   " X-double-bar +/- A2*R-bar, R limits D3*R-bar and D4*R-bar (n = 3: A2 = 1.023, D3 = 0,",
+                   " D4 = 2.574, d2 = 1.693)."),
+         uiOutput("xr_note"), plotOutput("xbar_plot", height = 330), plotOutput("r_plot", height = 300),
+         tableOutput("xr_tbl"),
+         help_text("Windows dropped (fewer than 3 usable completed tasks):"),
+         tableOutput("xr_dropped_tbl")),
+    panel_card(card_header("Capability of response time (needs your specification limits)"),
+         help_text("The USL and LSL below are YOUR inputs in minutes, not measured specifications; the tool",
+                   " never invents them. With no USL nothing is computed. Capability is computed only when the",
+                   " X-bar/R chart is in control. sigma-hat = R-bar/d2 (within-subgroup spread, so these are",
+                   " Cp/Cpk, not Pp/Ppk). Assumes an approximately normal process; see the check below.",
+                   " In the built-in simulated files every subgroup is the same 9, 10 and 11 minutes, so an",
+                   " index here only demonstrates the arithmetic; it is not a capability claim about any real fleet."),
+         layout_columns(
+           fill = FALSE, col_widths = c(3, 3, 6),
+           numericInput("usl", "Upper spec limit USL, minutes (your input)", value = NA, step = 0.5),
+           numericInput("lsl", "Lower spec limit LSL, minutes (your input, optional)", value = NA, step = 0.5),
+           uiOutput("cap_head")),
+         tableOutput("cap_tbl"),
+         uiOutput("normality_box"),
+         plotOutput("cap_hist", height = 300))
   ),
 
   nav_panel("Rebalancing",
@@ -257,7 +302,7 @@ server <- function(input, output, session) {
     s$data
   })
   # Rows per record type. Stations are required for everything; status and attempts each
-  # pause only the features that need them; tasks are not used yet.
+  # pause only the features that need them (tasks: the X-bar/R chart and capability).
   health <- reactive(table_health(sc()))
   stations_ok <- reactive({
     msg <- table_block_message(health(), sc()$issues, "stations", "no part of the scenario")
@@ -266,6 +311,7 @@ server <- function(input, output, session) {
   })
   status_msg <- reactive(table_block_message(health(), sc()$issues, "status", NEEDS_STATUS))
   attempts_msg <- reactive(table_block_message(health(), sc()$issues, "attempts", NEEDS_ATTEMPTS))
+  tasks_msg <- reactive(table_block_message(health(), sc()$issues, "tasks", NEEDS_TASKS))
 
   dates <- reactive({
     stations_ok()
@@ -494,9 +540,15 @@ server <- function(input, output, session) {
     i_part <- if (is.null(status_msg())) {
       inc <- windows()$included
       paste0("I-MR: first ", baseline_count(sum(inc), input$baseline_share), " of ", sum(inc), " included windows. ")
-    } else "I-MR: paused (no valid status records). "
+    } else "I-MR and c chart: paused (no valid status records). "
+    x_part <- if (is.null(tasks_msg())) {
+      n_x <- nrow(response_subgroups(sc()$tasks, d)$values)
+      paste0("X-bar/R: first ", baseline_count(n_x, input$baseline_share), " of ", n_x, " subgroups. ")
+    } else "X-bar/R: paused (no valid tasks records). "
     alert_box(paste0("Baseline (limits are estimated from these only): the first ", input$baseline_share * 100,
-                     "% of weekdays, at least 1. ", p_part, i_part, length(d), " weekdays in the scenario."), "info")
+                     "% of weekdays, at least 1. ", p_part, i_part,
+                     if (is.null(status_msg())) "The c chart uses the same windows as the I-MR chart. ",
+                     x_part, length(d), " weekdays in the scenario."), "info")
   })
 
   p_panel <- function(kind) {
@@ -567,6 +619,85 @@ server <- function(input, output, session) {
     data.frame(date = ex$window, known_min = ex$known, unknown_min = ex$unknown,
                coverage_pct = round(100 * ex$coverage, 1), reason = ex$reason)
   }, na = "n/a")
+
+  # ---- c chart: anomaly onsets (counted in qc.R count_onsets, limits in qc.R c_chart)
+  onsets <- reactive({
+    validate(need(is.null(status_msg()), status_msg()))
+    inc <- windows()[windows()$included, ]
+    validate(need(nrow(inc) > 0, "No window has enough coverage for the c chart (see the excluded list above)."))
+    counts <- onset_window_table(grids(), fixed_ids(), inc$window)$onsets
+    list(windows = inc,
+         res = c_chart(counts, baseline = baseline_flags(rep(TRUE, nrow(inc)), input$baseline_share)))
+  })
+  output$c_note <- renderUI({
+    r <- onsets()$res
+    tagList(
+      if (nzchar(r$note)) alert_box(paste("Control limits not drawn or limited:", r$note), "warning"),
+      c_dispersion_box(r$dispersion))
+  })
+  output$c_plot <- renderPlot({
+    o <- onsets()
+    w <- o$res$dispersion$warning
+    plot_c(o$res, o$windows$window, "anomaly onsets per window", "c chart: anomaly onsets",
+           ooc_label = signal_label(TRUE, w, model = "Poisson"), ok_label = signal_label(FALSE, w, model = "Poisson"))
+  })
+  output$c_tbl <- renderTable(c_chart_table(onsets()$windows, onsets()$res), na = "n/a")
+
+  # ---- X-bar and R chart of response time, and capability
+  resp <- reactive({
+    validate(need(is.null(tasks_msg()), tasks_msg()))
+    sub <- response_subgroups(sc()$tasks, dates())
+    list(sub = sub,
+         res = xbar_r_chart(sub$values, baseline = baseline_flags(rep(TRUE, nrow(sub$values)), input$baseline_share)))
+  })
+  resp_ok <- reactive({            # the subgroups, or a message when no window has 3 usable tasks
+    r <- resp()
+    validate(need(nrow(r$sub$values) > 0,
+                  "No rush window has 3 completed tasks with both times: nothing to chart (see the dropped list)."))
+    r
+  })
+  output$xr_note <- renderUI({
+    r <- resp()$res
+    if (nrow(resp()$sub$values) > 0 && nzchar(r$note)) {
+      alert_box(paste("Control limits not drawn:", r$note), "warning")
+    }
+  })
+  output$xbar_plot <- renderPlot({
+    r <- resp_ok()
+    plot_xbar(r$res, r$sub$windows, "mean response time (minutes)", "X-bar chart")
+  })
+  output$r_plot <- renderPlot({
+    r <- resp_ok()
+    plot_r(r$res, r$sub$windows, "range of response time (minutes)", "R chart")
+  })
+  output$xr_tbl <- renderTable({
+    r <- resp_ok()
+    xbar_r_table(r$sub, r$res)
+  }, na = "n/a")
+  output$xr_dropped_tbl <- renderTable({
+    dr <- resp()$sub$dropped
+    if (nrow(dr) == 0) data.frame(note = "No window was dropped.") else dr
+  })
+
+  cap <- reactive(capability_indices(resp_ok()$res, usl = input$usl, lsl = input$lsl))
+  output$cap_head <- renderUI({
+    r <- resp_ok()
+    cp <- cap()
+    num <- function(x) if (is.na(x)) "n/a" else sprintf("%.3f", x)
+    help_text("sigma-hat = R-bar/d2 = ", num(cp$sigma_hat), " min; X-double-bar = ", num(cp$xbarbar), " min; ",
+              nrow(r$sub$values), " subgroups. USL and LSL: your inputs, not measured specs.")
+  })
+  output$cap_tbl <- renderTable(capability_table(cap()), na = "n/a")
+  output$normality_box <- renderUI({
+    nc <- normality_check(as.vector(resp_ok()$sub$values))
+    alert_box(paste0("Normality check: ", nc$note, "."), if (is.na(nc$p_value)) "secondary" else
+      if (nc$p_value < 0.05) "warning" else "info")
+  })
+  output$cap_hist <- renderPlot({
+    r <- resp_ok()
+    cp <- cap()
+    plot_response_hist(as.vector(r$sub$values), cp$xbarbar, cp$usl, cp$lsl)
+  })
 
   # ---- Rebalancing
   plan <- reactive({

@@ -135,6 +135,47 @@ plot_mr <- function(res, dates, title) {
                dates, "moving range (percentage points)", title)
 }
 
+# c chart (qc.R c_chart result) -> plot
+plot_c <- function(res, dates, ylab, title, ooc_label = "out of control", ok_label = "in control") {
+  d <- res$data
+  plot_control(data.frame(x = d$subgroup, y = d$count, center = d$center, ucl = d$ucl,
+                          lcl = d$lcl, ooc = d$out_of_control),
+               dates, ylab, title, ooc_label = ooc_label, ok_label = ok_label)
+}
+
+# X-bar chart (qc.R xbar_r_chart result) -> plot. A subgroup is red when it has a rule 1 or 4 signal.
+plot_xbar <- function(res, dates, ylab, title) {
+  d <- res$data
+  plot_control(data.frame(x = d$subgroup, y = d$xbar, center = d$x_center, ucl = d$x_ucl,
+                          lcl = d$x_lcl, ooc = d$rule1_x | d$rule4_x),
+               dates, ylab, title)
+}
+
+# R chart (qc.R xbar_r_chart result) -> plot. Rule 1 only.
+plot_r <- function(res, dates, ylab, title) {
+  d <- res$data
+  plot_control(data.frame(x = d$subgroup, y = d$range, center = d$r_center, ucl = d$r_ucl,
+                          lcl = d$r_lcl, ooc = d$rule1_r),
+               dates, ylab, title)
+}
+
+# Histogram of the individual response times used, with the centre and any spec limit the
+# operator typed (dashed red, labelled as the operator's input).
+plot_response_hist <- function(x, xbarbar = NA_real_, usl = NA_real_, lsl = NA_real_) {
+  g <- ggplot2::ggplot(data.frame(x = x), ggplot2::aes(x)) +
+    ggplot2::geom_histogram(bins = max(5, min(20, length(unique(x)))), fill = "#4575b4",
+                            colour = "white") +
+    ggplot2::labs(title = "Response times in the subgroups", x = "response time (minutes)",
+                  y = "tasks",
+                  caption = "Green = X-double-bar. Dashed red = USL / LSL typed by the operator (an input, not a measured spec).") +
+    ggplot2::theme_minimal()
+  if (!is.na(xbarbar)) g <- g + ggplot2::geom_vline(xintercept = xbarbar, colour = "darkgreen")
+  specs <- c(usl, lsl)
+  specs <- specs[!is.na(specs)]
+  if (length(specs) > 0) g <- g + ggplot2::geom_vline(xintercept = specs, colour = "red", linetype = "dashed")
+  g
+}
+
 # Per-seed paired differences for the primary metric: one point per seed, the mean (green) and its
 # confidence interval (dashed blue band edges; NA = not drawn), zero = no difference.
 # d = metric(none) - metric(reactive), so points above 0 favour the reactive policy.

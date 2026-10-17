@@ -17,7 +17,8 @@
 #   7. data source            builtin_scenarios, default_scenario_path
 #   8. data health            table_health, table_block_message, issue_summary, issue_detail,
 #                             signal_label, format_p, as_whole_numbers
-#   9. simulation display     SIM_METRIC_LABELS, paired_table_display, policy_summary_display
+#   8b. tier 2 tables         onset_window_table, c_chart_table, xbar_r_table, capability_table
+#   9. simulation display    SIM_METRIC_LABELS, paired_table_display, policy_summary_display
 
 APP_TZ <- "America/New_York"
 STATE_LEVELS <- c("rent-unusable", "return-unusable", "rent- and return-unusable",
@@ -348,10 +349,10 @@ issue_detail <- function(iss, max_rows = 200) {
 # are likely too narrow, so a point beyond them is a prompt to investigate, not a confirmed
 # special cause, and a point inside them is only "within limits".
 # ooc: TRUE / FALSE / NA (not assessed); overdispersed: the dispersion warning (TRUE/FALSE/NA).
-signal_label <- function(ooc, overdispersed) {
+signal_label <- function(ooc, overdispersed, model = "binomial") {
   warn <- isTRUE(overdispersed)
   ifelse(is.na(ooc), "not assessed",
-         ifelse(ooc, if (warn) "beyond binomial limit (investigate; not a confirmed special cause)" else "OUT OF CONTROL",
+         ifelse(ooc, if (warn) paste0("beyond ", model, " limit (investigate; not a confirmed special cause)") else "OUT OF CONTROL",
                 if (warn) "within limits" else "in control"))
 }
 
@@ -365,6 +366,51 @@ format_p <- function(p) {
 as_whole_numbers <- function(df, cols) {
   for (col in intersect(cols, names(df))) df[[col]] <- as.integer(round(df[[col]]))
   df
+}
+
+# ---------------------------------------------------------------- 8b. tier 2 inputs and tables (H-11)
+# Counting rows and shaping tables only; the statistics are in qc.R.
+
+# Anomaly onsets per date on the fixed station set (qc.R count_onsets). Output: window, onsets.
+onset_window_table <- function(grids, fixed_ids, dates) {
+  onsets <- vapply(dates, function(d) count_onsets(grids[[d]], fixed_ids), numeric(1))
+  data.frame(window = dates, onsets = unname(onsets), stringsAsFactors = FALSE)
+}
+
+# c chart table: one row per included window.
+# w = included rows of window_table (window, known, coverage), counts = onsets in the same
+# order, res = qc.R c_chart result.
+c_chart_table <- function(w, res) {
+  d <- res$data
+  data.frame(window = w$window, onsets = as.integer(d$count), known_min = w$known,
+             coverage_pct = round(100 * w$coverage, 1), centre = round(d$center, 3),
+             UCL = round(d$ucl, 3), LCL = round(d$lcl, 3),
+             signal = signal_label(d$out_of_control, res$dispersion$warning, model = "Poisson"),
+             stringsAsFactors = FALSE)
+}
+
+# X-bar/R table: the 3 response times, mean, range, limits and the signal of each subgroup.
+# sub = qc.R response_subgroups result, res = qc.R xbar_r_chart result.
+xbar_r_table <- function(sub, res) {
+  d <- res$data
+  v <- sub$values
+  data.frame(window = sub$windows, time_1_min = v[, 1], time_2_min = v[, 2], time_3_min = v[, 3],
+             mean_min = round(d$xbar, 3), range_min = round(d$range, 3),
+             xbar_LCL = round(d$x_lcl, 3), xbar_UCL = round(d$x_ucl, 3),
+             R_LCL = round(d$r_lcl, 3), R_UCL = round(d$r_ucl, 3),
+             signal = ifelse(is.na(d$out_of_control), "not assessed",
+                             ifelse(d$out_of_control, "OUT OF CONTROL", "in control")),
+             stringsAsFactors = FALSE)
+}
+
+# Capability result (qc.R capability_indices) -> one row per index, with the reason when NA.
+capability_table <- function(cap) {
+  num <- function(x) if (is.na(x)) NA_real_ else round(x, 3)
+  data.frame(
+    index = c("Cpu", "Cpl", "Cp", "Cpk"),
+    value = c(num(cap$cpu), num(cap$cpl), num(cap$cp), num(cap$cpk)),
+    reason_if_not_computed = c(cap$cpu_note, cap$cpl_note, cap$cp_note, cap$cpk_note),
+    stringsAsFactors = FALSE)
 }
 
 # ---------------------------------------------------------------- 9. simulation display

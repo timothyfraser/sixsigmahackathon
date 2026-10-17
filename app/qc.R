@@ -10,6 +10,8 @@
 #   3. read_scenario, validate_scenario, load_scenario   (loader + validator)
 #   4. build_grid, unusable_summary, grid_window_counts, window_summary (4.1)
 #   5. p_chart (+ p_dispersion, its overdispersion check), imr_chart (+ the run rule used by both)
+#   5b. count_onsets, c_chart (+ c_dispersion), response_subgroups, xbar_r_chart,
+#       capability_indices, normality_check   (tier 2, KA-6 and KA-7)
 #   6. rebalance_plan    (4.3)
 #   7. paired_diff_ci
 
@@ -650,6 +652,295 @@ imr_chart <- function(x, baseline = rep(TRUE, length(x))) {
                      mr_signal = mr_signal, out_of_control = out)
   list(data = data, center = center, mr_bar = mr_bar, sigma_hat = sigma_hat, ucl = ucl,
        lcl = lcl, mr_ucl = mr_ucl, mr_lcl = mr_lcl, note = paste(notes, collapse = "; "))
+}
+
+# ---------------------------------------------------------------- 5b. tier 2: c chart, X-bar/R, capability
+# Methods: docs/methods.md 4.2 tier 2 items 1-3; known answers KA-6 and KA-7.
+
+#' Count anomaly onsets in one grid (methods 4.1, "Anomaly event").
+#' Input : grid (build_grid output, or any data.frame with station_id, minute, known,
+#'         either_unusable), station_ids = the fixed station set (NULL = every station).
+#' Method: for each station, sort by minute. Minute m is an onset when interval m-1 is KNOWN and
+#'         usable (either_unusable FALSE), interval m is KNOWN and unusable (either_unusable
+#'         TRUE), and the two minutes are consecutive (60 s apart). A switch across an unknown
+#'         minute is never counted, and the first minute of a window has no earlier minute in
+#'         the grid, so it cannot be an onset.
+#' Output: one whole number (0 when the grid is empty).
+count_onsets <- function(grid, station_ids = NULL) {
+  if (!is.null(station_ids)) grid <- grid[grid$station_id %in% station_ids, ]
+  if (nrow(grid) < 2) return(0)
+  grid <- grid[order(grid$station_id, as.numeric(grid$minute), method = "radix"), ]
+  usable <- grid$known %in% TRUE & grid$either_unusable %in% FALSE
+  unusable <- grid$known %in% TRUE & grid$either_unusable %in% TRUE
+  k <- nrow(grid)
+  same_station <- grid$station_id[-1] == grid$station_id[-k]
+  consecutive <- diff(as.numeric(grid$minute)) == 60
+  sum(same_station & consecutive & usable[-k] & unusable[-1])
+}
+
+#' Poisson check for a c chart's baseline: variance / mean of the baseline counts.
+#' Method: for Poisson counts the variance equals the mean, so the ratio is about 1.
+#'         The sample variance uses n - 1. warning = ratio > 1.5 (demo threshold, methods 4.2).
+#' Output: list(variance, mean, ratio, warning, note).
+#' NA rules: fewer than 2 baseline windows, or a mean of 0 -> ratio and warning are NA with a reason.
+c_dispersion <- function(counts) {
+  counts <- counts[!is.na(counts)]
+  out <- list(variance = NA_real_, mean = if (length(counts) >= 1) mean(counts) else NA_real_,
+              ratio = NA_real_, warning = NA, note = "")
+  if (length(counts) < 2) {
+    out$note <- "fewer than 2 baseline windows: dispersion cannot be estimated"
+    return(out)
+  }
+  out$variance <- stats::var(counts)
+  if (out$mean == 0) {
+    out$note <- "the baseline mean is 0: dispersion cannot be estimated"
+    return(out)
+  }
+  out$ratio <- out$variance / out$mean
+  out$warning <- out$ratio > 1.5
+  out$note <- if (out$warning) {
+    sprintf(paste("dispersion ratio variance/mean %.2f > 1.5: the baseline counts vary more than a",
+                  "Poisson model allows (events can cluster). The limits are likely too narrow, so a",
+                  "point beyond them is a prompt to investigate, not a confirmed special cause"),
+            out$ratio)
+  } else {
+    sprintf("dispersion ratio variance/mean %.2f <= 1.5: no sign of extra-Poisson variation in the baseline",
+            out$ratio)
+  }
+  out
+}
+
+#' c chart for counts of anomaly onsets per rush window (fixed area of opportunity).
+#' Input : counts (one whole number per included window), baseline (TRUE/FALSE or indexes).
+#' Method: c-bar = mean of the baseline counts. UCL = c-bar + 3*sqrt(c-bar),
+#'         LCL = max(0, c-bar - 3*sqrt(c-bar)). Rules: 1 (outside the limits) and 4 (8 in a
+#'         row on one side of c-bar). Assumes Poisson counts; see c_dispersion().
+#' Output: list(data, c_bar, ucl, lcl, note, dispersion). data: subgroup, count, center, ucl,
+#'         lcl, rule1, rule4, out_of_control.
+#' NA rules: c-bar = 0, or fewer than 2 baseline windows -> limits and signals are NA with a
+#'         reason in `note`. Counts and c-bar are always kept.
+c_chart <- function(counts, baseline = rep(TRUE, length(counts))) {
+  if (any(counts < 0 | counts != floor(counts), na.rm = TRUE)) {
+    stop("counts must be whole numbers of 0 or more.", call. = FALSE)
+  }
+  k <- length(counts)
+  base <- as_baseline_flag(baseline, k)
+  in_base <- base & !is.na(counts)
+  c_bar <- if (any(in_base)) mean(counts[in_base]) else NA_real_
+  notes <- character(0)
+  if (anyNA(counts)) notes <- c(notes, "missing values were excluded, not treated as 0")
+  limits_ok <- TRUE
+  if (sum(in_base) < 2) {
+    limits_ok <- FALSE
+    notes <- c(notes, "fewer than 2 baseline windows: limits cannot be estimated")
+  } else if (c_bar == 0) {
+    limits_ok <- FALSE
+    notes <- c(notes, paste("no anomaly events in the baseline: limits cannot be estimated;",
+                            "zero observed does not mean zero risk"))
+  }
+  if (limits_ok) {
+    ucl <- c_bar + 3 * sqrt(c_bar)
+    lcl <- max(0, c_bar - 3 * sqrt(c_bar))
+    rule1 <- !is.na(counts) & (counts > ucl | counts < lcl)
+    rule4 <- run_flags(counts, c_bar)
+    out <- rule1 | rule4
+  } else {
+    ucl <- lcl <- NA_real_
+    rule1 <- rule4 <- out <- rep(NA, k)
+  }
+  data <- data.frame(subgroup = seq_len(k), count = counts, center = rep(c_bar, k),
+                     ucl = rep(ucl, k), lcl = rep(lcl, k), rule1 = rule1, rule4 = rule4, out_of_control = out)
+  list(data = data, c_bar = c_bar, ucl = ucl, lcl = lcl, note = paste(notes, collapse = "; "),
+       dispersion = c_dispersion(counts[in_base]))
+}
+
+# Control chart constants for subgroups of n = 3 (standard table, for example Montgomery,
+# Introduction to Statistical Quality Control, Appendix VI, and the NIST/SEMATECH handbook
+# section 6.3.2): A2 = 1.023, D3 = 0, D4 = 2.574, d2 = 1.693. The repo glossary has no entry
+# for them. Only n = 3 is supported on purpose, so a wrong constant can never be picked.
+XR_N <- 3
+XR_A2 <- 1.023
+XR_D3 <- 0
+XR_D4 <- 2.574
+XR_D2 <- 1.693
+
+#' Rational subgroups of van response time (methods 4.2 tier 2 item 2).
+#' Input : tasks (cleaned tasks table), dates = weekday dates "YYYY-MM-DD" (local),
+#'         start/end = "HH:MM" local clock, tz.
+#' Method: response time = arrived_at - assigned_at, in minutes. In each date's rush window
+#'         [start, end), by assigned_at, take the first 3 tasks with status "completed" and both
+#'         times, ordered by assigned_at (ties: task_id). Windows with fewer than 3 are dropped.
+#' Output: list(values = matrix k x 3 (rows = kept windows), task_ids = same shape, windows =
+#'         their dates, dropped = data.frame(window, tasks, reason)).
+response_subgroups <- function(tasks, dates, start = "07:00", end = "10:00",
+                               tz = "America/New_York") {
+  ok <- tasks$status %in% "completed" & !is.na(tasks$assigned_at) & !is.na(tasks$arrived_at)
+  t <- tasks[ok, , drop = FALSE]
+  t$response <- as.numeric(difftime(t$arrived_at, t$assigned_at, units = "mins"))
+  secs <- as.numeric(t$assigned_at)
+  values <- matrix(numeric(0), nrow = 0, ncol = XR_N)
+  ids <- matrix(character(0), nrow = 0, ncol = XR_N)
+  kept <- character(0)
+  dropped <- data.frame(window = character(0), tasks = integer(0), reason = character(0),
+                        stringsAsFactors = FALSE)
+  for (d in dates) {
+    b0 <- as.numeric(as.POSIXct(paste(d, start), tz = tz, format = "%Y-%m-%d %H:%M"))
+    b1 <- as.numeric(as.POSIXct(paste(d, end), tz = tz, format = "%Y-%m-%d %H:%M"))
+    w <- t[secs >= b0 & secs < b1, , drop = FALSE]
+    w <- w[order(as.numeric(w$assigned_at), w$task_id, method = "radix"), , drop = FALSE]
+    if (nrow(w) < XR_N) {
+      dropped <- rbind(dropped, data.frame(
+        window = d, tasks = nrow(w), stringsAsFactors = FALSE,
+        reason = sprintf("only %d completed task(s) with both times; %d are needed", nrow(w), XR_N)))
+    } else {
+      values <- rbind(values, w$response[seq_len(XR_N)])
+      ids <- rbind(ids, w$task_id[seq_len(XR_N)])
+      kept <- c(kept, d)
+    }
+  }
+  list(values = values, task_ids = ids, windows = kept, dropped = dropped)
+}
+
+#' X-bar and R chart for subgroups of 3 response times (KA-7).
+#' Input : values = matrix, one row per subgroup, 3 columns; baseline (TRUE/FALSE or indexes).
+#' Method: X-bar_i = row mean, R_i = row max - row min. X-double-bar = mean of the baseline
+#'         X-bars, R-bar = mean of the baseline ranges. X-bar limits X-double-bar +/- A2*R-bar;
+#'         R limits D3*R-bar and D4*R-bar. sigma-hat = R-bar/d2 (within-subgroup spread; NOT the
+#'         overall standard deviation, which would give Pp/Ppk). Signals: rules 1 and 4 on the
+#'         X-bar chart, rule 1 on the R chart, for every plotted subgroup.
+#' Output: list(data, xbarbar, rbar, sigma_hat, x_ucl, x_lcl, r_ucl, r_lcl, in_control, note).
+#'         data: subgroup, xbar, range, x_center, x_ucl, x_lcl, r_center, r_ucl, r_lcl, rule1_x,
+#'         rule4_x, rule1_r, out_of_control. in_control = TRUE/FALSE, NA when not assessable.
+#' NA rules: R-bar = 0, or fewer than 2 baseline subgroups -> limits, sigma-hat and signals are
+#'         NA with a reason. Observed means and ranges are always kept.
+xbar_r_chart <- function(values, baseline = rep(TRUE, nrow(values))) {
+  values <- as.matrix(values)
+  if (ncol(values) != XR_N) {
+    stop("xbar_r_chart supports subgroups of exactly ", XR_N, " values.", call. = FALSE)
+  }
+  k <- nrow(values)
+  base <- as_baseline_flag(baseline, k)
+  xbar <- rowMeans(values)
+  rng <- apply(values, 1, max) - apply(values, 1, min)
+  if (k == 0) rng <- numeric(0)
+  in_base <- base & !is.na(xbar) & !is.na(rng)
+  xbarbar <- if (any(in_base)) mean(xbar[in_base]) else NA_real_
+  rbar <- if (any(in_base)) mean(rng[in_base]) else NA_real_
+
+  notes <- character(0)
+  limits_ok <- TRUE
+  if (sum(in_base) < 2) {
+    limits_ok <- FALSE
+    notes <- c(notes, "fewer than 2 baseline subgroups: limits and capability cannot be estimated")
+  } else if (rbar < 1e-12) {
+    limits_ok <- FALSE
+    notes <- c(notes, "R-bar = 0: no within-subgroup variation, limits and capability cannot be estimated")
+  }
+
+  if (limits_ok) {
+    sigma_hat <- rbar / XR_D2
+    x_ucl <- xbarbar + XR_A2 * rbar
+    x_lcl <- xbarbar - XR_A2 * rbar
+    r_ucl <- XR_D4 * rbar
+    r_lcl <- XR_D3 * rbar
+    rule1_x <- !is.na(xbar) & (xbar > x_ucl | xbar < x_lcl)
+    rule4_x <- run_flags(xbar, xbarbar)
+    rule1_r <- !is.na(rng) & (rng > r_ucl | rng < r_lcl)
+    out <- rule1_x | rule4_x | rule1_r
+    in_control <- !any(out)
+  } else {
+    sigma_hat <- x_ucl <- x_lcl <- r_ucl <- r_lcl <- NA_real_
+    rule1_x <- rule4_x <- rule1_r <- out <- rep(NA, k)
+    in_control <- NA
+  }
+  data <- data.frame(subgroup = seq_len(k), xbar = xbar, range = rng,
+                     x_center = rep(xbarbar, k), x_ucl = rep(x_ucl, k), x_lcl = rep(x_lcl, k),
+                     r_center = rep(rbar, k), r_ucl = rep(r_ucl, k), r_lcl = rep(r_lcl, k),
+                     rule1_x = rule1_x, rule4_x = rule4_x, rule1_r = rule1_r, out_of_control = out)
+  list(data = data, xbarbar = xbarbar, rbar = rbar, sigma_hat = sigma_hat, x_ucl = x_ucl,
+       x_lcl = x_lcl, r_ucl = r_ucl, r_lcl = r_lcl, in_control = in_control,
+       note = paste(notes, collapse = "; "))
+}
+
+#' Capability indices from an X-bar/R result and operator-entered spec limits.
+#' Input : xbr = xbar_r_chart() result; usl, lsl = numbers typed by the operator (NA = not
+#'         entered; a spec is never invented or taken from the data).
+#' Method: sigma-hat = R-bar/d2 (within-subgroup). Cpu = (USL - X-double-bar)/(3*sigma-hat).
+#'         With both limits also Cpl = (X-double-bar - LSL)/(3*sigma-hat),
+#'         Cp = (USL - LSL)/(6*sigma-hat), Cpk = min(Cpu, Cpl).
+#'         Assumes a stable (in control) and roughly normal process; see normality_check().
+#' Output: list(sigma_hat, xbarbar, usl, lsl, cpu, cpl, cp, cpk, cpu_note, cpl_note, cp_note,
+#'         cpk_note). A note is "" when its index is computed.
+#' NA rules: no USL -> Cpu NA ("no USL entered: capability is not computed"); the chart not in
+#'         control, R-bar = 0 or too few baseline subgroups -> every index NA with a reason;
+#'         USL <= LSL -> every index NA with a reason. No index is ever Inf.
+capability_indices <- function(xbr, usl = NA_real_, lsl = NA_real_) {
+  entered <- function(x) length(x) == 1 && is.numeric(x) && is.finite(x)
+  has_usl <- entered(usl)
+  has_lsl <- entered(lsl)
+  out <- list(sigma_hat = xbr$sigma_hat, xbarbar = xbr$xbarbar,
+              usl = if (has_usl) usl else NA_real_, lsl = if (has_lsl) lsl else NA_real_,
+              cpu = NA_real_, cpl = NA_real_, cp = NA_real_, cpk = NA_real_,
+              cpu_note = "", cpl_note = "", cp_note = "", cpk_note = "")
+
+  both_reason <- if (!has_usl && !has_lsl) {
+    "no USL and no LSL entered: capability is not computed"
+  } else if (!has_usl) {
+    "no USL entered: capability is not computed"
+  } else if (!has_lsl) {
+    "no LSL entered: Cpl, Cp and Cpk need both limits"
+  } else if (usl <= lsl) {
+    "USL must be larger than the LSL"
+  } else ""
+  chart_reason <- if (is.na(xbr$sigma_hat)) {
+    xbr$note
+  } else if (!isTRUE(xbr$in_control)) {
+    "the X-bar/R chart is not in control: capability is not meaningful"
+  } else ""
+
+  cpu_reason <- if (!has_usl) "no USL entered: capability is not computed" else
+    if (has_lsl && usl <= lsl) "USL must be larger than the LSL" else chart_reason
+  out$cpu_note <- cpu_reason
+  both_all <- if (nzchar(both_reason)) both_reason else chart_reason
+  out$cpl_note <- out$cp_note <- out$cpk_note <- both_all
+
+  if (!nzchar(cpu_reason)) {
+    out$cpu <- (usl - xbr$xbarbar) / (3 * xbr$sigma_hat)
+  }
+  if (!nzchar(both_all)) {
+    out$cpl <- (xbr$xbarbar - lsl) / (3 * xbr$sigma_hat)
+    out$cp <- (usl - lsl) / (6 * xbr$sigma_hat)
+    out$cpk <- min(out$cpu, out$cpl)
+  }
+  out
+}
+
+#' Shapiro-Wilk check on the individual response times (a check, not a proof of normality).
+#' Input : x = numeric vector. Method: stats::shapiro.test (needs 3 <= n <= 5000, not all equal).
+#' Output: list(w, p_value, n, note). NA with a reason when it cannot be run.
+normality_check <- function(x) {
+  x <- x[!is.na(x)]
+  out <- list(w = NA_real_, p_value = NA_real_, n = length(x), note = "")
+  if (length(x) < 3) {
+    out$note <- "Shapiro-Wilk needs at least 3 values"
+    return(out)
+  }
+  if (length(x) > 5000) {
+    out$note <- "Shapiro-Wilk is defined for at most 5000 values"
+    return(out)
+  }
+  if (length(unique(x)) == 1) {
+    out$note <- "all values are identical: Shapiro-Wilk cannot be computed"
+    return(out)
+  }
+  test <- stats::shapiro.test(x)
+  out$w <- unname(test$statistic)
+  out$p_value <- test$p.value
+  out$note <- sprintf(paste("Shapiro-Wilk W = %.3f, p = %.3g on %d response times. This is a check,",
+                            "not a proof of normality; response times are often right-skewed and a",
+                            "small sample has little power to detect it"),
+                      out$w, out$p_value, out$n)
+  out
 }
 
 # ---------------------------------------------------------------- 6. rebalancing (methods 4.3)
