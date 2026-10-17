@@ -74,10 +74,10 @@ tasks:
   - id: H-04
     title: Working tool - one demo copied to app/ and wired to the H-03 function
     points: "25 - Tool Implementation: an effective, working tool (does it run?)"
-    status: todo
-    owner: ""
-    started_at: ""
-    owns: ["app/"]
+    status: in_progress
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 18:59"
+    owns: ["app/", "tests/test-prep.R"]
     notes: >
       Copy ONE folder from demos/ (the one named in SPEC section 5) to app/.
       Everything in app/ except the H-03 files. Load fastapi-react-scaffold or
@@ -86,7 +86,7 @@ tasks:
       The testme script in app/ starts the tool with one command, and a call
       on one data/ file (endpoint, function call or app upload) returns the
       same numbers as the H-03 known-answer test.
-    result: ""
+    result: "in progress: 238 tests pass and Playwright checks on tests/fixtures pass; DoD needs a data/ file from H-02"
 
   - id: H-05
     title: Demonstration of the tool on every test dataset
