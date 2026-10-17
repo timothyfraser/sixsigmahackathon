@@ -21,7 +21,7 @@ source("survival.R", local = TRUE)   # Kaplan-Meier (H-12); prep.R only formats 
 source("prep.R", local = TRUE)
 source("plots.R", local = TRUE)
 source("sim.R", local = TRUE)     # the policy simulation (H-10); the page only shows its results
-source("forecast.R", local = TRUE)   # the Now risk forecast, step 5a (H-13)
+source("forecast.R", local = TRUE)   # the Now risk forecast, step 5a (H-13) and the day bootstrap 5b (H-14)
 
 # Built-in scenarios (H-02 data): app/data/*.csv.gz in the deployed bundle, ../data/*.csv in a
 # clone. With none, fall back to the tiny test fixture, else ask for an upload.
@@ -235,7 +235,7 @@ ui <- page_navbar(
                 " The rent and return curves use the same starting group (stations fully usable, for both rent",
                 " and return, at 07:00), so they are conditional on that group, not fleet-wide rates."),
       tags$b("Stations left out at 07:00"), tableOutput("km_excluded_tbl")),
-    panel_card(card_header("Now: risk forecast from the current state (a model, step 5a: fixed rates)"),
+    panel_card(card_header("Now: risk forecast from the current state (a model, step 5a fixed rates; step 5b day bootstrap on request)"),
       help_text("A model, unlike the History panel above. Question: starting from each station's inventory at the",
                 " origin t0 (sidebar date + observation minute), what is the probability of at least one rent-unusable",
                 " minute, and separately of at least one return-unusable minute, within the next 10, 20 and 30",
@@ -247,13 +247,29 @@ ui <- page_navbar(
         tags$div(help_text("Uses the sidebar date, observation minute, stale_limit, detour factor and the van speed",
                            " of the Improvement tab. Runs only when you click."),
                  actionButton("run_fc", "Run forecast", class = "btn-primary"))),
+      layout_columns(
+        fill = FALSE, col_widths = c(6, 3, 3),
+        tags$div(checkboxInput("fc_boot", "Add parameter uncertainty (day bootstrap)", FALSE),
+                 help_text("Step 5b. Resamples the earlier weekdays with replacement, re-estimates the rates and",
+                           " simulates each set. Takes about 20 s for 25 stations at the defaults.")),
+        numericInput("fc_B", "Bootstrap sets B", 200, min = 2, max = 1000, step = 50),
+        numericInput("fc_Rb", "Paths per bootstrap set", 200, min = 20, max = 2000, step = 50)),
       uiOutput("fc_head"),
       tableOutput("fc_tbl"),
       help_text("How to read this: each cell is the share of R simulated futures with at least one unusable minute",
-                " in the horizon, and (SE) is the simulation error. Sorted by the highest 30-minute risk. A station",
+                " in the horizon, and (SE) is the simulation error (ii). Sorted by the highest 30-minute risk. A station",
                 " that is already unusable at t0 says so in the last column. * = the horizon extends past 10:00 and",
-                " reuses the last 15-minute bin rate (09:45-10:00). n/a = no forecast, with the reason."),
+                " reuses the last 15-minute bin rate (09:45-10:00). n/a = no forecast, with the reason. With the day",
+                " bootstrap on, the (iii) columns give the 2.5-97.5% range of the risk when the rates are re-estimated",
+                " from resampled days; it is a separate statement from the SE and is never added to it."),
       plotOutput("fc_plot", height = 380),
+      tags$b("Day bootstrap details (all horizons)"), tableOutput("fc_boot_tbl"),
+      help_text("(iii) = percentile range over the bootstrap rate sets. 'mean SE inside sets' is the average Monte Carlo",
+                " error of each set: the range still contains some simulation error from the paths per set, so a range",
+                " not much wider than that SE says little about the rates. Common random numbers are used in every set,",
+                " but they only partly cancel that noise, so the range can be somewhat wider than the rate uncertainty",
+                " alone, and the 5a estimate (from R paths) can fall just outside it. With fewer than about 5 earlier",
+                " weekdays the resampled rates take only a few values, so the range is very rough."),
       tags$b("Vans on the way at t0"), tableOutput("fc_transit_tbl"),
       help_text("A van counts as on the way when its task was assigned by t0 and not completed by t0. Demo assumption:",
                 " it arrives at assigned_at + straight-line km x detour / speed, the pickup has already happened",
@@ -277,6 +293,10 @@ ui <- page_navbar(
                 " unusable at some minute from t0+1 on."),
         tags$li("The simulation SE sqrt(p(1-p)/R) is only a rough guide near 0 or 1 (e.g. 0.999 at R = 2000 can",
                 " be about 0.997 in a longer run); raise R for such stations."),
+        tags$li("Day bootstrap (step 5b, only when ticked): the unit is an earlier weekday, resampled with replacement;",
+                " the rates are re-estimated with the same definition (a day drawn twice counts twice in numerator and",
+                " denominator); days are treated as exchangeable (no weekday or trend effect). With few earlier days",
+                " the resampled rates take few distinct values, so the range is rough; with fewer than 2 it is n/a."),
         tags$li("A van's estimated arrival is rounded down to the start of its minute (up to 1 minute early);",
                 " demo assumption.")),
       tags$b("Source days (weekdays before t0's date)"), textOutput("fc_days"),
@@ -832,23 +852,36 @@ server <- function(input, output, session) {
     req(input$date, input$date %in% names(grids()))
     validate(need(isTRUE(input$fc_R >= 1), "Simulated paths R must be at least 1."),
              need(!is.na(input$fc_seed), "Seed must be a number."))
+    boot <- isTRUE(input$fc_boot)
+    if (boot) {
+      validate(need(isTRUE(input$fc_B >= 2), "Bootstrap sets B must be at least 2."),
+               need(isTRUE(input$fc_Rb >= 1), "Paths per bootstrap set must be at least 1."))
+    }
     params <- tryCatch(sim_params(vans = default_van_count(sc()$tasks), detour = input$detour,
                                   speed_kmh = input$sim_speed),
                        error = function(e) conditionMessage(e))
     validate(need(is.list(params), params))
-    withProgress(message = "Running the forecast", value = 0.5, {
+    withProgress(message = if (boot) "Running the forecast and the day bootstrap (about 20 s)" else "Running the forecast",
+                 value = 0.5, {
       forecast_now(sc(), grids(), input$date, dates(), input$minute, R = input$fc_R,
-                   seed = input$fc_seed, params = params)
+                   seed = input$fc_seed, params = params,
+                   bootstrap = boot, B = if (boot) input$fc_B else 200, R_b = if (boot) input$fc_Rb else 200)
     })
   })
   output$fc_head <- renderUI({
     f <- fc_res()
     clock <- format(f$t0, "%Y-%m-%d %H:%M", tz = APP_TZ)
     if (!f$ok) return(alert_box(paste0("No forecast for t0 = ", clock, ": ", f$reason, "."), "warning"))
-    alert_box(paste0("Origin t0 = ", clock, ". ", sum(!is.na(f$table$p_rent_10)), " of ", nrow(f$table),
+    tagList(
+      alert_box(paste0("Origin t0 = ", clock, ". ", sum(!is.na(f$table$p_rent_10)), " of ", nrow(f$table),
                      " stations forecast from ", length(f$source_days), " earlier weekday(s) (", f$n_attempts,
                      " attempts), R = ", f$R, " paths, seed ", f$seed, ". Simulated; inputs changed since the click",
-                     " are not reflected until you run again."), "info")
+                     " are not reflected until you run again."), "info"),
+      if (isTRUE(f$bootstrap$ok) && f$bootstrap$n_days < 5) {
+        alert_box(paste0("Only ", f$bootstrap$n_days, " earlier weekday(s) to resample: the day-bootstrap range (iii)",
+                         " can take only a few distinct values and is very rough."), "warning")
+      }
+    )
   })
   output$fc_tbl <- renderTable(forecast_table_display(fc_res()), na = "n/a")
   output$fc_plot <- renderPlot({
@@ -857,9 +890,14 @@ server <- function(input, output, session) {
     validate(need(!is.null(d), f$reason))
     h <- max(f$horizons)
     plot_forecast_risk(d, paste0("Risk within ", h, " min of ", format(f$t0, "%H:%M", tz = APP_TZ), ": top stations"),
-                       paste0("Bars = probability of at least one unusable minute; whiskers = +/- 1 simulation SE (R = ",
-                              f$R, "). Model with fixed rates (step 5a), not a measurement."))
+                       paste0("Bars = probability of at least one unusable minute; thin black whisker = +/- 1 simulation SE (ii, R = ",
+                              f$R, ")",
+                              if (isTRUE(f$bootstrap$ok)) paste0("; wide orange bracket = 2.5-97.5% parameter range (iii, day bootstrap, B = ",
+                                                                 f$bootstrap$B, ", R_b = ", f$bootstrap$R_b, ")")
+                              else "; no parameter range (day bootstrap off or not available)",
+                              ". A model, not a measurement."))
   })
+  output$fc_boot_tbl <- renderTable(forecast_boot_display(fc_res()), na = "n/a")
   output$fc_transit_tbl <- renderTable(forecast_transit_display(fc_res()), na = "n/a")
   output$fc_uncertainty <- renderUI({
     f <- fc_res()

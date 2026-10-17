@@ -196,3 +196,109 @@ test_that("a van arriving adds bikes to the destination (capped by free docks) a
                                horizons = 10, R = 20, seed = 1)
   expect_equal(van_cap$p_return[1, 1], 1)                          # only 1 of 5 bikes fits: now 0 docks
 })
+
+# ---------------------------------------------------------------- step 5b: day bootstrap (H-14)
+
+# Same scenario as hand_scenario(), but A's attempts per bin on the two source days are given.
+# 3 attempts per 15-minute bin = rate 0.2 per minute, 6 = 0.4.
+boot_scenario <- function(per_bin_day1, per_bin_day2) {
+  h <- hand_scenario()
+  h$sc$attempts <- rbind(attempts_day("2026-10-05", "A", per_bin_day1), attempts_day("2026-10-06", "A", per_bin_day2))
+  h
+}
+
+test_that("counts per day add up to exactly the rates of sim.R estimate_demand", {
+  h <- hand_scenario()
+  ids <- c("A", "B")
+  days <- c("2026-10-05", "2026-10-06")
+  counts <- forecast_day_counts(h$sc$attempts, h$grids, days, ids)
+  r <- forecast_rates_from_counts(apply(counts$known_min, c(2, 3), sum), apply(counts$att, c(2, 3, 4), sum))
+  expect_equal(r, unname(estimate_demand(h$sc$attempts, h$grids, days, ids)$rates), ignore_attr = TRUE)
+})
+
+test_that("KA-8d: identical days give identical rate sets and a range that is exactly a point", {
+  h <- boot_scenario(3, 3)
+  f <- forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 2000, seed = 1,
+                    bootstrap = TRUE, B = 60, R_b = 300)
+  b <- f$bootstrap
+  expect_true(b$ok)
+  expect_true(b$sets_identical)                                   # every rate set is exactly the same
+  expect_equal(unname(b$rate_sets[1, 1, 1, ]), rep(0.2, 12))
+  a <- f$table[f$table$station_id == "A", ]
+  expect_identical(a$boot_lo_rent_30, a$boot_hi_rent_30)          # common random numbers: a point
+  expect_identical(a$boot_lo_rent_10, a$boot_hi_rent_10)
+  expect_identical(a$boot_lo_return_20, a$boot_hi_return_20)
+  # the 5a point estimate (R = 2000) agrees with that point within simulation error of the two runs
+  expect_lt(abs(a$p_rent_30 - a$boot_lo_rent_30), 4 * sqrt(a$se_rent_30^2 + a$boot_mean_se_rent_30^2))
+  # separate fields: the simulation SE and the bootstrap mean SE are different columns
+  expect_true(all(c("se_rent_30", "boot_mean_se_rent_30", "boot_lo_rent_30", "boot_hi_rent_30") %in% names(f$table)))
+})
+
+test_that("days with different rates (0.2 and 0.4): rate sets take only 0.2, 0.3, 0.4 with weights 1/4, 1/2, 1/4", {
+  h <- boot_scenario(3, 6)
+  f <- forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 200, seed = 5,
+                    bootstrap = TRUE, B = 400, R_b = 20)
+  b <- f$bootstrap
+  rate <- b$rate_sets[, 1, 1, 1]                                   # station A (first used), rent, bin 1
+  expect_true(all(abs(rate - 0.2) < 1e-12 | abs(rate - 0.3) < 1e-12 | abs(rate - 0.4) < 1e-12))
+  prop <- c(mean(abs(rate - 0.2) < 1e-12), mean(abs(rate - 0.3) < 1e-12), mean(abs(rate - 0.4) < 1e-12))
+  expect_equal(prop, c(0.25, 0.5, 0.25), tolerance = 0.08, scale = 1)
+  # the weights are draws of 2 days with replacement: (2,0), (1,1), (0,2)
+  expect_true(all(rowSums(b$weights) == 2))
+  # the range is a real range now: wider than a point, and ordered
+  a <- f$table[f$table$station_id == "A", ]
+  expect_gt(a$boot_hi_rent_10, a$boot_lo_rent_10)     # 30 min is saturated near 1 at these rates
+})
+
+test_that("a day drawn twice counts twice in numerator and denominator (rate of the pair, not an average of rates)", {
+  # day 1: A has 3 per bin; day 2: A has 6 per bin; known minutes are equal, so weights (2,0) -> 0.2
+  h <- boot_scenario(3, 6)
+  counts <- forecast_day_counts(h$sc$attempts, h$grids, c("2026-10-05", "2026-10-06"), c("A", "B"))
+  km <- c(2, 0) %*% matrix(counts$known_min, 2, 2 * 12)
+  at <- c(2, 0) %*% matrix(counts$att, 2, 2 * 2 * 12)
+  r <- forecast_rates_from_counts(array(km, c(2, 12)), array(at, c(2, 2, 12)))
+  expect_equal(r[1, 1, 1], 0.2)
+  expect_equal(r[2, 1, 1], 0)
+})
+
+test_that("same seed gives an identical bootstrap, another seed differs", {
+  h <- boot_scenario(3, 6)
+  go <- function(seed) forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 200, seed = seed,
+                                    bootstrap = TRUE, B = 30, R_b = 50)
+  expect_identical(go(2)$table, go(2)$table)
+  expect_false(identical(go(2)$bootstrap$weights, go(3)$bootstrap$weights))
+})
+
+test_that("fewer than 2 earlier weekdays: range NA with the reason, the 5a estimate is still shown", {
+  h <- hand_scenario()
+  f <- forecast_now(h$sc, h$grids, "2026-10-06", h$dates, 30, R = 300, seed = 1,
+                    bootstrap = TRUE, B = 20, R_b = 20)
+  expect_false(f$bootstrap$ok)
+  a <- f$table[f$table$station_id == "A", ]
+  expect_false(is.na(a$p_rent_30))
+  expect_true(is.na(a$boot_lo_rent_30) && is.na(a$boot_hi_rent_30))
+  expect_equal(a$boot_reason, "fewer than 2 earlier weekdays: the day bootstrap cannot vary the rates")
+  expect_match(f$uncertainty[3], "fewer than 2 earlier weekdays")
+})
+
+test_that("a stale station is NA in the bootstrap columns too", {
+  h <- hand_scenario(a_until = 20)
+  f <- forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 100, seed = 1, bootstrap = TRUE, B = 10, R_b = 10)
+  a <- f$table[f$table$station_id == "A", ]
+  expect_true(is.na(a$boot_lo_rent_30) && is.na(a$boot_hi_return_30))
+  expect_false(is.na(f$table$boot_lo_rent_30[f$table$station_id == "B"]))
+})
+
+test_that("bootstrap off: the table is exactly the 5a table, and the 5a columns do not change when it is on", {
+  h <- boot_scenario(3, 6)
+  off <- forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 500, seed = 4)
+  on <- forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 500, seed = 4, bootstrap = TRUE, B = 10, R_b = 10)
+  expect_null(off$bootstrap)
+  expect_false(any(grepl("^boot_", names(off$table))))
+  expect_match(off$uncertainty[3], "not computed: tick the day bootstrap")
+  keep <- names(off$table)
+  expect_identical(on$table[keep], off$table)
+  expect_identical(on$rates, off$rates)
+  expect_error(forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, bootstrap = TRUE, B = 1), "B must be")
+  expect_error(forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, bootstrap = TRUE, R_b = 0), "R_b must be")
+})

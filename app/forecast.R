@@ -20,7 +20,7 @@
 #   * A successful rent needs a bike and renting on; a successful return needs a free dock and
 #     returning on; a failed attempt changes nothing.
 #   * Fixed rates (step 5a): the rates are taken as known. Parameter-estimation uncertainty is
-#     added in step 5b (H-14).
+#     added in step 5b (H-14, forecast_bootstrap below), only when asked (bootstrap = TRUE).
 #
 # Time convention (same as sim.R / methods 4.1)
 #   Minute k (k = 0, 1, ...) after t0 holds the events of [t0+k, t0+k+1). The state of the interval
@@ -38,7 +38,23 @@ FORECAST_UNCERTAINTY <- c(
   "(i) Demand randomness: this is what each probability describes (the same rates give different futures).",
   paste("(ii) Simulation error: the Monte Carlo standard error sqrt(p(1-p)/R) of using a finite R;",
         "it is not a statement about the real world."),
-  "(iii) Parameter-estimation uncertainty (are the rates right?): added in step 5b (H-14).")
+  paste("(iii) Parameter-estimation uncertainty (are the rates right?): not computed: tick the day bootstrap",
+        "(step 5b) and run again."))
+
+# The three-source text when the day bootstrap was run (boot = forecast_bootstrap output or the
+# "nothing to bootstrap" stub of forecast_now).
+forecast_uncertainty <- function(boot) {
+  iii <- if (isTRUE(boot$ok)) {
+    paste0("(iii) Parameter-estimation uncertainty (are the rates right?): the 2.5% to 97.5% percentile range of the",
+           " risk over B = ", boot$B, " day-bootstrap rate sets (", boot$n_days, " earlier weekdays resampled with",
+           " replacement, R_b = ", boot$R_b, " paths per set, the same random numbers in every set). It is a percentile",
+           " range, not a confidence interval; it still contains some simulation error from the R_b paths per set",
+           " (the mean within-set SE is shown next to it). Days are treated as exchangeable.")
+  } else {
+    paste0("(iii) Parameter-estimation uncertainty: not available (", boot$reason, ").")
+  }
+  c(FORECAST_UNCERTAINTY[1:2], iii)
+}
 
 # ---------------------------------------------------------------- 1. the Monte Carlo core
 
@@ -155,6 +171,140 @@ forecast_rates <- function(attempts, grids, date, dates, station_ids, tz = SIM_T
   estimate_demand(attempts, grids, source_days, station_ids, tz)
 }
 
+# ---------------------------------------------------------------- 3b. day bootstrap (step 5b, H-14)
+#
+# Why: the rates of step 5a are estimated from only a few earlier weekdays, so they are uncertain.
+# Method (methods 4.2 tier 2 item 5, step 5b): the unit is an ELIGIBLE WEEKDAY (strictly before t0's
+# date). Draw B resamples of the eligible days WITH replacement (same number of days as the original).
+# For each resample re-estimate the rates with the same definition (attempts / known station-minutes
+# per station x 15-min bin x type, summed over the resampled days; a day drawn twice counts twice in
+# the numerator AND the denominator), then simulate R_b paths from the same t0 inventory and the same
+# vans in transit. The parameter-uncertainty range is the 2.5% and 97.5% percentile of p across the B
+# sets (a percentile range, not a confidence interval).
+# Assumptions: days are exchangeable draws of one demand process (no weekday-of-week or trend
+# effect); with only a few days the resampled rates take few distinct values, so the range is rough.
+# Common random numbers: every set is simulated with the SAME seed, so two sets with identical rates
+# give identical p exactly (KA-8d: identical days -> the range is exactly a point). This only PARTLY
+# removes simulation noise between sets: when many bin rates change at once the random-number streams
+# go out of step (stats-reviewer, H-14: for mid-risk stations the range was about 10-20% wider than the
+# rate uncertainty alone at R_b = 200). So the range still contains simulation error from the R_b paths
+# per set (the mean within-set SE is shown), and the 5a estimate (R = 2000) can fall outside it.
+# The simulation SE (ii) and this range (iii) are always separate fields, never merged.
+
+FORECAST_BOOT_FEW_DAYS <- "fewer than 2 earlier weekdays: the day bootstrap cannot vary the rates"
+
+#' Per-day counts behind the rates (the same counting as sim.R estimate_demand, one day at a time).
+#' Output: list(known_min = array [day, station, bin], att = array [day, station, type 1/2, bin],
+#'         source_days). Summing over days gives exactly what estimate_demand sums.
+forecast_day_counts <- function(attempts, grids, source_days, station_ids, tz = SIM_TZ) {
+  ns <- length(station_ids)
+  n_bins <- SIM_N_MIN %/% SIM_BIN_MIN
+  nd <- length(source_days)
+  known_min <- array(0, c(nd, ns, n_bins))
+  att <- array(0, c(nd, ns, 2, n_bins))
+  secs <- as.numeric(attempts$timestamp)
+  for (i in seq_len(nd)) {
+    d <- source_days[i]
+    start <- as.numeric(as.POSIXct(paste(d, "07:00"), tz = tz, format = "%Y-%m-%d %H:%M"))
+    g <- grids[[d]]
+    g <- g[g$known & g$station_id %in% station_ids, ]
+    bin <- floor((as.numeric(g$minute) - start) / 60 / SIM_BIN_MIN) + 1
+    tab <- table(factor(match(g$station_id, station_ids), seq_len(ns)), factor(bin, seq_len(n_bins)))
+    known_min[i, , ] <- matrix(as.vector(tab), ns, n_bins)
+    in_day <- !is.na(secs) & secs >= start & secs < start + 60 * SIM_N_MIN &
+      attempts$station_id %in% station_ids
+    a <- attempts[in_day, ]
+    abin <- floor((secs[in_day] - start) / 60 / SIM_BIN_MIN) + 1
+    atype <- ifelse(a$attempt_type == "rent", 1, 2)
+    tab <- table(factor(match(a$station_id, station_ids), seq_len(ns)), factor(atype, 1:2),
+                 factor(abin, seq_len(n_bins)))
+    att[i, , , ] <- array(as.vector(tab), c(ns, 2, n_bins))
+  }
+  list(known_min = known_min, att = att, source_days = source_days)
+}
+
+#' Rates from summed counts: the same rule as estimate_demand (rate = attempts / known minutes of the
+#' bin; a bin with no known minute uses the station's pooled rate; no known minute at all -> NA).
+#' Input : known_min [station, bin], att [station, type, bin] (already summed over the days used).
+#' Output: array [station, type, bin].
+forecast_rates_from_counts <- function(known_min, att) {
+  ns <- nrow(known_min)
+  n_bins <- ncol(known_min)
+  rates <- array(NA_real_, c(ns, 2, n_bins))
+  pooled_known <- rowSums(known_min)
+  for (ty in 1:2) {
+    pooled <- ifelse(pooled_known > 0, rowSums(att[, ty, , drop = FALSE]) / pooled_known, NA_real_)
+    for (b in seq_len(n_bins)) {
+      own <- ifelse(known_min[, b] > 0, att[, ty, b] / known_min[, b], NA_real_)
+      rates[, ty, b] <- ifelse(is.na(own), pooled, own)
+    }
+  }
+  rates
+}
+
+#' The day bootstrap around the fixed-rate forecast.
+#' Input : counts = forecast_day_counts() for the stations used; world, lambda_idx (the minute rows of
+#'         the 180-minute lambda used, as in forecast_now), arrivals, horizons as in forecast_simulate;
+#'         B (resamples), R_b (paths per set), seed.
+#' Output: list(ok, reason, B, R_b, seed, n_days, weights [B, day] (how often each day was drawn),
+#'         rate_sets [B, station, type, bin], sets_identical (all B rate sets equal),
+#'         p_rent_sets / p_return_sets / se_rent_sets / se_return_sets [B, station, horizon],
+#'         lo_* / hi_* / mean_se_* matrices [station, horizon] for rent and return (the 2.5%, 97.5%
+#'         percentiles of p over the sets, and the mean within-set SE), n_sets [station]).
+#' Side effect: set.seed(seed) for the resampling, then once per set inside forecast_simulate.
+forecast_bootstrap <- function(counts, world, lambda_idx, arrivals, horizons = FORECAST_HORIZONS,
+                               B = 200, R_b = 200, seed = 1) {
+  if (!is.numeric(B) || length(B) != 1 || is.na(B) || B < 2) stop("B must be a whole number of at least 2.", call. = FALSE)
+  if (!is.numeric(R_b) || length(R_b) != 1 || is.na(R_b) || R_b < 1) stop("R_b must be a whole number of at least 1.", call. = FALSE)
+  if (!is.numeric(seed) || length(seed) != 1 || is.na(seed)) stop("seed must be a number.", call. = FALSE)
+  B <- round(B); R_b <- round(R_b)
+  nd <- dim(counts$known_min)[1]
+  ns <- dim(counts$known_min)[2]
+  n_bins <- dim(counts$known_min)[3]
+  nh <- length(horizons)
+  if (nd < 2) return(list(ok = FALSE, reason = FORECAST_BOOT_FEW_DAYS, B = B, R_b = R_b, seed = seed, n_days = nd))
+  km_flat <- matrix(counts$known_min, nd, ns * n_bins)        # one row per day
+  at_flat <- matrix(counts$att, nd, ns * 2 * n_bins)
+  set.seed(seed)
+  weights <- t(vapply(seq_len(B), function(b) tabulate(sample.int(nd, nd, replace = TRUE), nd), numeric(nd)))
+  rate_sets <- array(NA_real_, c(B, ns, 2, n_bins))
+  arr3 <- function() array(NA_real_, c(B, ns, nh))
+  p_rent <- arr3(); p_ret <- arr3(); se_rent <- arr3(); se_ret <- arr3()
+  for (b in seq_len(B)) {
+    km <- array(weights[b, ] %*% km_flat, c(ns, n_bins))        # a day drawn twice counts twice
+    at <- array(weights[b, ] %*% at_flat, c(ns, 2, n_bins))
+    rates <- forecast_rates_from_counts(km, at)
+    rate_sets[b, , , ] <- rates
+    no_rate <- is.na(rates[, 1, 1])                             # no known minute in this resample
+    rates[is.na(rates)] <- 0                                    # simulated as 0, then set to NA below
+    lambda <- demand_lambda(rates)[lambda_idx, , , drop = FALSE]
+    sim <- forecast_simulate(world, lambda, arrivals, horizons, R_b, seed)   # same seed: common random numbers
+    sim$p_rent[no_rate, ] <- NA; sim$p_return[no_rate, ] <- NA
+    sim$se_rent[no_rate, ] <- NA; sim$se_return[no_rate, ] <- NA
+    p_rent[b, , ] <- sim$p_rent; p_ret[b, , ] <- sim$p_return
+    se_rent[b, , ] <- sim$se_rent; se_ret[b, , ] <- sim$se_return
+  }
+  # per station x horizon: 2.5% / 97.5% percentiles over the sets, and the mean within-set SE
+  summarise <- function(a, fun) {
+    out <- matrix(NA_real_, ns, nh)
+    for (i in seq_len(ns)) for (j in seq_len(nh)) {
+      v <- a[, i, j]
+      if (any(!is.na(v))) out[i, j] <- fun(v[!is.na(v)])
+    }
+    out
+  }
+  q <- function(prob) function(v) unname(stats::quantile(v, prob, type = 7))
+  identical_sets <- all(vapply(seq_len(B), function(b) isTRUE(all.equal(rate_sets[b, , , ], rate_sets[1, , , ],
+                                                                         tolerance = 0)), logical(1)))
+  list(ok = TRUE, reason = "", B = B, R_b = R_b, seed = seed, n_days = nd, weights = weights,
+       rate_sets = rate_sets, sets_identical = identical_sets,
+       p_rent_sets = p_rent, p_return_sets = p_ret, se_rent_sets = se_rent, se_return_sets = se_ret,
+       lo_rent = summarise(p_rent, q(0.025)), hi_rent = summarise(p_rent, q(0.975)),
+       lo_return = summarise(p_ret, q(0.025)), hi_return = summarise(p_ret, q(0.975)),
+       mean_se_rent = summarise(se_rent, mean), mean_se_return = summarise(se_ret, mean),
+       n_sets = vapply(seq_len(ns), function(i) sum(!is.na(p_rent[, i, 1])), numeric(1)))
+}
+
 # ---------------------------------------------------------------- 4. the forecast for every station
 
 #' Step 5a forecast at t0 = `date` 07:00 + `minute`.
@@ -174,7 +324,8 @@ forecast_rates <- function(attempts, grids, date, dates, station_ids, tz = SIM_T
 #'         rates ([station, type, bin] of the stations used), in_transit, past_10 (per horizon),
 #'         uncertainty (the three sources, text), n_attempts).
 forecast_now <- function(sc, grids, date, dates, minute, R = 2000, seed = 1,
-                         params = sim_params(), horizons = FORECAST_HORIZONS, tz = SIM_TZ) {
+                         params = sim_params(), horizons = FORECAST_HORIZONS, tz = SIM_TZ,
+                         bootstrap = FALSE, B = 200, R_b = 200) {
   if (!is.numeric(minute) || length(minute) != 1 || is.na(minute) || minute < 0 || minute > SIM_N_MIN - 1) {
     stop("minute must be a number from 0 to 179.", call. = FALSE)
   }
@@ -201,6 +352,12 @@ forecast_now <- function(sc, grids, date, dates, minute, R = 2000, seed = 1,
   p_rent <- P(); p_ret <- P(); se_rent <- P(); se_ret <- P()
   in_transit <- forecast_in_transit(sc$tasks, sc$stations, t0, params)
   rates <- NULL
+  boot <- NULL
+  ids_used <- all_ids[use]
+  if (isTRUE(bootstrap) && !any(use)) {
+    boot <- list(ok = FALSE, B = round(B), R_b = round(R_b), seed = seed, n_days = 0,
+                 reason = "no station could be forecast, so there is nothing to bootstrap")
+  }
   if (any(use)) {
     ids <- all_ids[use]
     world <- sim_world(st[use, c("station_id", "bikes_available", "docks_available", "is_renting", "is_returning")],
@@ -221,6 +378,10 @@ forecast_now <- function(sc, grids, date, dates, minute, R = 2000, seed = 1,
       }
     }
     sim <- forecast_simulate(world, lambda, arrivals, horizons, R, seed)
+    if (isTRUE(bootstrap)) {                                          # step 5b, only when asked
+      counts <- forecast_day_counts(sc$attempts, grids, demand$source_days, ids, tz)
+      boot <- forecast_bootstrap(counts, world, idx, arrivals, horizons, B, R_b, seed)
+    }
     row <- match(ids, all_ids)
     p_rent[row, ] <- sim$p_rent; p_ret[row, ] <- sim$p_return
     se_rent[row, ] <- sim$se_rent; se_ret[row, ] <- sim$se_return
@@ -253,6 +414,21 @@ forecast_now <- function(sc, grids, date, dates, minute, R = 2000, seed = 1,
     tab[[paste0("p_return_", h)]] <- p_ret[, j]
     tab[[paste0("se_return_", h)]] <- se_ret[, j]
   }
+  if (isTRUE(bootstrap)) {                  # step 5b columns, kept apart from the 5a SE columns
+    for (type in c("rent", "return")) {
+      for (j in seq_len(nh)) {
+        h <- horizons[j]
+        for (nm in c("lo", "hi", "mean_se")) {
+          v <- rep(NA_real_, length(all_ids))
+          if (isTRUE(boot$ok)) v[match(ids_used, all_ids)] <- boot[[paste0(nm, "_", type)]][, j]
+          tab[[paste0("boot_", nm, "_", type, "_", h)]] <- v
+        }
+      }
+    }
+    tab$boot_sets <- NA_real_
+    if (isTRUE(boot$ok)) tab$boot_sets[match(ids_used, all_ids)] <- boot$n_sets
+    tab$boot_reason <- ifelse(use, if (isTRUE(boot$ok)) "" else boot$reason, "")
+  }
   tab$flags <- flags
   tab$reason <- reason
   last <- paste0("p_rent_", max(horizons))
@@ -267,7 +443,8 @@ forecast_now <- function(sc, grids, date, dates, minute, R = 2000, seed = 1,
        table = tab, horizons = horizons, t0 = t0, minute = minute, R = round(R), seed = seed,
        source_days = if (is.null(demand)) character(0) else demand$source_days,
        rates = rates, in_transit = in_transit, past_10 = setNames(past_10, horizons),
-       uncertainty = FORECAST_UNCERTAINTY,
+       uncertainty = if (isTRUE(bootstrap)) forecast_uncertainty(boot) else FORECAST_UNCERTAINTY,
+       bootstrap = boot,
        n_attempts = if (is.null(demand)) 0 else demand$n_attempts,
        params = params)
 }

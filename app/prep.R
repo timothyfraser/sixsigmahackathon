@@ -21,7 +21,7 @@
 #   9. simulation display    SIM_METRIC_LABELS, paired_table_display, policy_summary_display
 #  10. Kaplan-Meier display  km_days, km_counts_table, km_horizon_table, km_mean_table,
 #                            km_excluded_table, km_plot_data (needs app/survival.R sourced)
-#  11. Now forecast display  forecast_p_text, forecast_table_display, forecast_transit_display,
+#  11. Now forecast display  forecast_p_text, forecast_table_display, forecast_boot_display, forecast_transit_display,
 #                            forecast_rate_display, forecast_plot_data (numbers from app/forecast.R)
 
 APP_TZ <- "America/New_York"
@@ -552,7 +552,43 @@ forecast_table_display <- function(f) {
       out[[label]] <- forecast_p_text(tb[[paste0("p_", type, "_", h)]], tb[[paste0("se_", type, "_", h)]])
     }
   }
+  if (isTRUE(f$bootstrap$ok)) {            # step 5b: the 30-minute parameter range (details table has 10/20/30)
+    h <- max(f$horizons)
+    for (type in c("rent", "return")) {
+      label <- paste0("(iii) parameter uncertainty, ", type, "-unusable within ", h, " min (day bootstrap, B = ",
+                      f$bootstrap$B, " sets): 2.5-97.5%")
+      out[[label]] <- forecast_range_text(tb[[paste0("boot_lo_", type, "_", h)]], tb[[paste0("boot_hi_", type, "_", h)]])
+    }
+  }
   out$`flags / reason` <- ifelse(tb$reason != "", tb$reason, tb$flags)
+  out
+}
+
+# "0.985 to 1.000"; an NA range -> "n/a".
+forecast_range_text <- function(lo, hi) {
+  ifelse(is.na(lo) | is.na(hi), "n/a", paste(formatC(lo, format = "f", digits = 3), "to", formatC(hi, format = "f", digits = 3)))
+}
+
+# Details of the day bootstrap for every horizon: the 2.5-97.5% range (iii) next to the 5a point
+# estimate and its simulation SE (ii), and the mean simulation SE inside the bootstrap sets (so a reader
+# sees how much of the range is simulation noise). NULL-safe: a message table when there is no range.
+forecast_boot_display <- function(f) {
+  b <- f$bootstrap
+  if (is.null(b)) return(data.frame(note = "Not computed: tick the day bootstrap and run the forecast again."))
+  if (!isTRUE(b$ok)) return(data.frame(note = paste0("Not available: ", b$reason, ".")))
+  tb <- f$table
+  tb <- tb[!is.na(tb$p_rent_10), ]
+  out <- data.frame(station = tb$station_id, stringsAsFactors = FALSE)
+  for (type in c("rent", "return")) {
+    for (h in f$horizons) {
+      out[[paste0(type, " ", h, " min: 5a estimate (ii) SE")]] <-
+        forecast_p_text(tb[[paste0("p_", type, "_", h)]], tb[[paste0("se_", type, "_", h)]])
+      out[[paste0(type, " ", h, " min: (iii) 2.5-97.5%")]] <-
+        forecast_range_text(tb[[paste0("boot_lo_", type, "_", h)]], tb[[paste0("boot_hi_", type, "_", h)]])
+      out[[paste0(type, " ", h, " min: mean SE inside sets")]] <-
+        formatC(tb[[paste0("boot_mean_se_", type, "_", h)]], format = "f", digits = 3)
+    }
+  }
   out
 }
 
@@ -585,6 +621,9 @@ forecast_plot_data <- function(f, top = 10) {
   if (nrow(tb) == 0) return(NULL)
   worst <- pmax(tb[[paste0("p_rent_", h)]], tb[[paste0("p_return_", h)]])
   tb <- head(tb[order(-worst, tb$station_id, method = "radix"), ], top)
-  rbind(data.frame(station = tb$station_id, type = "rent-unusable", p = tb[[paste0("p_rent_", h)]], se = tb[[paste0("se_rent_", h)]]),
-        data.frame(station = tb$station_id, type = "return-unusable", p = tb[[paste0("p_return_", h)]], se = tb[[paste0("se_return_", h)]]))
+  col <- function(name) if (name %in% names(tb)) tb[[name]] else rep(NA_real_, nrow(tb))   # NA without the bootstrap
+  rbind(data.frame(station = tb$station_id, type = "rent-unusable", p = tb[[paste0("p_rent_", h)]], se = tb[[paste0("se_rent_", h)]],
+                   lo = col(paste0("boot_lo_rent_", h)), hi = col(paste0("boot_hi_rent_", h))),
+        data.frame(station = tb$station_id, type = "return-unusable", p = tb[[paste0("p_return_", h)]], se = tb[[paste0("se_return_", h)]],
+                   lo = col(paste0("boot_lo_return_", h)), hi = col(paste0("boot_hi_return_", h))))
 }

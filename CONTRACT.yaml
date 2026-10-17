@@ -256,15 +256,15 @@ tasks:
   - id: H-14
     title: Forecast step 5b, day bootstrap
     points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 06:12"
     owns: ["app/forecast.R", "tests/test-forecast.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-forecast.R')" passes, including KA-8d, with
       the simulation SE and the parameter range kept as separate fields;
       Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-forecast.R 68 and test_dir 724 pass (KA-8d: identical days give identical rate sets and a point range; simulation SE and the bootstrap parameter range are separate fields); stats-reviewer PASS (independent bootstrap agrees; range partly inflated by R_b noise, disclosed); Playwright shows the bootstrap columns"
 
   - id: H-15
     title: Predictive rebalancing policy and the 3-policy comparison

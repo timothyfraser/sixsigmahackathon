@@ -217,12 +217,20 @@ plot_paired_diff <- function(d, seeds, mean_d, ci_low, ci_high, ci_text, ylab, t
 
 # Risk of the top stations: P(at least one unusable minute within the horizon), rent and return side
 # by side, with +/- 1 simulation SE as a thin bar. d = prep.R forecast_plot_data().
+# When the day bootstrap was run (lo / hi not NA) the 2.5-97.5% parameter range (iii) is added as a wide
+# orange bracket, distinct from the thin black SE whisker (ii); the caption says which is which.
 plot_forecast_risk <- function(d, title, caption) {
   d$station <- factor(d$station, levels = rev(unique(d$station)))
-  ggplot2::ggplot(d, ggplot2::aes(station, p, fill = type)) +
+  g <- ggplot2::ggplot(d, ggplot2::aes(station, p, fill = type)) +
     ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.8), width = 0.7) +
     ggplot2::geom_errorbar(ggplot2::aes(ymin = pmax(0, p - se), ymax = pmin(1, p + se)),
-                           position = ggplot2::position_dodge(width = 0.8), width = 0.25) +
+                           position = ggplot2::position_dodge(width = 0.8), width = 0.25)
+  if ("lo" %in% names(d) && any(!is.na(d$lo))) {
+    g <- g + ggplot2::geom_errorbar(ggplot2::aes(ymin = lo, ymax = hi), data = d[!is.na(d$lo), ],
+                                    position = ggplot2::position_dodge(width = 0.8), width = 0.6,
+                                    colour = "#ff7f00", linewidth = 0.9)
+  }
+  g +
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(limits = c(0, 1)) +
     ggplot2::scale_fill_manual(values = c("rent-unusable" = "#d73027", "return-unusable" = "#4575b4"), name = NULL) +
