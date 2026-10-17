@@ -306,6 +306,82 @@ test_that("signal_label does not call a beyond-limit point a confirmed special c
   expect_equal(signal_label(TRUE, NA), "OUT OF CONTROL")       # dispersion not estimable
 })
 
+# ---- Scenario integration test on the formal file data/edge_case.csv (H-04 evidence)
+# This is NOT one of the KA-1b formula tests (those use their own tiny inputs in
+# test-grid.R). It checks that the KA-1b grid rules give hand-worked numbers on a real
+# data/ file. Expected values were read by hand from the raw CSV rows (capacity 20,
+# stale_limit 2, early-warning 2):
+#   S002 status rows: 07:02, 07:03, 07:04 = 4 bikes; 07:05 missing; 07:06 = three rows
+#   with 4, 2 and 3 bikes (conflict); 07:07, 07:08, 07:09 = 3 bikes; 07:10-07:13 missing;
+#   07:14, 07:15 = 4 bikes.
+#   07:05 -> 07:04 snapshot, age 1, known, 4 bikes          (KA-1b rule a)
+#   07:06 -> all 3 rows rejected; 07:04, age 2, known, 4     (KA-1b rule c)
+#   07:10, 07:11 -> 07:09, ages 1 and 2, known, 3 bikes;
+#   07:12, 07:13 -> ages 3 and 4 > 2, unknown                (KA-1b rule b)
+#   07:02-07:15: 12 known, 2 unknown, 0 unusable, 0 early-warning minutes.
+#   S001: 10 bikes and 10 docks in every snapshot -> 180 known, 0 unknown, 0 unusable,
+#   0 warning (degenerate case).
+#   One weekday only -> p and I-MR limits are NA with "fewer than 2 baseline ..." notes.
+edge_path <- testthat::test_path("..", "data", "edge_case.csv")
+
+test_that("Scenario integration (data/edge_case.csv): KA-1b rules on S002 07:02-07:15, S001 degenerate, one-day SPC", {
+  skip_if_not(file.exists(edge_path),
+              "data/edge_case.csv is not in this checkout (it comes from task H-02); integration test not run")
+  sc <- load_scenario(edge_path)
+
+  # loader: exactly the three intentional conflicting S002 07:06 rows are rejected
+  expect_equal(nrow(sc$issues), 3)
+  expect_true(all(sc$issues$table == "status" & sc$issues$id == "S002" &
+                  sc$issues$rule == "conflicting duplicate" & sc$issues$action == "rejected"))
+
+  g <- build_grid(sc$status, sc$stations, "2026-09-21", "07:00", "10:00", APP_TZ, 2)
+  at <- function(hm) g[g$station_id == "S002" & format(g$minute, "%H:%M", tz = APP_TZ) == hm, ]
+  m05 <- at("07:05"); expect_true(m05$known); expect_equal(m05$age, 1); expect_equal(m05$bikes_available, 4)
+  m06 <- at("07:06"); expect_true(m06$known); expect_equal(m06$age, 2); expect_equal(m06$bikes_available, 4)
+  for (hm in c("07:10", "07:11")) {
+    expect_true(at(hm)$known)
+    expect_equal(at(hm)$bikes_available, 3)
+  }
+  for (hm in c("07:12", "07:13")) {
+    expect_false(at(hm)$known)
+    expect_true(is.na(at(hm)$bikes_available))
+  }
+  seg <- g[g$station_id == "S002" & format(g$minute, "%H:%M", tz = APP_TZ) >= "07:02" &
+             format(g$minute, "%H:%M", tz = APP_TZ) <= "07:15", ]
+  expect_equal(nrow(seg), 14)
+  expect_equal(sum(seg$known), 12)
+  expect_equal(sum(!seg$known), 2)
+  k <- seg[seg$known, ]
+  expect_equal(sum(k$either_unusable), 0)
+  expect_equal(sum(k$warn_bike | k$warn_dock), 0)
+
+  s1 <- unusable_summary(g)
+  s1 <- s1[s1$station_id == "S001", ]
+  expect_equal(c(s1$known_min, s1$unknown_min, s1$either_unusable_min, s1$warn_bike_min, s1$warn_dock_min),
+               c(180, 0, 0, 0, 0))
+  expect_equal(s1$coverage, 1)
+
+  # the page's rebalancing at 07:12 leaves S002 out, with the stale ages above as the reason
+  plan <- rebalance_plan(state_at(g, 12), sc$stations)
+  expect_equal(plan$excluded$station_id, "S002")
+  ex12 <- explain_exclusion(plan$excluded, sc$status, at("07:12")$minute, 2, sc$issues)
+  expect_match(ex12$detail, "last valid snapshot is 3 min old", fixed = TRUE)
+  expect_match(ex12$detail, "3 invalid status row(s) rejected", fixed = TRUE)
+  ex13 <- explain_exclusion(ex12[, c("station_id", "reason", "recommendation")],
+                            sc$status, at("07:13")$minute, 2, sc$issues)
+  expect_match(ex13$detail, "last valid snapshot is 4 min old", fixed = TRUE)
+
+  # one weekday: limits cannot be estimated (the H-03 degenerate rules)
+  a <- attempts_by_day(sc$attempts, "2026-09-21")
+  p <- p_chart(a$rent_fail, a$rent_n)
+  expect_true(is.na(p$data$ucl))
+  expect_match(p$note, "fewer than 2 baseline subgroups", fixed = TRUE)
+  expect_match(p$dispersion$note, "fewer than 2 baseline subgroups", fixed = TRUE)
+  expect_equal(a$return_n, 0)                     # edge_case has no return attempts
+  i <- imr_chart(grid_window_counts(g, NULL, "2026-09-21")$either_min)
+  expect_match(i$note, "fewer than 2 baseline points", fixed = TRUE)
+})
+
 test_that("format_p and as_whole_numbers", {
   expect_equal(format_p(0.716406), "0.716")
   expect_equal(format_p(6.2e-23), "< 0.0001")
