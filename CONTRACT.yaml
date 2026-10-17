@@ -120,7 +120,7 @@ tasks:
     definition_of_done: >
       The workflow run is green, and the public URL answers HTTP 200 from a
       logged-out browser and returns the H-03 numbers for one test dataset.
-    result: "blocked: workflow + manifest on main via PR #6; its run 39001891133 stopped at the secrets check (nothing published); manifestme.R now bundles every file app.R sources (sim.R added); bundle-only copy runs the Improvement comparison locally; waiting for repo secrets and approval to publish; DoD not run"
+    result: "blocked: final manifest.json (13 files: app.R, 9 sourced R files, 3 scenario .csv.gz; 68 CRAN packages; R 4.5.2) with every MD5 matching the commit; a copy holding only the bundle files starts and all 7 tabs render without errors; repo secrets set by YuCiciFu; waiting for YuCiciFu to approve publishing (merge to main); not deployed, DoD not run"
 
   - id: H-07
     title: README and function documentation

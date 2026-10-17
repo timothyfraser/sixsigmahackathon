@@ -2147,7 +2147,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "a9398260713c62e2e3ee90190f5c1148"
+      "checksum": "2d62b601b41cf1258f4f987b59d00e36"
     },
     "data/baseline.csv.gz": {
       "checksum": "ddb0d064fb0d6a6b762e8061bacfaa1a"
@@ -2158,17 +2158,32 @@
     "data/planted_shift.csv.gz": {
       "checksum": "0f86a97543262bef7039082a322c7d7a"
     },
+    "faulttree.R": {
+      "checksum": "420f40529b823542dbf964e0e381cfdf"
+    },
+    "forecast.R": {
+      "checksum": "0c1762ab8d2e49dcb50a7b58da6c1ca2"
+    },
     "plots.R": {
-      "checksum": "5e95f11d9ee3fbf1806959c1d8d80d79"
+      "checksum": "389065d3317154c922c4f38fe545a21c"
     },
     "prep.R": {
-      "checksum": "78c608f22ead99eb55af64610dace64d"
+      "checksum": "8b88d45e73bbbbaeee609dccb8002209"
     },
     "qc.R": {
-      "checksum": "ab4edc62d946381f767f004df99ed778"
+      "checksum": "6322639082b710567b1498bb673913a2"
+    },
+    "reliability.R": {
+      "checksum": "61a9590e329a627acc66595dcce8e725"
     },
     "sim.R": {
-      "checksum": "7c2985278f77bbec12c4bfedb65754e4"
+      "checksum": "d6f78336ee01dc22a3db325212242601"
+    },
+    "survival.R": {
+      "checksum": "e5b7e0063a25a6d2ae8a13566dc988e4"
+    },
+    "tasks.R": {
+      "checksum": "785a324765332acabe319d2ae22eb3e8"
     }
   },
   "users": null
