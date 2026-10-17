@@ -53,7 +53,7 @@ Your team tackles one real-world quality control and reliability problem.
 - 📊 **The statistics are the graded core.** Statistical process control,
   process capability, reliability modeling, failure analysis. The app is the
   delivery vehicle for the analysis, not the point
-- 🧱 Ship a a dashboard / web app (React or Shiny), plus **one** of: an R package or Python library AND/OR a public REST API
+- 🧱 Ship a a dashboard / web app (React), plus **one** of: an R package or Python library AND/OR a public REST API
   (FastAPI or plumber).
 - 🚀 Deploy it live to the course **Posit Connect** server
 - 🔢 Every project is scored 0-100 by the event staff.
