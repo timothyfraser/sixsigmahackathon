@@ -320,15 +320,17 @@ ui <- page_navbar(
   nav_panel("Improvement",
     panel_card(card_header("What this tab does, and what it assumes"),
       help_text("Question: with the SAME simulated riders, are fewer station-minutes unusable when vans",
-                " rebalance (reactive policy) than when they do not (no rebalancing)? The tool does not",
-                " assume the reactive policy wins. Everything below is simulated, not a forecast of a real day."),
+                " rebalance (reactive or predictive policy) than when they do not (no rebalancing), and does",
+                " one rebalancing policy beat the other? The tool does not assume any policy wins. Everything",
+                " below is simulated, not a forecast of a real day."),
       tags$ul(class = "text-muted small",
         tags$li("Demand (from the data): Poisson arrivals per station and 15-minute bin, rate = attempts",
                 " (successful + failed) / known station-minutes over the weekdays STRICTLY BEFORE the chosen",
                 " date (no look-ahead). A rate of 0 is valid. A bin with no known minute uses the station's",
                 " pooled rate (demo assumption); riders who gave up without trying are not observed."),
-        tags$li("Paired seeds: each seed makes ONE stream of rider events; both policies get exactly that",
-                " stream, so the policy never changes demand, only whether a rent or return succeeds."),
+        tags$li("Paired seeds: each seed makes ONE stream of rider events, made before any policy runs; all three",
+                " policies get exactly that stream, the same start inventory and the same vans, so the policy",
+                " never changes demand, only whether a rent or return succeeds."),
         tags$li("Start: the chosen date's 07:00 state (from the minute grid, so stale_limit applies). Stations",
                 " with an unknown 07:00 state are left out and listed below. Station open/closed flags stay as",
                 " at 07:00 (demo assumption); a closed station is maintenance, never a move."),
@@ -342,9 +344,19 @@ ui <- page_navbar(
                 " rebalancing plan (the plan from the Rebalancing tab, on the simulated state) that touches a",
                 " rent-unusable, return-unusable or early-warning station. One task per van; stations of an",
                 " active task are reserved. Target fill, van capacity and detour come from the sidebar."),
-        tags$li("Difference d = metric(no rebalancing) - metric(reactive), per seed. Primary metric: either-unusable",
-                " station-minutes in 07:00-10:00, paired t interval with a Bonferroni family of 3 (98.333%, this",
-                " anticipates the three-policy comparison). The other metrics are exploratory, unadjusted 95%,",
+        tags$li("Predictive policy (tier 2, a demo heuristic): at the start of each minute an idle van gets the first",
+                " move of the same greedy plan whose destination has a rent risk, or whose source has a return",
+                " risk, at or above the threshold. Risk = probability of at least one rent-unusable (return-unusable)",
+                " minute in the next 30 minutes from the CURRENT simulated state, with the same Poisson model",
+                " as the Now forecast, calculated exactly (no random numbers). The current minute counts, so an",
+                " empty station has risk 1. The threshold (default 0.5) is an adjustable heuristic and was not",
+                " tuned to make this policy look good. Caveat (oracle rates): inside the simulation the policy",
+                " knows the TRUE demand rates of the simulator, which a real dispatcher could only estimate; this",
+                " favours the predictive policy over what a real tool could do."),
+        tags$li("Differences d = metric(first policy) - metric(second policy), per seed, for the 3 pairs: none -",
+                " reactive, none - predictive, reactive - predictive. Primary metric: either-unusable",
+                " station-minutes in 07:00-10:00, paired t interval with a Bonferroni family of 3 (98.333%; the 3",
+                " intervals are the 3 pairwise comparisons). The other metrics are exploratory, unadjusted 95%,",
                 " not adjusted for multiple comparisons; there is no overall 95% confidence across metrics."),
         tags$li("Recovery time: only failure onsets that recover before 10:00 are averaged, and only seeds with at",
                 " least one are counted; the table shows how many.")
@@ -357,21 +369,30 @@ ui <- page_navbar(
         numericInput("sim_vans", "Number of vans (demo assumption)", 2, min = 1, max = 20, step = 1),
         numericInput("sim_speed", "Van speed, km/h (demo assumption)", 20, min = 1, step = 1)),
       layout_columns(
-        fill = FALSE, col_widths = c(3, 3, 6),
+        fill = FALSE, col_widths = c(3, 3, 3, 3),
         numericInput("sim_stop", "Stop time per pickup / drop-off, min (demo assumption)", 2, min = 0, step = 0.5),
         numericInput("sim_perbike", "Handling time per bike, min (demo assumption)", 0.1, min = 0, step = 0.05),
+        numericInput("sim_threshold", "Predictive threshold: dispatch at 30-min risk of at least (heuristic)", 0.5,
+                     min = 0, max = 1, step = 0.05),
         tags$div(
           help_text("Also used from the sidebar: date, stale_limit, target fill, van capacity, detour factor."),
           actionButton("run_sim", "Run comparison", class = "btn-primary"))),
-      help_text("The simulation runs only when you click. 30 seeds take several seconds.")),
+      help_text("The simulation runs only when you click. 30 seeds x 3 policies take about half a minute.")),
     uiOutput("sim_head"),
     panel_card(card_header("Per-policy means over the seeds"), tableOutput("sim_summary_tbl")),
-    panel_card(card_header("Paired differences (no rebalancing minus reactive)"),
-      help_text("How to read this: positive = the reactive policy is better (fewer minutes, fewer failures, faster",
-                " recovery). Van distance is negative because only the reactive policy drives. An interval that",
-                " contains 0 does not show a difference. CI_level shows the level of each row."),
-      tableOutput("sim_paired_tbl")),
-    panel_card(card_header("Primary metric: per-seed differences"),
+    panel_card(card_header("Paired differences (first policy minus second policy, 3 pairs x 4 metrics)"),
+      help_text("How to read this: d = first minus second, so positive = the SECOND policy of the pair is better",
+                " (fewer minutes, fewer failures, faster recovery). The 3 primary rows come first (Bonferroni 98.333%,",
+                " the family of 3 pairs); the other rows are exploratory (95%, not adjusted). Van distance is negative",
+                " in the pairs with none because only the rebalancing policies drive. An interval that contains 0",
+                " does not show a difference. CI_level shows the level of each row."),
+      tableOutput("sim_paired_tbl"),
+      help_text("A pair whose differences are all exactly 0 gets a zero-width interval (see its note). That only",
+                " describes this day and these assumptions: e.g. on baseline 2026-10-05 reactive and predictive",
+                " send the same moves because almost every station is triggered and the 2 vans, not the trigger,",
+                " limit dispatch. It does not show the two policies are equivalent in general (on planted_shift",
+                " they differ).")),
+    panel_card(card_header("Primary metric: per-seed differences, the 3 pairs"),
       plotOutput("sim_plot", height = 350)),
     layout_columns(
       fill = FALSE, col_widths = c(6, 6),
@@ -951,7 +972,7 @@ server <- function(input, output, session) {
     params <- tryCatch(
       sim_params(vans = input$sim_vans, van_capacity = input$van_capacity, target_fill = input$target_fill,
                  detour = input$detour, speed_kmh = input$sim_speed, stop_min = input$sim_stop,
-                 per_bike_min = input$sim_perbike),
+                 per_bike_min = input$sim_perbike, risk_threshold = input$sim_threshold),
       error = function(e) conditionMessage(e))
     validate(need(is.list(params), params),
              need(isTRUE(input$sim_seeds >= 1), "Seeds R must be at least 1."),
@@ -984,13 +1005,13 @@ server <- function(input, output, session) {
   output$sim_plot <- renderPlot({
     r <- sim_res()
     validate(need(r$ok, r$reason))
-    row <- r$paired[r$paired$metric == "either_min", ]
-    ci_text <- if (is.na(row$ci_low)) paste("No interval:", row$note) else
-      sprintf("green line = mean difference; dashed = %.3f%% CI (Bonferroni family of 3); n = %d seeds",
-              row$ci_level_pct, row$n)
-    plot_paired_diff(r$diffs$either_min, r$seeds, row$mean_d, row$ci_low, row$ci_high, ci_text,
-                     "unusable station-minutes saved (none - reactive)",
-                     "Per-seed difference in either-unusable station-minutes")
+    rows <- r$paired[r$paired$metric == "either_min", ]
+    ci_text <- if (all(is.na(rows$ci_low))) paste("No interval:", rows$note[1]) else
+      sprintf("green line = mean difference; dashed = %.3f%% CI (Bonferroni family of 3 pairs); n = %d seeds. Above 0 = the second policy of the pair is better.",
+              rows$ci_level_pct[1], rows$n[1])
+    plot_paired_diffs(lapply(r$diffs, function(x) x$either_min), r$seeds, rows,
+                      "unusable station-minutes saved (first - second)",
+                      "Per-seed difference in either-unusable station-minutes", ci_text)
   })
   output$sim_excluded_tbl <- renderTable({
     r <- sim_res()

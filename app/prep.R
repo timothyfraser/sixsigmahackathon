@@ -426,25 +426,28 @@ SIM_METRIC_LABELS <- c(
   van_km = "Van distance, km (estimated, not a road route)",
   recovery_min = "Recovery time, minutes from failure onset to usable")
 
-# Paired-difference table (sim.R paired_table) -> readable table. d = none - reactive.
+# Paired-difference table (sim.R paired_tables) -> readable table. d = metric(first policy) - metric(second
+# policy) of the `pair` column, so a positive difference means the SECOND policy is better.
 # The failed share is shown in percentage points (x 100). Numbers are printed as text with 4
 # significant digits, so a small difference (e.g. 0.01318 pp) is not rounded to "0.00".
 paired_table_display <- function(tbl) {
   scale <- ifelse(tbl$metric == "fail_prop", 100, 1)
   num <- function(x) ifelse(is.na(x), NA_character_,
                             formatC(signif(x * scale, 4), format = "fg", digits = 4))
-  data.frame(
+  out <- data.frame(
     metric = unname(SIM_METRIC_LABELS[tbl$metric]), role = tbl$role,
     seeds_used = as.integer(tbl$n), mean_difference = num(tbl$mean_d),
     CI_low = num(tbl$ci_low), CI_high = num(tbl$ci_high),
     CI_level = paste0(format(round(tbl$ci_level_pct, 3), nsmall = 0), "%"),
     label = tbl$label, note = tbl$note, stringsAsFactors = FALSE)
+  if ("pair" %in% names(tbl)) out <- cbind(data.frame(pair = tbl$pair, stringsAsFactors = FALSE), out)
+  out
 }
 
 # Per-policy means (sim.R compare_policies$summary) -> readable table; the failed share is in percent.
 policy_summary_display <- function(s) {
   data.frame(
-    policy = ifelse(s$policy == "none", "none (no rebalancing)", "reactive"),
+    policy = ifelse(s$policy == "none", "none (no rebalancing)", s$policy),
     seeds = as.integer(s$seeds),
     # 2 decimals, like the paired table, so the two means visibly differ by the mean difference
     mean_either_unusable_min = round(s$either_min, 2),

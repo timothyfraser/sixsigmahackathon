@@ -215,6 +215,35 @@ plot_paired_diff <- function(d, seeds, mean_d, ci_low, ci_high, ci_text, ylab, t
   g
 }
 
+# The three pairwise primary differences side by side (H-15): one panel per pair, one point per seed,
+# the mean (green) and the Bonferroni interval (dashed blue; NA = not drawn), zero = no difference.
+# d = metric(first policy) - metric(second policy), so points above 0 favour the SECOND policy.
+# diffs = list named by pair of per-seed differences; rows = the primary rows of sim.R paired_tables
+# (columns pair, mean_d, ci_low, ci_high). This function only draws.
+plot_paired_diffs <- function(diffs, seeds, rows, ylab, title, caption) {
+  pairs <- names(diffs)
+  df <- data.frame(seed = rep(seeds, length(pairs)), d = unlist(diffs, use.names = FALSE),
+                   pair = factor(rep(pairs, each = length(seeds)), levels = pairs))
+  rows <- rows[match(pairs, rows$pair), ]
+  rows$pair <- factor(rows$pair, levels = pairs)
+  g <- ggplot2::ggplot(df, ggplot2::aes(seed, d)) +
+    ggplot2::geom_hline(yintercept = 0, colour = "grey40") +
+    ggplot2::geom_point(size = 2, colour = "#2166ac", na.rm = TRUE) +
+    ggplot2::facet_wrap(~pair, nrow = 1) +
+    ggplot2::labs(title = title, x = "seed", y = ylab, caption = caption) +
+    ggplot2::theme_minimal()
+  has_mean <- !is.na(rows$mean_d)
+  if (any(has_mean)) {
+    g <- g + ggplot2::geom_hline(ggplot2::aes(yintercept = mean_d), data = rows[has_mean, ], colour = "darkgreen")
+  }
+  has_ci <- !is.na(rows$ci_low) & !is.na(rows$ci_high)
+  if (any(has_ci)) {
+    g <- g + ggplot2::geom_hline(ggplot2::aes(yintercept = ci_low), data = rows[has_ci, ], colour = "#2166ac", linetype = "dashed") +
+      ggplot2::geom_hline(ggplot2::aes(yintercept = ci_high), data = rows[has_ci, ], colour = "#2166ac", linetype = "dashed")
+  }
+  g
+}
+
 # Risk of the top stations: P(at least one unusable minute within the horizon), rent and return side
 # by side, with +/- 1 simulation SE as a thin bar. d = prep.R forecast_plot_data().
 # When the day bootstrap was run (lo / hi not NA) the 2.5-97.5% parameter range (iii) is added as a wide

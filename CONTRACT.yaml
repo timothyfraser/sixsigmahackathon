@@ -269,15 +269,15 @@ tasks:
   - id: H-15
     title: Predictive rebalancing policy and the 3-policy comparison
     points: "supports 25 - Tool Implementation: valid improvement evaluation (tier 2)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 06:29"
     owns: ["app/sim.R", "tests/test-sim.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-sim.R')" passes, including identical demand
       streams across the 3 policies for each seed and KA-5 (primary at 98.333%, secondary
       labelled unadjusted 95%); Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-sim.R 260 and test_dir 853 pass (identical demand streams across the 3 policies per seed, KA-5 primary 98.333% and secondary unadjusted 95%, KA-5b); stats-reviewer PASS (predictive = reactive on baseline 2026-10-05 is a data/rule consequence, they differ on planted_shift; disclosed); Playwright shows the 3-policy tables"
 
   - id: H-16
     title: Empirical availability and R(tau) for series, parallel and k-out-of-n

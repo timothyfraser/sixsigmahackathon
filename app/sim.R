@@ -5,15 +5,16 @@
 # Everything marked "demo assumption" is adjustable and is NOT a measured property of a real system.
 #
 # What it answers: with the SAME simulated riders, are fewer station-minutes unusable when vans
-# rebalance (policy "reactive") than when they do not (policy "none")? The tool never assumes the
-# answer; the paired differences and their intervals say.
+# rebalance (policy "reactive" or "predictive") than when they do not (policy "none")? The tool never
+# assumes the answer; the paired differences and their intervals say. Three policies, three pairs (H-15).
 #
 # Contents
 #   1. parameters and the world         sim_params, default_van_count, sim_world
 #   2. demand (no look-ahead)           estimate_demand, demand_lambda, make_demand_stream
 #   3. van rules                        van_pickup_amount, van_dropoff_amount
+#   3b. predictive risk (H-15)          predictive_risk_table, predictive_risk
 #   4. one run of one policy            run_policy (+ its helpers), recovery_episodes
-#   5. the comparison                   paired_table, compare_policies
+#   5. the comparison                   paired_table, paired_tables, compare_policies
 #
 # Time: minutes after 07:00 (0 ... 180). A rider event of minute m happens at time m + 0.5.
 # The state of minute [m, m+1) is read at time m, after every event before m (methods 4.1).
@@ -23,6 +24,11 @@ SIM_BIN_MIN <- 15                # demand rates are constant inside a 15-minute 
 SIM_TZ <- "America/New_York"
 SIM_PRIMARY <- "either_min"      # the primary metric; the others are exploratory
 SIM_PRIMARY_FAMILY <- 3          # Bonferroni family: 3 pairwise policy comparisons (H-15), alpha = 0.05/3
+SIM_POLICIES <- c("none", "reactive", "predictive")
+# The 3 pairwise comparisons. d = metric(first) - metric(second): positive = the SECOND policy is better
+# (fewer minutes / failures / minutes to recover; for van_km it says the second drives less).
+SIM_PAIRS <- list(c("none", "reactive"), c("none", "predictive"), c("reactive", "predictive"))
+SIM_RISK_HORIZON <- 30           # minutes the predictive policy looks ahead (same as the Now forecast's longest horizon)
 SIM_METRICS <- c("either_min", "fail_prop", "van_km", "recovery_min")
 
 # ---------------------------------------------------------------- 1. parameters and the world
@@ -36,8 +42,11 @@ SIM_METRICS <- c("either_min", "fail_prop", "van_km", "recovery_min")
 #' stop_min     minutes lost at each pickup and each drop-off
 #' per_bike_min minutes per bike loaded or unloaded
 #' early_k      early warning = 0 < bikes <= k or 0 < docks <= k (used only to trigger "reactive")
+#' risk_threshold  the "predictive" policy dispatches for a station whose risk of at least one
+#'              unusable minute in the next 30 minutes is at or above this (default 0.5; an adjustable
+#'              demo heuristic, not a tuned or optimal value; above 1 it never triggers)
 sim_params <- function(vans = 2, van_capacity = 12, target_fill = 0.5, detour = 1.3,
-                       speed_kmh = 20, stop_min = 2, per_bike_min = 0.1, early_k = 2) {
+                       speed_kmh = 20, stop_min = 2, per_bike_min = 0.1, early_k = 2, risk_threshold = 0.5) {
   ok <- function(x, lower, name) {
     if (!is.numeric(x) || length(x) != 1 || is.na(x) || x < lower) {
       stop(name, " must be a single number of at least ", lower, ".", call. = FALSE)
@@ -45,13 +54,14 @@ sim_params <- function(vans = 2, van_capacity = 12, target_fill = 0.5, detour = 
   }
   ok(vans, 1, "vans"); ok(van_capacity, 1, "van_capacity"); ok(detour, 1, "detour")
   ok(speed_kmh, 1e-6, "speed_kmh"); ok(stop_min, 0, "stop_min"); ok(per_bike_min, 0, "per_bike_min")
-  ok(early_k, 1, "early_k")
+  ok(early_k, 1, "early_k"); ok(risk_threshold, 0, "risk_threshold")
   if (!is.numeric(target_fill) || length(target_fill) != 1 || is.na(target_fill) ||
       target_fill <= 0 || target_fill >= 1) {
     stop("target_fill must be between 0 and 1.", call. = FALSE)
   }
   list(vans = round(vans), van_capacity = van_capacity, target_fill = target_fill, detour = detour,
-       speed_kmh = speed_kmh, stop_min = stop_min, per_bike_min = per_bike_min, early_k = early_k)
+       speed_kmh = speed_kmh, stop_min = stop_min, per_bike_min = per_bike_min, early_k = early_k,
+       risk_threshold = risk_threshold)
 }
 
 # Number of vans the scenario's task log used (distinct van_id); 2 when there are none.
@@ -163,10 +173,106 @@ van_pickup_amount <- function(planned, bikes_at_source, van_free) max(0, min(pla
 # At drop-off the van leaves min(van load, free docks at the destination then).
 van_dropoff_amount <- function(van_load, free_docks) max(0, min(van_load, free_docks))
 
+# ---------------------------------------------------------------- 3b. predictive risk (H-15)
+
+#' Risk table for the "predictive" policy: for every station, every start minute m (0..179) and every
+#' bike count b, the probability of AT LEAST ONE rent-unusable (and, separately, return-unusable)
+#' minute in [m, m + 30) when the station holds b bikes at the start of minute m.
+#' Model (the same as the Now forecast, docs/methods.md 4.2 item 5): independent Poisson rent and
+#'   return attempts per station, rate constant inside each 15-minute bin. In a minute with N ~
+#'   Poisson(rent rate + return rate) attempts, each is a rent with probability rent / (rent + return);
+#'   a rent needs a bike, a return needs a free dock, a failed attempt changes nothing. The state is
+#'   checked after the events of each minute. The current minute counts: an empty station has risk 1.
+#' Method: EXACT, not simulated. For each station the bike count (0 ... bikes + docks, constant in a
+#'   run) is a Markov chain; one minute is the matrix sum over n of Poisson(n) x M^n (M = one attempt);
+#'   the "unusable" state is made absorbing, and the 30 minute matrices are applied back to front.
+#' DEMO ASSUMPTION ("oracle rates"): the policy is given the TRUE demand rates of the simulator
+#'   (`lambda`), which a real dispatcher would only estimate. This favours the predictive policy
+#'   over a real one, and the comparison says so.
+#' Uses no random numbers, so it cannot change the rider streams or the global seed.
+#' Input : world (sim_world), lambda (demand_lambda: [minute, station, type]).
+#' Output: list(rent = list of matrices, ret = same, n_bikes_max, horizon); each matrix is
+#'         [bike count + 1, start minute + 1].
+predictive_risk_table <- function(world, lambda, horizon = SIM_RISK_HORIZON) {
+  ns <- length(world$ids)
+  n_bins <- SIM_N_MIN %/% SIM_BIN_MIN
+  n_max <- round(world$bikes + world$docks)           # bikes + docks never changes in a run
+  starts <- 0:(SIM_N_MIN - 1)
+  rent <- vector("list", ns)
+  ret <- vector("list", ns)
+  for (i in seq_len(ns)) {
+    N <- n_max[i]
+    P_rent <- vector("list", n_bins)
+    P_ret <- vector("list", n_bins)
+    for (b in seq_len(n_bins)) {
+      first_minute <- (b - 1) * SIM_BIN_MIN + 1        # the rate is constant inside the bin
+      P <- risk_minute_matrix(N, lambda[first_minute, i, 1], lambda[first_minute, i, 2])
+      P_rent[[b]] <- risk_absorb(P, 0)                 # absorbing state: 0 bikes (rent-unusable)
+      P_ret[[b]] <- risk_absorb(P, N)                  # absorbing state: 0 free docks (return-unusable)
+    }
+    rent[[i]] <- risk_window(P_rent, 0, N, horizon, starts)
+    ret[[i]] <- risk_window(P_ret, N, N, horizon, starts)
+  }
+  list(rent = rent, ret = ret, n_bikes_max = n_max, horizon = horizon)
+}
+
+# One minute of one station: matrix [bikes now + 1, bikes after the minute + 1].
+risk_minute_matrix <- function(N, rent_rate, return_rate) {
+  total <- rent_rate + return_rate
+  if (total <= 0) return(diag(N + 1))
+  share <- rent_rate / total
+  M <- matrix(0, N + 1, N + 1)                         # M = one attempt
+  for (b in 0:N) {
+    if (b > 0) M[b + 1, b] <- share else M[b + 1, b + 1] <- share      # a rent needs a bike
+    if (b < N) M[b + 1, b + 2] <- 1 - share else M[b + 1, b + 1] <- M[b + 1, b + 1] + 1 - share   # a return needs a dock
+  }
+  n_top <- stats::qpois(1 - 1e-12, total)              # more attempts than this have probability < 1e-12
+  w <- stats::dpois(0:n_top, total)
+  w[n_top + 1] <- w[n_top + 1] + (1 - sum(w))          # the (tiny) tail goes on the last term
+  P <- w[1] * diag(N + 1)
+  Mn <- diag(N + 1)
+  for (n in seq_len(n_top)) {
+    Mn <- Mn %*% M
+    P <- P + w[n + 1] * Mn
+  }
+  P
+}
+
+# Make state `hit` absorbing (once there, it stays) in a minute matrix.
+risk_absorb <- function(P, hit) {
+  P[hit + 1, ] <- 0
+  P[hit + 1, hit + 1] <- 1
+  P
+}
+
+# Probability of being in the absorbing state `hit` after `horizon` minutes, for every start minute
+# (column) and every starting bike count (row). P_bins = one absorbing minute matrix per 15-minute bin.
+# Past 10:00 the last bin's rate is reused (demo assumption, same as the Now forecast).
+risk_window <- function(P_bins, hit, N, horizon, starts) {
+  V <- matrix(0, N + 1, length(starts))
+  V[hit + 1, ] <- 1
+  for (k in (horizon - 1):0) {                         # innermost minute first: P_m (P_m+1 (... P_m+29 e))
+    bins <- pmin((starts + k) %/% SIM_BIN_MIN, length(P_bins) - 1) + 1
+    for (b in unique(bins)) {
+      cols <- which(bins == b)
+      V[, cols] <- P_bins[[b]] %*% V[, cols, drop = FALSE]
+    }
+  }
+  V
+}
+
+#' Look up the risks at the start of minute `minute` for the given bike counts (one per station).
+#' Output: list(rent, ret) numeric vectors, probability of at least one unusable minute in the next 30.
+predictive_risk <- function(tab, minute, bikes) {
+  idx <- minute + 1
+  at <- function(mats) vapply(seq_along(bikes), function(i) mats[[i]][bikes[i] + 1, idx], numeric(1))
+  list(rent = at(tab$rent), ret = at(tab$ret))
+}
+
 # ---------------------------------------------------------------- 4. one run of one policy
 
 # The mutable state of one run lives in an environment S (so the helpers below can change it).
-sim_state <- function(world, params, stream, keep_log, script) {
+sim_state <- function(world, params, stream, keep_log, script, risk = NULL) {
   S <- new.env(parent = emptyenv())
   S$ids <- world$ids; S$lat <- world$lat; S$lon <- world$lon; S$cap <- world$cap
   S$renting <- world$renting; S$returning <- world$returning
@@ -197,6 +303,7 @@ sim_state <- function(world, params, stream, keep_log, script) {
   S$keep_log <- keep_log
   S$log_time <- numeric(0); S$log_event <- character(0); S$log_station <- character(0)
   S$log_qty <- numeric(0); S$log_ok <- logical(0); S$log_total <- numeric(0)
+  S$risk <- risk
   S$script <- script
   S$script_used <- if (is.null(script)) logical(0) else rep(FALSE, nrow(script))
   S
@@ -308,6 +415,21 @@ sim_run_vans <- function(S, limit) {
   }
 }
 
+# The plan both dynamic policies use: qc.R rebalance_plan on the current simulated state, stations of
+# active tasks left out, stations ranked by `severity` (largest first, ties by station_id).
+# Returns the data.frame of planned moves (from_station, to_station, quantity).
+sim_plan_moves <- function(S, v, reserved, severity) {
+  free_cap <- S$params$van_capacity - S$v_load[v]
+  keep <- which(!reserved)
+  keep <- keep[order(-severity[keep], S$ids[keep], method = "radix")]
+  state <- data.frame(station_id = S$ids[keep], bikes_available = S$bikes[keep],
+                      docks_available = S$docks[keep], is_renting = S$renting[keep],
+                      is_returning = S$returning[keep], stringsAsFactors = FALSE)
+  rank <- data.frame(station_id = S$ids[keep], rank = seq_along(keep), stringsAsFactors = FALSE)
+  rebalance_plan(state, S$stations_df, rank = rank, target_fill = S$params$target_fill,
+                 van_capacity = free_cap, detour = S$params$detour)$moves
+}
+
 # Reactive policy (methods 4.4): at the start of a minute an idle van gets the FIRST move of
 # qc.R rebalance_plan (on the current simulated state) whose source or destination is a triggered
 # station. Triggered = an OPEN station (renting and returning) that is rent-unusable (0 bikes),
@@ -327,16 +449,34 @@ sim_reactive_choice <- function(S, v) {
   rent_u <- S$bikes == 0 | !S$renting
   ret_u <- S$docks == 0 | !S$returning
   severity <- ifelse(rent_u | ret_u, rent_u + ret_u, ifelse(warn, 0.5, 0))
-  keep <- which(!reserved)
-  keep <- keep[order(-severity[keep], S$ids[keep], method = "radix")]
-  state <- data.frame(station_id = S$ids[keep], bikes_available = S$bikes[keep],
-                      docks_available = S$docks[keep], is_renting = S$renting[keep],
-                      is_returning = S$returning[keep], stringsAsFactors = FALSE)
-  rank <- data.frame(station_id = S$ids[keep], rank = seq_along(keep), stringsAsFactors = FALSE)
-  plan <- rebalance_plan(state, S$stations_df, rank = rank, target_fill = S$params$target_fill,
-                         van_capacity = free_cap, detour = S$params$detour)
-  mv <- plan$moves
+  mv <- sim_plan_moves(S, v, reserved, severity)
   hit <- which(mv$from_station %in% S$ids[triggered] | mv$to_station %in% S$ids[triggered])
+  if (length(hit) == 0) return(NULL)
+  list(from = match(mv$from_station[hit[1]], S$ids), to = match(mv$to_station[hit[1]], S$ids),
+       planned = mv$quantity[hit[1]])
+}
+
+# Predictive policy (H-15, tier 2): at the start of minute m an idle van gets the FIRST move of the same
+# rebalance_plan whose destination is a station with rent risk >= the threshold (deficit side) or whose
+# source is a station with return risk >= the threshold (surplus side). Risk = probability of at least
+# one rent-unusable (return-unusable) minute in the next 30 minutes from the CURRENT simulated state
+# (predictive_risk_table; exact Poisson model with the simulator's TRUE rates = "oracle rates").
+# Same rules as reactive: only open stations, stations of an active task are reserved, one task per van.
+# Rank for the plan: the larger of the two risks first (ties: station_id). Decided every minute a van
+# is idle. Returns list(from, to, planned) as station numbers, or NULL.
+sim_predictive_choice <- function(S, v, m) {
+  free_cap <- S$params$van_capacity - S$v_load[v]
+  if (free_cap <= 0) return(NULL)
+  reserved <- sim_reserved(S)
+  open <- S$renting & S$returning
+  risk <- predictive_risk(S$risk, m, S$bikes)
+  thr <- S$params$risk_threshold
+  need_bikes <- open & !reserved & risk$rent >= thr
+  need_docks <- open & !reserved & risk$ret >= thr
+  if (!any(need_bikes | need_docks)) return(NULL)
+  severity <- ifelse(open, pmax(risk$rent, risk$ret), 0)
+  mv <- sim_plan_moves(S, v, reserved, severity)
+  hit <- which(mv$to_station %in% S$ids[need_bikes] | mv$from_station %in% S$ids[need_docks])
   if (length(hit) == 0) return(NULL)
   list(from = match(mv$from_station[hit[1]], S$ids), to = match(mv$to_station[hit[1]], S$ids),
        planned = mv$quantity[hit[1]])
@@ -357,8 +497,9 @@ sim_dispatch <- function(S, m, policy) {
   for (v in seq_len(S$n_vans)) {
     if (S$v_phase[v] != "idle" || S$v_free_at[v] > m + 1e-9) next
     free_cap <- S$params$van_capacity - S$v_load[v]
-    if (policy == "reactive" && free_cap %in% tried_free) next
-    task <- if (policy == "scripted") sim_scripted_choice(S, m) else sim_reactive_choice(S, v)
+    if (policy %in% c("reactive", "predictive") && free_cap %in% tried_free) next
+    task <- switch(policy, scripted = sim_scripted_choice(S, m), reactive = sim_reactive_choice(S, v),
+                   predictive = sim_predictive_choice(S, v, m))
     if (is.null(task)) tried_free <- c(tried_free, free_cap) else sim_start_task(S, v, m, task)
   }
 }
@@ -383,19 +524,24 @@ recovery_episodes <- function(unusable) {
 }
 
 #' Run ONE policy on ONE rider stream.
-#' policy: "none" (no vans dispatched), "reactive" (see sim_reactive_choice) or "scripted" (tests).
-#' Input : world (sim_world), stream (make_demand_stream), params (sim_params).
+#' policy: "none" (no vans dispatched), "reactive" (see sim_reactive_choice), "predictive" (see
+#'         sim_predictive_choice; needs `risk`) or "scripted" (tests).
+#' Input : world (sim_world), stream (make_demand_stream), params (sim_params),
+#'         risk = predictive_risk_table(world, lambda), only for the "predictive" policy.
 #' Order inside minute m: record the state of [m, m+1); dispatch idle vans; van events before m+0.5;
 #'         the minute's rider events (in stream order); van events before m+1.
 #' Metrics: either_min = station-minutes with a rent- or return-unusable state (4.1) summed over the
 #'         180 minutes (PRIMARY); fail_prop = failed attempts / attempts; van_km; recovery (above).
 #' Output: list with those metrics, tasks (one row per van task, with actual_quantity), final state,
 #'         conserved (the invariant held at every event), total0, n_events, log (if keep_log).
-run_policy <- function(world, stream, policy = c("none", "reactive", "scripted"), params = sim_params(),
-                       script = NULL, keep_log = FALSE) {
+run_policy <- function(world, stream, policy = c("none", "reactive", "predictive", "scripted"), params = sim_params(),
+                       script = NULL, keep_log = FALSE, risk = NULL) {
   policy <- match.arg(policy)
   if (policy == "scripted" && is.null(script)) stop("policy 'scripted' needs a script.", call. = FALSE)
-  S <- sim_state(world, params, stream, keep_log, script)
+  if (policy == "predictive" && is.null(risk)) {
+    stop("policy 'predictive' needs a risk table (predictive_risk_table).", call. = FALSE)
+  }
+  S <- sim_state(world, params, stream, keep_log, script, risk)
   st_idx <- match(stream$station_id, S$ids)
   if (anyNA(st_idx)) stop("the stream has a station that is not in the world.", call. = FALSE)
   first_row <- cumsum(c(1, tabulate(stream$minute + 1, SIM_N_MIN)))     # rows of minute m: first_row[m+1] ...
@@ -435,14 +581,15 @@ run_policy <- function(world, stream, policy = c("none", "reactive", "scripted")
 
 # ---------------------------------------------------------------- 5. the comparison
 
-#' Paired-difference table. d_s = metric(none) - metric(reactive) for each seed s, so a POSITIVE
-#' difference means the reactive policy has fewer minutes / failures / minutes to recover (for van_km
-#' it is negative because only the reactive policy drives).
+#' Paired-difference table for ONE pair of policies. d_s = metric(first) - metric(second) for each
+#' seed s, so a POSITIVE difference means the second policy has fewer minutes / failures / minutes to
+#' recover (for van_km it means the second drives less; "none" never drives, so any pair with "none"
+#' first gives a negative van_km difference).
 #' Input : diffs = named list of numeric vectors, one per metric (see SIM_METRICS).
 #' Method: qc.R paired_diff_ci. The primary metric (either_min) uses the Bonferroni family of 3,
-#'         alpha = 0.05/3, i.e. a 98.333% t interval (D-4: this anticipates the 3-policy comparison of
-#'         H-15). Every other metric is exploratory: unadjusted 95%, labelled as such. No claim of
-#'         overall 95% confidence across metrics. n < 2 -> interval NA with the message (KA-5b).
+#'         alpha = 0.05/3, i.e. a 98.333% t interval (D-4: 3 pairwise comparisons of 3 policies). Every
+#'         other metric is exploratory: unadjusted 95%, labelled as such. No claim of overall 95%
+#'         confidence across metrics. n < 2 -> interval NA with the message (KA-5b).
 #' Output: data.frame(metric, role, n, n_missing, mean_d, ci_low, ci_high, ci_level_pct, label, note).
 paired_table <- function(diffs) {
   rows <- lapply(names(diffs), function(metric) {
@@ -458,26 +605,45 @@ paired_table <- function(diffs) {
   do.call(rbind, rows)
 }
 
+#' The paired table for every pair: diffs_by_pair = list named "first - second" of paired_table inputs.
+#' Output: paired_table rows with a `pair` column first; the primary rows (one per pair) come first.
+paired_tables <- function(diffs_by_pair) {
+  rows <- lapply(names(diffs_by_pair), function(pair) {
+    t <- paired_table(diffs_by_pair[[pair]])
+    cbind(data.frame(pair = pair, stringsAsFactors = FALSE), t)
+  })
+  all <- do.call(rbind, rows)
+  all <- all[order(all$role != "primary"), ]           # stable: the pair order is kept inside each group
+  rownames(all) <- NULL
+  all
+}
+
 # A comparison that cannot be run: NA results that carry the reason.
 sim_not_ok <- function(reason, excluded = NULL, demand_days = character(0)) {
-  paired <- paired_table(setNames(lapply(SIM_METRICS, function(x) numeric(0)), SIM_METRICS))
+  empty <- setNames(lapply(SIM_METRICS, function(x) numeric(0)), SIM_METRICS)
+  paired <- paired_tables(setNames(rep(list(empty), length(SIM_PAIRS)),
+                                   vapply(SIM_PAIRS, function(p) paste(p, collapse = " - "), "")))
   paired$note <- reason
   list(ok = FALSE, reason = reason, per_seed = NULL, summary = NULL, paired = paired, diffs = NULL,
        excluded = excluded, stations = character(0), demand_days = demand_days, seeds = integer(0),
        params = NULL, date = NA_character_)
 }
 
-#' Compare the policies "none" and "reactive" on paired seeds for one rush window.
+#' Compare the policies "none", "reactive" and "predictive" on paired seeds for one rush window.
 #' Input : sc = list(stations, attempts, tasks) from qc.R load_scenario;
 #'         grids = minute grids named by date (prep.R build_day_grids, at the chosen stale_limit);
 #'         date = the chosen "YYYY-MM-DD"; dates = every weekday of the scenario;
 #'         n_seeds R (default 30), base_seed (seed s = base_seed + s - 1);
-#'         params (sim_params); on_progress(i, n) is called after each seed.
+#'         params (sim_params, including the predictive threshold); on_progress(i, n) is called after each seed.
 #' Method: demand = estimate_demand() over the weekdays STRICTLY BEFORE `date` (no look-ahead);
 #'         the start state is the 07:00 state of `date` from its grid; stations whose 07:00 state is
 #'         unknown, or with no known minute on earlier days, are left out and listed.
-#' Output: list(ok, reason, per_seed (one row per seed x policy), summary (per policy means),
-#'         paired (paired_table), diffs (per-seed differences), excluded, stations, demand_days,
+#'         Every policy gets the same start inventory, the same vans and, per seed, the SAME rider
+#'         stream (made once, before any policy runs). The predictive policy is given those same rates
+#'         as its forecast ("oracle rates", see predictive_risk_table).
+#' Output: list(ok, reason, per_seed (one row per seed x policy), summary (per policy means, 3 rows),
+#'         paired (paired_tables: 3 pairs x 4 metrics), diffs (per pair, then per metric: per-seed
+#'         differences), excluded, stations, demand_days,
 #'         seeds, params, date). With no earlier weekday: ok = FALSE and NA results with the reason.
 compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1,
                              params = sim_params(vans = default_van_count(sc$tasks)),
@@ -512,14 +678,15 @@ compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1
                                                      "is_renting", "is_returning")]
   world <- sim_world(state0, sc$stations)
   lambda <- demand_lambda(demand$rates[use, , , drop = FALSE])
+  risk <- predictive_risk_table(world, lambda)         # once: it depends on the world and the rates, not on the seed
 
   seeds <- base_seed + seq_len(n_seeds) - 1
-  policies <- c("none", "reactive")
+  policies <- SIM_POLICIES
   rows <- list()
   for (i in seq_along(seeds)) {
-    stream <- make_demand_stream(lambda, world$ids, seeds[i])      # ONE stream, used by both policies
+    stream <- make_demand_stream(lambda, world$ids, seeds[i])      # ONE stream, used by all policies
     for (policy in policies) {
-      r <- run_policy(world, stream, policy, params)
+      r <- run_policy(world, stream, policy, params, risk = risk)
       if (!r$conserved) stop("internal error: bikes were not conserved (seed ", seeds[i], ", ", policy, ").", call. = FALSE)
       rows[[length(rows) + 1]] <- data.frame(
         seed = seeds[i], policy = policy, either_min = r$either_min, fail_prop = r$fail_prop,
@@ -532,7 +699,9 @@ compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1
   per_seed <- do.call(rbind, rows)
 
   one <- function(p) per_seed[per_seed$policy == p, ]
-  diffs <- setNames(lapply(SIM_METRICS, function(m) one("none")[[m]] - one("reactive")[[m]]), SIM_METRICS)
+  diffs <- setNames(lapply(SIM_PAIRS, function(pr) {
+    setNames(lapply(SIM_METRICS, function(m) one(pr[1])[[m]] - one(pr[2])[[m]]), SIM_METRICS)
+  }), vapply(SIM_PAIRS, function(pr) paste(pr, collapse = " - "), ""))
   summary <- do.call(rbind, lapply(policies, function(p) {
     x <- one(p)
     data.frame(policy = p, seeds = nrow(x), either_min = mean(x$either_min),
@@ -541,7 +710,7 @@ compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1
                recovery_seeds = sum(!is.na(x$recovery_min)), tasks = mean(x$n_tasks),
                stringsAsFactors = FALSE)
   }))
-  list(ok = TRUE, reason = "", per_seed = per_seed, summary = summary, paired = paired_table(diffs),
+  list(ok = TRUE, reason = "", per_seed = per_seed, summary = summary, paired = paired_tables(diffs),
        diffs = diffs, excluded = excluded, stations = world$ids, demand_days = source_days,
        seeds = seeds, params = params, date = date, demand_attempts = demand$n_attempts,
        fallback_cells = demand$n_fallback_cells)
