@@ -485,6 +485,79 @@ test_that("KA-5b through the comparison: one seed keeps the mean, intervals NA w
   expect_true(all(grepl("n < 2: no interval can be estimated", p$note, fixed = TRUE)))
 })
 
+# ---------------------------------------------------------------- true demand vs the policy's information (H-15 rework)
+
+# Day 1: 3 rents at T1 in bin 1. Day 3 (the chosen day): 6 rents at T1 in bin 1 and 30 returns at T3 in bin 2.
+# Day 2 has no attempts. Every station is known for all 180 minutes of every day.
+att_h <- rbind(
+  fake_attempts(days3[1], 5, "T1", "rent", 3),
+  fake_attempts(days3[3], 5, "T1", "rent", 6),
+  fake_attempts(days3[3], 20, "T3", "return", 30)
+)
+sc_h <- list(stations = sc3$stations, attempts = att_h, tasks = sc3$tasks)
+
+test_that("true rates use only the chosen day; the policy's rates use only the earlier days (counted by hand)", {
+  r <- compare_policies(sc_h, grids3, date = days3[3], dates = days3, n_seeds = 1)
+  # T1 rent, bin 1: true = 6 attempts / 15 known minutes of the chosen day = 0.4
+  expect_equal(r$rates_true["T1", "rent", 1], 6 / 15)
+  # history = days 1 and 2: 3 attempts / (15 + 15) known minutes = 0.1
+  expect_equal(r$rates_hist["T1", "rent", 1], 3 / 30)
+  # T3 return, bin 2: true = 30 / 15 = 2; the history has no such attempt, so 0 (a valid rate)
+  expect_equal(r$rates_true["T3", "return", 2], 2)
+  expect_equal(r$rates_hist["T3", "return", 2], 0)
+  expect_equal(r$demand_days, days3[1:2])
+  expect_equal(r$true_attempts, 36)
+  expect_equal(r$demand_attempts, 3)
+})
+
+test_that("no look-ahead: the predictive risk table is identical whether or not the chosen day's and later attempts exist", {
+  days4 <- c(days3, "2026-10-08")
+  grids4 <- setNames(lapply(days4, function(d) fake_grid(d, ids4, c(0, 10, 5, 3), cap4)), days4)
+  base <- rbind(fake_attempts(days4[1], 5, "T1", "rent", 3), fake_attempts(days4[2], 30, "T3", "return", 8))
+  future <- rbind(fake_attempts(days4[3], 5, "T1", "rent", 40), fake_attempts(days4[3], 20, "T3", "return", 30),
+                  fake_attempts(days4[4], 5, "T1", "rent", 99))
+  # the chosen-day attempts that remain in BOTH inputs, so the stations/true rates stay usable
+  one <- list(stations = sc3$stations, attempts = base, tasks = sc3$tasks)
+  two <- list(stations = sc3$stations, attempts = rbind(base, future), tasks = sc3$tasks)
+  r1 <- compare_policies(one, grids4, date = days4[3], dates = days4, n_seeds = 1)
+  r2 <- compare_policies(two, grids4, date = days4[3], dates = days4, n_seeds = 1)
+  expect_true(r1$ok && r2$ok)
+  expect_false(identical(r1$rates_true, r2$rates_true))     # the true rates DO use the chosen day
+  expect_identical(r1$rates_hist, r2$rates_hist)
+  expect_identical(r1$risk, r2$risk)
+})
+
+test_that("the demand streams of a comparison come from the true rates, not from the history", {
+  r <- compare_policies(sc_h, grids3, date = days3[3], dates = days3, n_seeds = 1, base_seed = 5)
+  lam_true <- demand_lambda(r$rates_true)
+  stream <- make_demand_stream(lam_true, r$stations, 5)
+  # T3 has a true return rate of 2 per minute in bin 2 and a historical rate of 0: the stream must have them
+  expect_gt(sum(stream$station_id == "T3" & stream$type == "return" & stream$minute >= 15 & stream$minute < 30), 0)
+  expect_equal(r$per_seed$n_attempts[1], nrow(stream))     # all 3 policies ran on this stream
+  expect_equal(unique(r$per_seed$n_attempts), nrow(stream))
+})
+
+test_that("the engine is unchanged: none/reactive/predictive on a fixed stream equal the committed (HEAD) run_policy", {
+  root <- normalizePath(testthat::test_path(".."), winslash = "/")
+  old_src <- tryCatch(suppressWarnings(system2("git", c("-C", paste0('"', root, '"'), "show", "HEAD:app/sim.R"),
+                                               stdout = TRUE, stderr = FALSE)), error = function(e) character(0))
+  skip_if(length(old_src) < 100, "git HEAD:app/sim.R not available")
+  old <- new.env(parent = environment())
+  eval(parse(text = old_src), envir = old)
+  p <- sim_params(vans = 2, van_capacity = 6)
+  for (seed in 1:3) {
+    stream <- make_demand_stream(six_lambda, six_world$ids, seed)
+    for (pol in c("none", "reactive", "predictive")) {
+      new_r <- run_policy(six_world, stream, pol, p, risk = six_risk)
+      old_r <- old$run_policy(six_world, stream, pol, p, risk = six_risk)
+      for (f in c("either_min", "n_attempts", "n_failed", "van_km", "recovery_min", "n_onsets")) {
+        expect_identical(new_r[[f]], old_r[[f]])
+      }
+      expect_identical(new_r$tasks, old_r$tasks)
+    }
+  }
+})
+
 # ---------------------------------------------------------------- KA-5 through paired_table
 
 test_that("KA-5: paired_table gives mean 10, Bonferroni 98.333% CI [7.199, 12.801], 95% CI [8.037, 11.963]", {

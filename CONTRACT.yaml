@@ -277,7 +277,7 @@ tasks:
       Rscript -e "testthat::test_file('tests/test-sim.R')" passes, including identical demand
       streams across the 3 policies for each seed and KA-5 (primary at 98.333%, secondary
       labelled unadjusted 95%); Rscript -e "testthat::test_dir('tests')" passes.
-    result: "done: test-sim.R 260 and test_dir 853 pass (identical demand streams across the 3 policies per seed, KA-5 primary 98.333% and secondary unadjusted 95%, KA-5b); stats-reviewer PASS (predictive = reactive on baseline 2026-10-05 is a data/rule consequence, they differ on planted_shift; disclosed); Playwright shows the 3-policy tables"
+    result: "done: test-sim.R 337 and test_dir 1236 pass (identical demand streams across the 3 policies per seed, KA-5 primary 98.333% / secondary unadjusted 95%, KA-5b, no look-ahead for the policy); reworked: true demand = the chosen morning's own rates, the predictive policy knows only earlier weekdays (no oracle); stats-reviewer PASS; Playwright: every primary CI contains 0 on baseline and planted_shift"
 
   - id: H-16
     title: Empirical availability and R(tau) for series, parallel and k-out-of-n

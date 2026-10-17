@@ -88,8 +88,9 @@ sim_world <- function(state0, stations) {
 
 #' Poisson demand rates per station x type x 15-minute bin (methods 4.2 item 5, D-2).
 #' Method: rate = attempts (successful + failed) / known station-minutes in that bin, summed over
-#'         `source_days`. The caller passes only weekdays STRICTLY BEFORE the chosen date, so the
-#'         chosen day is never used. A rate of 0 is valid (known minutes, no attempts).
+#'         `source_days`. For the policy's HISTORY the caller passes only weekdays STRICTLY BEFORE the
+#'         chosen date (no look-ahead); for the simulated TRUE demand it passes the chosen date alone.
+#'         A rate of 0 is valid (known minutes, no attempts).
 #' Input : attempts (timestamp, station_id, attempt_type, success), grids = list of minute grids
 #'         named by date (qc.R build_grid), source_days, station_ids.
 #' Output: list(rates = array [station, "rent"/"return", bin 1..12] in attempts per station-minute,
@@ -186,11 +187,11 @@ van_dropoff_amount <- function(van_load, free_docks) max(0, min(van_load, free_d
 #' Method: EXACT, not simulated. For each station the bike count (0 ... bikes + docks, constant in a
 #'   run) is a Markov chain; one minute is the matrix sum over n of Poisson(n) x M^n (M = one attempt);
 #'   the "unusable" state is made absorbing, and the 30 minute matrices are applied back to front.
-#' DEMO ASSUMPTION ("oracle rates"): the policy is given the TRUE demand rates of the simulator
-#'   (`lambda`), which a real dispatcher would only estimate. This favours the predictive policy
-#'   over a real one, and the comparison says so.
+#' INFORMATION (no oracle): `lambda` is what the policy KNOWS at decision time, i.e. the historical
+#'   estimate from the weekdays strictly before the chosen date (compare_policies). It is NOT the
+#'   rate that generates the simulated riders, so the policy can be wrong about the morning.
 #' Uses no random numbers, so it cannot change the rider streams or the global seed.
-#' Input : world (sim_world), lambda (demand_lambda: [minute, station, type]).
+#' Input : world (sim_world), lambda (demand_lambda of the historical estimate: [minute, station, type]).
 #' Output: list(rent = list of matrices, ret = same, n_bikes_max, horizon); each matrix is
 #'         [bike count + 1, start minute + 1].
 predictive_risk_table <- function(world, lambda, horizon = SIM_RISK_HORIZON) {
@@ -460,7 +461,7 @@ sim_reactive_choice <- function(S, v) {
 # rebalance_plan whose destination is a station with rent risk >= the threshold (deficit side) or whose
 # source is a station with return risk >= the threshold (surplus side). Risk = probability of at least
 # one rent-unusable (return-unusable) minute in the next 30 minutes from the CURRENT simulated state
-# (predictive_risk_table; exact Poisson model with the simulator's TRUE rates = "oracle rates").
+# (predictive_risk_table; exact Poisson model with the HISTORICAL estimate of earlier weekdays, not the true rates).
 # Same rules as reactive: only open stations, stations of an active task are reserved, one task per van.
 # Rank for the plan: the larger of the two risks first (ties: station_id). Decided every minute a van
 # is idle. Returns list(from, to, planned) as station numbers, or NULL.
@@ -635,16 +636,22 @@ sim_not_ok <- function(reason, excluded = NULL, demand_days = character(0)) {
 #'         date = the chosen "YYYY-MM-DD"; dates = every weekday of the scenario;
 #'         n_seeds R (default 30), base_seed (seed s = base_seed + s - 1);
 #'         params (sim_params, including the predictive threshold); on_progress(i, n) is called after each seed.
-#' Method: demand = estimate_demand() over the weekdays STRICTLY BEFORE `date` (no look-ahead);
-#'         the start state is the 07:00 state of `date` from its grid; stations whose 07:00 state is
-#'         unknown, or with no known minute on earlier days, are left out and listed.
+#' Method: two demand estimates, both from estimate_demand():
+#'         TRUE demand (makes the riders) = the chosen date's OWN observed rates (source_days = date only):
+#'           it "replays the demand intensity of that morning".
+#'         HISTORICAL demand (the predictive policy's only information) = the weekdays STRICTLY BEFORE
+#'           `date` (no look-ahead: the chosen day and later days are never used for it).
+#'         The start state is the 07:00 state of `date` from its grid; stations whose 07:00 state is
+#'         unknown, with no known minute on the chosen day, or with no known minute on earlier days
+#'         (no history to estimate from) are left out and listed.
 #'         Every policy gets the same start inventory, the same vans and, per seed, the SAME rider
-#'         stream (made once, before any policy runs). The predictive policy is given those same rates
-#'         as its forecast ("oracle rates", see predictive_risk_table).
+#'         stream (made once from the TRUE rates, before any policy runs). The predictive risk table
+#'         is built from the HISTORICAL rates. There is no oracle-rate benchmark.
 #' Output: list(ok, reason, per_seed (one row per seed x policy), summary (per policy means, 3 rows),
 #'         paired (paired_tables: 3 pairs x 4 metrics), diffs (per pair, then per metric: per-seed
-#'         differences), excluded, stations, demand_days,
-#'         seeds, params, date). With no earlier weekday: ok = FALSE and NA results with the reason.
+#'         differences), excluded, stations, demand_days (= the historical days),
+#'         seeds, params, date). With no earlier weekday: ok = FALSE and NA results with the reason
+#'         (the predictive policy has no history to estimate from).
 compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1,
                              params = sim_params(vans = default_van_count(sc$tasks)),
                              tz = SIM_TZ, on_progress = NULL) {
@@ -660,31 +667,35 @@ compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1
   g0 <- g0[as.numeric(g0$minute) == min(as.numeric(g0$minute)), ]
   known0 <- g0$station_id[g0$known]
   all_ids <- sort(sc$stations$station_id, method = "radix")
-  demand <- estimate_demand(sc$attempts, grids, source_days, all_ids, tz)
+  hist <- estimate_demand(sc$attempts, grids, source_days, all_ids, tz)   # what the policy knows
+  true <- estimate_demand(sc$attempts, grids, date, all_ids, tz)          # the chosen morning's own rates
   unknown_start <- !all_ids %in% known0
-  no_rate <- !unknown_start & !demand$has_rate
+  no_true <- !unknown_start & !true$has_rate
+  no_hist <- !unknown_start & !no_true & !hist$has_rate
   excluded <- data.frame(
-    station_id = c(all_ids[unknown_start], all_ids[no_rate]),
+    station_id = c(all_ids[unknown_start], all_ids[no_true], all_ids[no_hist]),
     reason = c(rep("07:00 state unknown (no valid snapshot within stale_limit)", sum(unknown_start)),
-               rep("no known minute on earlier weekdays to estimate demand", sum(no_rate))),
+               rep("no known minute on the chosen day to estimate its demand", sum(no_true)),
+               rep("no known minute on earlier weekdays (no history for the predictive policy)", sum(no_hist))),
     stringsAsFactors = FALSE)
   excluded <- excluded[order(excluded$station_id, method = "radix"), ]
   rownames(excluded) <- NULL
-  use <- !unknown_start & !no_rate
+  use <- !unknown_start & !no_true & !no_hist
   if (sum(use) < 2) return(sim_not_ok("fewer than 2 stations with a known 07:00 state and a demand rate",
                                       excluded, source_days))
 
   state0 <- g0[match(all_ids[use], g0$station_id), c("station_id", "bikes_available", "docks_available",
                                                      "is_renting", "is_returning")]
   world <- sim_world(state0, sc$stations)
-  lambda <- demand_lambda(demand$rates[use, , , drop = FALSE])
-  risk <- predictive_risk_table(world, lambda)         # once: it depends on the world and the rates, not on the seed
+  lambda_true <- demand_lambda(true$rates[use, , , drop = FALSE])   # makes the riders
+  lambda_hist <- demand_lambda(hist$rates[use, , , drop = FALSE])   # the predictive policy's information
+  risk <- predictive_risk_table(world, lambda_hist)    # once: it depends on the world and the history, not on the seed
 
   seeds <- base_seed + seq_len(n_seeds) - 1
   policies <- SIM_POLICIES
   rows <- list()
   for (i in seq_along(seeds)) {
-    stream <- make_demand_stream(lambda, world$ids, seeds[i])      # ONE stream, used by all policies
+    stream <- make_demand_stream(lambda_true, world$ids, seeds[i]) # ONE stream, used by all policies
     for (policy in policies) {
       r <- run_policy(world, stream, policy, params, risk = risk)
       if (!r$conserved) stop("internal error: bikes were not conserved (seed ", seeds[i], ", ", policy, ").", call. = FALSE)
@@ -712,6 +723,8 @@ compare_policies <- function(sc, grids, date, dates, n_seeds = 30, base_seed = 1
   }))
   list(ok = TRUE, reason = "", per_seed = per_seed, summary = summary, paired = paired_tables(diffs),
        diffs = diffs, excluded = excluded, stations = world$ids, demand_days = source_days,
-       seeds = seeds, params = params, date = date, demand_attempts = demand$n_attempts,
-       fallback_cells = demand$n_fallback_cells)
+       seeds = seeds, params = params, date = date, demand_attempts = hist$n_attempts,
+       true_attempts = true$n_attempts, rates_true = true$rates[use, , , drop = FALSE],
+       rates_hist = hist$rates[use, , , drop = FALSE], risk = risk, fallback_cells = hist$n_fallback_cells,
+       true_fallback_cells = true$n_fallback_cells)
 }
