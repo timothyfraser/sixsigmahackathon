@@ -15,6 +15,8 @@
 #   5. charts' inputs         hour_station_matrix, pareto_order
 #   6. baseline               baseline_count, baseline_flags
 #   7. data source            default_scenario_path
+#   8. data health            table_health, table_block_message, issue_summary, issue_detail,
+#                             signal_label, format_p, as_whole_numbers
 
 APP_TZ <- "America/New_York"
 STATE_LEVELS <- c("rent-unusable", "return-unusable", "rent- and return-unusable",
@@ -254,4 +256,89 @@ default_scenario_path <- function(app_dir = ".",
   paths <- file.path(app_dir, candidates)
   hit <- paths[file.exists(paths)]
   if (length(hit) == 0) NA_character_ else hit[1]
+}
+
+# ---------------------------------------------------------------- 8. data health
+
+# Per record type: how many rows the file had and what the loader did with them.
+#   valid     rows kept after validation
+#   rejected  rows the loader rejected (issues action "rejected")
+#   kept_once identical duplicates dropped as copies (issues action "kept once")
+#   in_file   valid + rejected + kept_once
+#   state     "no records"   the file has no rows of this type (nothing was rejected)
+#             "all rejected" the file has rows of this type but none is valid
+#             "some rejected" / "ok"
+# Input: the load_scenario() result. Output: one row per record type.
+table_health <- function(sc, tables = c("stations", "status", "attempts", "tasks")) {
+  iss <- sc$issues
+  rows <- lapply(tables, function(t) {
+    valid <- if (is.null(sc[[t]])) 0L else nrow(sc[[t]])
+    rejected <- sum(iss$table == t & iss$action == "rejected")
+    kept_once <- sum(iss$table == t & iss$action == "kept once")
+    in_file <- valid + rejected + kept_once
+    state <- if (in_file == 0) "no records" else if (valid == 0) "all rejected" else
+      if (rejected > 0) "some rejected" else "ok"
+    data.frame(table = t, in_file = in_file, valid = valid, rejected = rejected,
+               kept_once = kept_once, state = state, stringsAsFactors = FALSE)
+  })
+  do.call(rbind, rows)
+}
+
+# A plain message when a record type cannot be used, or NULL when it can.
+# `needed_for` names the features that pause. The most common rejection rule is quoted.
+table_block_message <- function(health, iss, table, needed_for) {
+  h <- health[health$table == table, ]
+  if (nrow(h) == 0 || h$valid > 0) return(NULL)
+  if (h$state == "no records") {
+    return(sprintf("The file has no %s records, so %s cannot be shown.", table, needed_for))
+  }
+  rules <- sort(table(iss$rule[iss$table == table & iss$action == "rejected"]), decreasing = TRUE)
+  sprintf("All %d %s rows in the file were rejected (most common reason: %s, %d rows), so %s %s paused. See Data issues.",
+          h$in_file, table, names(rules)[1], as.integer(rules[1]), needed_for,
+          if (grepl(" and |, ", needed_for)) "are" else "is")
+}
+
+# Issues counted by record type, rule and action, largest first.
+issue_summary <- function(iss) {
+  if (nrow(iss) == 0) {
+    return(data.frame(table = character(0), rule = character(0), action = character(0),
+                      rows = integer(0), stringsAsFactors = FALSE))
+  }
+  key <- paste(iss$table, iss$rule, iss$action, sep = "\r")
+  n <- table(key)
+  parts <- strsplit(names(n), "\r", fixed = TRUE)
+  out <- data.frame(table = vapply(parts, `[`, "", 1), rule = vapply(parts, `[`, "", 2),
+                    action = vapply(parts, `[`, "", 3), rows = as.integer(n),
+                    stringsAsFactors = FALSE)
+  out <- out[order(-out$rows, out$table, out$rule), ]
+  rownames(out) <- NULL
+  out
+}
+
+# The first max_rows issue rows (the full list can be hundreds of thousands of rows).
+issue_detail <- function(iss, max_rows = 200) {
+  utils::head(iss, max_rows)
+}
+
+# Signal wording for p chart points. When qc.R's dispersion check warns, the binomial limits
+# are likely too narrow, so a point beyond them is a prompt to investigate, not a confirmed
+# special cause, and a point inside them is only "within limits".
+# ooc: TRUE / FALSE / NA (not assessed); overdispersed: the dispersion warning (TRUE/FALSE/NA).
+signal_label <- function(ooc, overdispersed) {
+  warn <- isTRUE(overdispersed)
+  ifelse(is.na(ooc), "not assessed",
+         ifelse(ooc, if (warn) "beyond binomial limit (investigate; not a confirmed special cause)" else "OUT OF CONTROL",
+                if (warn) "within limits" else "in control"))
+}
+
+# A p-value as text: 3 significant digits, or "< 0.0001".
+format_p <- function(p) {
+  if (is.na(p)) return("n/a")
+  if (p < 1e-4) "< 0.0001" else format(signif(p, 3), scientific = FALSE)
+}
+
+# Columns that hold whole-number counts -> integer, so tables print "2", not "2.00".
+as_whole_numbers <- function(df, cols) {
+  for (col in intersect(cols, names(df))) df[[col]] <- as.integer(round(df[[col]]))
+  df
 }

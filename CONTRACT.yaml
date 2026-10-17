@@ -86,7 +86,7 @@ tasks:
       The testme script in app/ starts the tool with one command, and a call
       on one data/ file (endpoint, function call or app upload) returns the
       same numbers as the H-03 known-answer test.
-    result: "in progress: 238 tests pass and Playwright checks on tests/fixtures pass; DoD needs a data/ file from H-02"
+    result: "in progress: (paused for the H-02 offset fix and the H-03 dispersion check, then resumed) data-health pauses by record type, capped issue list, 100 MiB upload, whole-number counts, dispersion shown; 292 tests pass; Playwright on the three data/ CSVs matches qc.R; DoD known-answer match on a data/ file still open"
 
   - id: H-05
     title: Demonstration of the tool on every test dataset

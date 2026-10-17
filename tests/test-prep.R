@@ -232,3 +232,84 @@ test_that("heatmap keeps 0 and unknown apart (distinct layers and a legend entry
   expect_true(any(vapply(b$plot$scales$scales,
                          function(s) "colour" %in% s$aesthetics, logical(1))))  # legend entry
 })
+
+# ---- data health: "no records" is not the same as "all rejected"
+
+# Two stations; status rows written with a -0400 offset (no colon), which the loader rejects.
+bad_offset_scenario <- function(with_attempts = TRUE) {
+  st <- make_station_rows(c("S1", "S2"), c(10, 10))
+  status <- make_status_rows(c("07:00:00", "07:01:00", "07:02:00"), c(2, 3, 4))
+  status$timestamp <- sub("-04:00$", "-0400", status$timestamp)
+  rows <- rbind(st, status)
+  if (with_attempts) {
+    at <- blank_rows(2, "attempts")
+    at$attempt_id <- c("A1", "A2")
+    at$timestamp <- c("2026-10-05T07:00:10-04:00", "2026-10-05T07:01:10-04:00")
+    at$station_id <- "S1"
+    at$attempt_type <- "rent"
+    at$success <- c("TRUE", "FALSE")
+    at$failure_reason <- c(NA, "no_bike")
+    rows <- rbind(rows, at)
+  }
+  validate_scenario(rows)
+}
+
+test_that("table_health: all rejected, no records and ok are told apart", {
+  h <- table_health(bad_offset_scenario())
+  expect_equal(h$table, c("stations", "status", "attempts", "tasks"))
+  expect_equal(h$state, c("ok", "all rejected", "ok", "no records"))
+  expect_equal(h$in_file, c(2L, 3L, 2L, 0L))
+  expect_equal(h$valid, c(2L, 0L, 2L, 0L))
+  expect_equal(h$rejected, c(0L, 3L, 0L, 0L))
+})
+
+test_that("table_health counts identical copies and partial rejections on the fixture", {
+  h <- table_health(fx)
+  s <- h[h$table == "status", ]
+  expect_equal(s$valid, nrow(fx$status))
+  expect_equal(s$in_file, s$valid + s$rejected + s$kept_once)
+  expect_true(s$kept_once >= 1)                 # the identical S2 07:01 copy
+  expect_equal(s$state, "some rejected")
+})
+
+test_that("table_block_message: only the unusable record type pauses, with its reason", {
+  sc <- bad_offset_scenario()
+  h <- table_health(sc)
+  m <- table_block_message(h, sc$issues, "status", "the map")
+  expect_match(m, "All 3 status rows in the file were rejected", fixed = TRUE)
+  expect_match(m, "unparseable timestamp, 3 rows", fixed = TRUE)
+  expect_match(m, "the map is paused", fixed = TRUE)
+  expect_null(table_block_message(h, sc$issues, "attempts", "the p charts"))
+  expect_null(table_block_message(h, sc$issues, "stations", "everything"))
+  none <- table_block_message(table_health(bad_offset_scenario(FALSE)), sc$issues, "attempts", "the p charts")
+  expect_match(none, "The file has no attempts records", fixed = TRUE)
+})
+
+test_that("issue_summary counts by table, rule and action; issue_detail caps the rows", {
+  sc <- bad_offset_scenario()
+  s <- issue_summary(sc$issues)
+  expect_equal(nrow(s), 1)
+  expect_equal(s$table, "status")
+  expect_equal(s$rule, "unparseable timestamp")
+  expect_equal(s$rows, 3L)
+  big <- sc$issues[rep(1, 1000), ]
+  expect_equal(nrow(issue_detail(big, 200)), 200)
+  expect_equal(sum(issue_summary(big)$rows), 1000L)
+  expect_equal(nrow(issue_summary(sc$issues[0, ])), 0)
+})
+
+test_that("signal_label does not call a beyond-limit point a confirmed special cause when overdispersed", {
+  expect_equal(signal_label(c(TRUE, FALSE, NA), FALSE), c("OUT OF CONTROL", "in control", "not assessed"))
+  w <- signal_label(c(TRUE, FALSE, NA), TRUE)
+  expect_match(w[1], "not a confirmed special cause", fixed = TRUE)
+  expect_equal(w[2:3], c("within limits", "not assessed"))
+  expect_equal(signal_label(TRUE, NA), "OUT OF CONTROL")       # dispersion not estimable
+})
+
+test_that("format_p and as_whole_numbers", {
+  expect_equal(format_p(0.716406), "0.716")
+  expect_equal(format_p(6.2e-23), "< 0.0001")
+  expect_equal(format_p(NA), "n/a")
+  d <- as_whole_numbers(data.frame(station_id = "S1", remaining_deficit = 7), "remaining_deficit")
+  expect_identical(d$remaining_deficit, 7L)
+})
