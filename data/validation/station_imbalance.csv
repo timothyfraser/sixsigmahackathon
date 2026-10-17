@@ -1,0 +1,82 @@
+"city","dockID","zone","mean_bikes","min_bikes","max_bikes","empty_percent","full_percent"
+"jersey_city","City Hall","office",12.6607638888889,0,30,4.57175925925926,13.2638888888889
+"jersey_city","York St & Marin Blvd","office",15.0243055555556,0,30,3.68055555555556,16.1458333333333
+"jersey_city","Grove St PATH","office",14.093287037037,0,30,4.21296296296296,14.3518518518519
+"jersey_city","Columbus Drive","office",12.4594907407407,0,30,4.51388888888889,13.4490740740741
+"jersey_city","Marin Light Rail","office",13.1394675925926,0,30,3.83101851851852,13.8425925925926
+"jersey_city","Van Vorst Park","residential",7.3599537037037,0,30,5.85648148148148,0.0347222222222222
+"jersey_city","Manila & 1st","office",15.2892361111111,0,30,3.4375,16.4467592592593
+"jersey_city","Newark Ave","residential",9.32314814814815,0,30,3.85416666666667,0.104166666666667
+"jersey_city","Grand St","retail",6.0474537037037,0,20,3.76157407407407,0
+"jersey_city","Washington St & Morgan St","retail",5.81180555555556,0,22,4.39814814814815,0
+"jersey_city","Warren St","retail",5.91701388888889,0,21,3.96990740740741,0
+"jersey_city","JC Medical Center","residential",13.8296296296296,0,30,2.47685185185185,3.94675925925926
+"jersey_city","Jersey & 3rd","office",11.0219907407407,0,30,5.78703703703704,11.9560185185185
+"jersey_city","Montgomery St","residential",11.14375,0,30,3.72685185185185,0.601851851851852
+"jersey_city","Morris Canal","retail",6.51747685185185,0,24,3.75,0
+"jersey_city","Dixon Mills","residential",11.3493055555556,0,30,2.90509259259259,0.868055555555556
+"jersey_city","Exchange Pl","retail",5.73148148148148,0,21,4.20138888888889,0
+"jersey_city","Essex Light Rail","retail",6.84525462962963,0,25,3.7037037037037,0
+"jersey_city","Jersey & 6th St","office",15.9439814814815,0,30,3.62268518518519,17.6851851851852
+"jersey_city","Paulus Hook","retail",7.87025462962963,0,24,2.70833333333333,0
+"jersey_city","Brunswick St","residential",8.18252314814815,0,30,5.63657407407407,0.0231481481481482
+"jersey_city","Washington St","retail",7.41886574074074,0,23,2.90509259259259,0
+"jersey_city","Monmouth & 6th","residential",10.1866898148148,0,30,3.77314814814815,0.3125
+"jersey_city","Hamilton Park","office",10.9782407407407,0,30,5.63657407407407,11.7013888888889
+"jersey_city","Brunswick & 6th","residential",11.0114583333333,0,30,3.25231481481481,0.509259259259259
+"jersey_city","Liberty Light Rail","residential",8.2568287037037,0,30,5.20833333333333,0.0347222222222222
+"jersey_city","Newport PATH","retail",6.3900462962963,0,20,3.86574074074074,0
+"milwaukee","411 East Wisconsin ","office",12.6402777777778,0,30,4.54861111111111,12.9861111111111
+"milwaukee","Water & Wisconsin","office",14.837962962963,0,30,3.22916666666667,15.4861111111111
+"milwaukee","Jefferson & Clybourn","office",12.0675925925926,0,30,3.91203703703704,12.6967592592593
+"milwaukee","777 East Wisconsin","retail",5.19652777777778,0,20,4.76851851851852,0
+"milwaukee","Cathedral Square","retail",5.43032407407407,0,19,5.23148148148148,0
+"milwaukee","Veolia","residential",8.10069444444444,0,29,4.93055555555556,0
+"milwaukee","Broadway & St Paul","office",12.9768518518519,0,30,4.60648148148148,13.5416666666667
+"milwaukee","MSOE Library","office",15.3005787037037,0,30,3.64583333333333,16.3888888888889
+"milwaukee","Red Arrow Park","office",13.5712962962963,0,30,3.77314814814815,13.912037037037
+"milwaukee","Postman Square","residential",10.750462962963,0,30,3.62268518518519,0.25462962962963
+"milwaukee","Mason & Prospect","retail",5.13240740740741,0,21,5.16203703703704,0
+"milwaukee","Couture","retail",5.22430555555556,0,20,4.90740740740741,0
+"milwaukee","State & Van Buren","retail",5.44351851851852,0,20,4.4212962962963,0
+"milwaukee","Kilbourn & Marshall","retail",8.48900462962963,0,27,2.39583333333333,0
+"milwaukee","Plankinton & St Paul","residential",12.106712962963,0,30,2.80092592592593,1.78240740740741
+"milwaukee","MSOE Diercks Hall","office",15.23125,0,30,3.35648148148148,16.4699074074074
+"milwaukee","MLK & Wisconsin","residential",11.0070601851852,0,30,3.4837962962963,0.68287037037037
+"milwaukee","MLK & State","residential",9.9150462962963,0,30,4.00462962962963,0.208333333333333
+"milwaukee","War Memorial","retail",5.80717592592593,0,21,4.23611111111111,0
+"milwaukee","Zeidler Union Square Park","residential",7.91967592592593,0,30,5,0.0347222222222222
+"milwaukee","Summerfest Midgate","retail",6.09930555555556,0,21,3.98148148148148,0
+"milwaukee","Vel R. Phillips & Wisconsin","residential",11.5040509259259,0,30,3.14814814814815,0.706018518518518
+"milwaukee","East Juneau Post Office","office",16.915162037037,0,30,3.15972222222222,18.6805555555556
+"milwaukee","Discovery World","retail",5.68958333333333,0,21,4.86111111111111,0
+"milwaukee","Erie & Menomonee","office",12.1842592592593,0,30,4.36342592592593,12.5462962962963
+"milwaukee","Juneau & Water","residential",11.2832175925926,0,30,3.28703703703704,0.520833333333333
+"milwaukee","Vel R. Phillips & Kilbourn","residential",9.22303240740741,0,30,4.31712962962963,0.0694444444444444
+"tampa","East Madison Street & North Florida Avenue","office",12.5422453703704,0,30,5.17361111111111,13.7847222222222
+"tampa","East Kennedy Boulevard & North Florida Avenue","office",14.5707175925926,0,30,3.86574074074074,15.775462962963
+"tampa","East Madison Street & North Franklin Street","office",10.9371527777778,0,30,5.85648148148148,11.5509259259259
+"tampa","East Twiggs Street & North Florida Avenue","office",12.5774305555556,0,30,4.3287037037037,13.3796296296296
+"tampa","East Kennedy Boulevard & North Franklin Street","office",12.0206018518519,0,30,5.10416666666667,12.9976851851852
+"tampa","East Twiggs Street & North Franklin Street","residential",8.13460648148148,0,30,5.30092592592593,0.0462962962962963
+"tampa","East Jackson Street & North Florida Avenue","office",13.3314814814815,0,30,4.17824074074074,14.0046296296296
+"tampa","East Madison Street & North Morgan Street","retail",6.4849537037037,0,22,3.36805555555556,0
+"tampa","East Kennedy Boulevard & North Morgan Street","retail",6.32384259259259,0,22,3.49537037037037,0
+"tampa","East Jackson Street & North Franklin Street","office",13.7679398148148,0,30,3.93518518518519,14.6759259259259
+"tampa","East Madison Street & North Tampa Street","residential",9.87384259259259,0,30,4.27083333333333,0.0347222222222222
+"tampa","East Twiggs Street & North Morgan Street","retail",4.46782407407407,0,20,6.40046296296296,0
+"tampa","East Zack Street & North Florida Avenue","office",14.5731481481481,0,30,3.49537037037037,15.9837962962963
+"tampa","East Kennedy Boulevard & North Tampa Street","residential",12.0511574074074,0,30,2.97453703703704,1.5625
+"tampa","East Twiggs Street & North Tampa Street","residential",11.0527777777778,0,30,3.14814814814815,0.590277777777778
+"tampa","East Zack Street & North Franklin Street","residential",12.3686342592593,0,30,2.5462962962963,1.93287037037037
+"tampa","East Jackson Street & North Morgan Street","retail",4.49386574074074,0,18,5.92592592592593,0
+"tampa","East Washington Street & North Florida Avenue","retail",8.51030092592593,0,30,2.01388888888889,0.0115740740740741
+"tampa","East Jackson Street & North Tampa Street","residential",11.0572916666667,0,30,3.0787037037037,0.532407407407407
+"tampa","East Madison Street & Pierce Street","retail",7.01365740740741,0,24,3.37962962962963,0
+"tampa","East Zack Street & North Morgan Street","retail",6.93831018518518,0,24,3.20601851851852,0
+"tampa","East Kennedy Boulevard & Pierce Street","retail",5.57997685185185,0,23,4.09722222222222,0
+"tampa","East Twiggs Street & Pierce Street","retail",4.1744212962963,0,17,7.15277777777778,0
+"tampa","East Zack Street & North Tampa Street","residential",13.2724537037037,0,30,2.66203703703704,3.125
+"tampa","East Madison Street & North Ashley Drive","residential",9.48055555555556,0,30,4.12037037037037,0.104166666666667
+"tampa","North Florida Avenue & Polk Street","office",13.2608796296296,0,30,4.21296296296296,13.8078703703704
+"tampa","East Kennedy Boulevard & North Ashley Drive","residential",10.8899305555556,0,30,3.53009259259259,0.532407407407407

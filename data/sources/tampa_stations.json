@@ -1,0 +1,174 @@
+{
+  "source": "https://www.openstreetmap.org/",
+  "retrieved_utc": "2026-10-17T02:03:48.763814+00:00",
+  "osm_base_timestamp": "2026-10-17T02:02:36Z",
+  "center": [
+    27.9486,
+    -82.4572
+  ],
+  "location_type": "real intersections; hypothetical bike docks",
+  "stations": [
+    {
+      "station_id": "osm-node-474972598",
+      "dockID": "East Madison Street & North Florida Avenue",
+      "lat": 27.9487174,
+      "lon": -82.4574238
+    },
+    {
+      "station_id": "osm-node-97871013",
+      "dockID": "East Kennedy Boulevard & North Florida Avenue",
+      "lat": 27.9479739,
+      "lon": -82.4570982
+    },
+    {
+      "station_id": "osm-node-975495315",
+      "dockID": "East Madison Street & North Franklin Street",
+      "lat": 27.9484372,
+      "lon": -82.4582366
+    },
+    {
+      "station_id": "osm-node-97928974",
+      "dockID": "East Twiggs Street & North Florida Avenue",
+      "lat": 27.949467,
+      "lon": -82.457742
+    },
+    {
+      "station_id": "osm-node-97871012",
+      "dockID": "East Kennedy Boulevard & North Franklin Street",
+      "lat": 27.9476964,
+      "lon": -82.4579291
+    },
+    {
+      "station_id": "osm-node-97928972",
+      "dockID": "East Twiggs Street & North Franklin Street",
+      "lat": 27.9491829,
+      "lon": -82.458618
+    },
+    {
+      "station_id": "osm-node-97929653",
+      "dockID": "East Jackson Street & North Florida Avenue",
+      "lat": 27.9472059,
+      "lon": -82.4567593
+    },
+    {
+      "station_id": "osm-node-97815626",
+      "dockID": "East Madison Street & North Morgan Street",
+      "lat": 27.9492989,
+      "lon": -82.4557374
+    },
+    {
+      "station_id": "osm-node-97871014",
+      "dockID": "East Kennedy Boulevard & North Morgan Street",
+      "lat": 27.9485626,
+      "lon": -82.4554104
+    },
+    {
+      "station_id": "osm-node-97929650",
+      "dockID": "East Jackson Street & North Franklin Street",
+      "lat": 27.9469257,
+      "lon": -82.4575957
+    },
+    {
+      "station_id": "osm-node-975495316",
+      "dockID": "East Madison Street & North Tampa Street",
+      "lat": 27.9481406,
+      "lon": -82.4590968
+    },
+    {
+      "station_id": "osm-node-97876151",
+      "dockID": "East Twiggs Street & North Morgan Street",
+      "lat": 27.950046,
+      "lon": -82.456066
+    },
+    {
+      "station_id": "osm-node-97942623",
+      "dockID": "East Zack Street & North Florida Avenue",
+      "lat": 27.9502261,
+      "lon": -82.4580774
+    },
+    {
+      "station_id": "osm-node-97871010",
+      "dockID": "East Kennedy Boulevard & North Tampa Street",
+      "lat": 27.9474007,
+      "lon": -82.4587699
+    },
+    {
+      "station_id": "osm-node-97925457",
+      "dockID": "East Twiggs Street & North Tampa Street",
+      "lat": 27.94889,
+      "lon": -82.459428
+    },
+    {
+      "station_id": "osm-node-97964888",
+      "dockID": "East Zack Street & North Franklin Street",
+      "lat": 27.9499406,
+      "lon": -82.4588911
+    },
+    {
+      "station_id": "osm-node-97876148",
+      "dockID": "East Jackson Street & North Morgan Street",
+      "lat": 27.9477926,
+      "lon": -82.4550758
+    },
+    {
+      "station_id": "osm-node-97940369",
+      "dockID": "East Washington Street & North Florida Avenue",
+      "lat": 27.9464956,
+      "lon": -82.4564607
+    },
+    {
+      "station_id": "osm-node-97925455",
+      "dockID": "East Jackson Street & North Tampa Street",
+      "lat": 27.9466421,
+      "lon": -82.4584397
+    },
+    {
+      "station_id": "osm-node-97815628",
+      "dockID": "East Madison Street & Pierce Street",
+      "lat": 27.949589,
+      "lon": -82.454896
+    },
+    {
+      "station_id": "osm-node-97876153",
+      "dockID": "East Zack Street & North Morgan Street",
+      "lat": 27.9507983,
+      "lon": -82.4563932
+    },
+    {
+      "station_id": "osm-node-942206728",
+      "dockID": "East Kennedy Boulevard & Pierce Street",
+      "lat": 27.9488521,
+      "lon": -82.4545754
+    },
+    {
+      "station_id": "osm-node-97928976",
+      "dockID": "East Twiggs Street & Pierce Street",
+      "lat": 27.950334,
+      "lon": -82.455224
+    },
+    {
+      "station_id": "osm-node-97925459",
+      "dockID": "East Zack Street & North Tampa Street",
+      "lat": 27.9496351,
+      "lon": -82.4597618
+    },
+    {
+      "station_id": "osm-node-97815615",
+      "dockID": "East Madison Street & North Ashley Drive",
+      "lat": 27.9478616,
+      "lon": -82.4599058
+    },
+    {
+      "station_id": "osm-node-1870060119",
+      "dockID": "North Florida Avenue & Polk Street",
+      "lat": 27.9509047,
+      "lon": -82.458369
+    },
+    {
+      "station_id": "osm-node-97772729",
+      "dockID": "East Kennedy Boulevard & North Ashley Drive",
+      "lat": 27.947121,
+      "lon": -82.4595848
+    }
+  ]
+}

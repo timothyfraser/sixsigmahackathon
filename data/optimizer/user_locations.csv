@@ -1,0 +1,31 @@
+city,location_id,name,lat,lon,osm_node_id,source_url
+jersey_city,JC-U01,4th Street & Erie Street,40.7239432,-74.0439733,103865942,https://www.openstreetmap.org/node/103865942
+jersey_city,JC-U02,Colgate Street & York Street,40.7198981,-74.0542449,103875795,https://www.openstreetmap.org/node/103875795
+jersey_city,JC-U03,3rd Street & Manila Avenue,40.7230853,-74.0424124,103874259,https://www.openstreetmap.org/node/103874259
+jersey_city,JC-U04,Montgomery Street & Washington Street,40.7167527,-74.0373975,103869698,https://www.openstreetmap.org/node/103869698
+jersey_city,JC-U05,Hudson Street & Sussex Street,40.7142038,-74.0345999,752178858,https://www.openstreetmap.org/node/752178858
+jersey_city,JC-U06,Manila Avenue & Pavonia Avenue,40.7273684,-74.0417589,103863260,https://www.openstreetmap.org/node/103863260
+jersey_city,JC-U07,Greene Street & Sussex Street,40.7143723,-74.036056,9077458261,https://www.openstreetmap.org/node/9077458261
+jersey_city,JC-U08,Bright Street & Merseles Street,40.719638,-74.0559491,103865435,https://www.openstreetmap.org/node/103865435
+jersey_city,JC-U09,Bay Street & Grove Street,40.720948,-74.0427413,103863440,https://www.openstreetmap.org/node/103863440
+jersey_city,JC-U10,8th Street & McWilliams Place,40.7268493,-74.0442452,103875886,https://www.openstreetmap.org/node/103875886
+milwaukee,MKE-U01,East Juneau Avenue & North Water Street,43.0458057,-87.9109913,3722293323,https://www.openstreetmap.org/node/3722293323
+milwaukee,MKE-U02,East Juneau Avenue & North Prospect Avenue,43.0457059,-87.8975387,196671391,https://www.openstreetmap.org/node/196671391
+milwaukee,MKE-U03,East Buffalo Street & North Jackson Street,43.0341005,-87.9034903,196646900,https://www.openstreetmap.org/node/196646900
+milwaukee,MKE-U04,North Doctor Martin Luther King Junior Drive & West Juneau Avenue,43.0456032,-87.9144226,5409214516,https://www.openstreetmap.org/node/5409214516
+milwaukee,MKE-U05,North 2nd Street & West Michigan Street,43.0374171,-87.9130727,196665145,https://www.openstreetmap.org/node/196665145
+milwaukee,MKE-U06,East Michigan Street & North Lincoln Memorial Drive,43.0375904,-87.8988841,196619232,https://www.openstreetmap.org/node/196619232
+milwaukee,MKE-U07,East Menomonee Street & North Broadway,43.0314839,-87.9069111,672762269,https://www.openstreetmap.org/node/672762269
+milwaukee,MKE-U08,North Harbor Drive & North Lincoln Memorial Drive,43.0345585,-87.9000724,4483302976,https://www.openstreetmap.org/node/4483302976
+milwaukee,MKE-U09,North Market Street & North Water Street,43.0483713,-87.9100275,196695999,https://www.openstreetmap.org/node/196695999
+milwaukee,MKE-U10,East Saint Paul Avenue & North Water Street,43.0349861,-87.9087473,196640037,https://www.openstreetmap.org/node/196640037
+tampa,TPA-U01,East Jackson Street & North Brush Street,27.9492578,-82.4508681,97835510,https://www.openstreetmap.org/node/97835510
+tampa,TPA-U02,North Franklin Street & Royal Street,27.9535085,-82.4602122,97923655,https://www.openstreetmap.org/node/97923655
+tampa,TPA-U03,East Brorein Street & South Tampa Street,27.9435434,-82.457075,1433887322,https://www.openstreetmap.org/node/1433887322
+tampa,TPA-U04,South Morgan Street & Water Street,27.9417161,-82.4524055,97895171,https://www.openstreetmap.org/node/97895171
+tampa,TPA-U05,Central Avenue & Ray Charles Boulevard,27.955324,-82.4549959,260704362,https://www.openstreetmap.org/node/260704362
+tampa,TPA-U06,North Franklin Street & Scott Street,27.9563519,-82.4602111,97964892,https://www.openstreetmap.org/node/97964892
+tampa,TPA-U07,Frederic H. Spaulding Drive & UT University Drive,27.9457044,-82.4638809,1868616153,https://www.openstreetmap.org/node/1868616153
+tampa,TPA-U08,Channelside Drive & Water Street,27.9435319,-82.4503984,97951081,https://www.openstreetmap.org/node/97951081
+tampa,TPA-U09,Channelside Drive & East Madison Street,27.9513989,-82.4456081,97815614,https://www.openstreetmap.org/node/97815614
+tampa,TPA-U10,South Hyde Park Avenue & West Brorein Street & West Cleveland Street,27.9431349,-82.463895,97968731,https://www.openstreetmap.org/node/97968731

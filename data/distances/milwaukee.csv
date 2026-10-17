@@ -1,0 +1,730 @@
+dockID1,dockID2,distance
+411 East Wisconsin ,411 East Wisconsin ,0.0
+411 East Wisconsin ,Water & Wisconsin,0.19158769185006314
+411 East Wisconsin ,Jefferson & Clybourn,0.16115753517441045
+411 East Wisconsin ,777 East Wisconsin,0.2890683500798657
+411 East Wisconsin ,Cathedral Square,0.24535133870712703
+411 East Wisconsin ,Veolia,0.3924560380713776
+411 East Wisconsin ,Broadway & St Paul,0.3671004568217769
+411 East Wisconsin ,MSOE Library,0.40146389753093253
+411 East Wisconsin ,Red Arrow Park,0.488109927012876
+411 East Wisconsin ,Postman Square,0.515409235760339
+411 East Wisconsin ,Mason & Prospect,0.380731336154941
+411 East Wisconsin ,Couture,0.42806980238261866
+411 East Wisconsin ,State & Van Buren,0.49108366255802705
+411 East Wisconsin ,Kilbourn & Marshall,0.5197864863471586
+411 East Wisconsin ,Plankinton & St Paul,0.6032971346402959
+411 East Wisconsin ,MSOE Diercks Hall,0.5036618523322404
+411 East Wisconsin ,MLK & Wisconsin,0.4924161681223701
+411 East Wisconsin ,MLK & State,0.6894537043628756
+411 East Wisconsin ,War Memorial,0.8011198265988395
+411 East Wisconsin ,Zeidler Union Square Park,0.6389388686368744
+411 East Wisconsin ,Summerfest Midgate,0.5808118888264698
+411 East Wisconsin ,Vel R. Phillips & Wisconsin,0.5789957050544707
+411 East Wisconsin ,East Juneau Post Office,0.587827415785852
+411 East Wisconsin ,Discovery World,0.5715490955478614
+411 East Wisconsin ,Erie & Menomonee,0.6991442478211045
+411 East Wisconsin ,Juneau & Water,0.7693244544631823
+411 East Wisconsin ,Vel R. Phillips & Kilbourn,0.7607488901879332
+Water & Wisconsin,411 East Wisconsin ,0.19158769185006308
+Water & Wisconsin,Water & Wisconsin,0.0
+Water & Wisconsin,Jefferson & Clybourn,0.34668467520575447
+Water & Wisconsin,777 East Wisconsin,0.4736860564617158
+Water & Wisconsin,Cathedral Square,0.4133174119540828
+Water & Wisconsin,Veolia,0.21445573690528785
+Water & Wisconsin,Broadway & St Paul,0.29749324469041266
+Water & Wisconsin,MSOE Library,0.5669032677201064
+Water & Wisconsin,Red Arrow Park,0.3590226388664359
+Water & Wisconsin,Postman Square,0.3374089345942493
+Water & Wisconsin,Mason & Prospect,0.549972070280365
+Water & Wisconsin,Couture,0.6120738574964517
+Water & Wisconsin,State & Van Buren,0.6590497358049827
+Water & Wisconsin,Kilbourn & Marshall,0.6877525595941143
+Water & Wisconsin,Plankinton & St Paul,0.4417474190056383
+Water & Wisconsin,MSOE Diercks Hall,0.5419251680157829
+Water & Wisconsin,MLK & Wisconsin,0.3144158669562805
+Water & Wisconsin,MLK & State,0.5114534031967862
+Water & Wisconsin,War Memorial,0.9703605607242636
+Water & Wisconsin,Zeidler Union Square Park,0.47728219803646244
+Water & Wisconsin,Summerfest Midgate,0.7663390288578139
+Water & Wisconsin,Vel R. Phillips & Wisconsin,0.40099540388838106
+Water & Wisconsin,East Juneau Post Office,0.7532667859750257
+Water & Wisconsin,Discovery World,0.7555531506616945
+Water & Wisconsin,Erie & Menomonee,0.5795790607135495
+Water & Wisconsin,Juneau & Water,0.591599748190486
+Water & Wisconsin,Vel R. Phillips & Kilbourn,0.5827485890218439
+Jefferson & Clybourn,411 East Wisconsin ,0.16115753517441048
+Jefferson & Clybourn,Water & Wisconsin,0.34668467520575447
+Jefferson & Clybourn,Jefferson & Clybourn,0.0
+Jefferson & Clybourn,777 East Wisconsin,0.2899434569604658
+Jefferson & Clybourn,Cathedral Square,0.40044832206281833
+Jefferson & Clybourn,Veolia,0.4202825770293106
+Jefferson & Clybourn,Broadway & St Paul,0.22021039894710967
+Jefferson & Clybourn,MSOE Library,0.5565608808866239
+Jefferson & Clybourn,Red Arrow Park,0.6432069103685673
+Jefferson & Clybourn,Postman Square,0.6705062191160304
+Jefferson & Clybourn,Mason & Prospect,0.5355587302951078
+Jefferson & Clybourn,Couture,0.4289449092632188
+Jefferson & Clybourn,State & Van Buren,0.6461806459137183
+Jefferson & Clybourn,Kilbourn & Marshall,0.6748834697028498
+Jefferson & Clybourn,Plankinton & St Paul,0.45638641885556464
+Jefferson & Clybourn,MSOE Diercks Hall,0.6587588356879318
+Jefferson & Clybourn,MLK & Wisconsin,0.6475131514780614
+Jefferson & Clybourn,MLK & State,0.844550687718567
+Jefferson & Clybourn,War Memorial,0.9559472207390064
+Jefferson & Clybourn,Zeidler Union Square Park,0.6398139755174745
+Jefferson & Clybourn,Summerfest Midgate,0.43114654558790877
+Jefferson & Clybourn,Vel R. Phillips & Wisconsin,0.7340926884101622
+Jefferson & Clybourn,East Juneau Post Office,0.7429243991415432
+Jefferson & Clybourn,Discovery World,0.5724242024284615
+Jefferson & Clybourn,Erie & Menomonee,0.5502540545666184
+Jefferson & Clybourn,Juneau & Water,0.9244214378188735
+Jefferson & Clybourn,Vel R. Phillips & Kilbourn,0.9158458735436247
+777 East Wisconsin,411 East Wisconsin ,0.14778149297839183
+777 East Wisconsin,Water & Wisconsin,0.3170222271038158
+777 East Wisconsin,Jefferson & Clybourn,0.3028784763340831
+777 East Wisconsin,777 East Wisconsin,0.0
+777 East Wisconsin,Cathedral Square,0.25494259552711646
+777 East Wisconsin,Veolia,0.5178905733251302
+777 East Wisconsin,Broadway & St Paul,0.5085705000161947
+777 East Wisconsin,MSOE Library,0.40176243281169605
+777 East Wisconsin,Red Arrow Park,0.6135444622666286
+777 East Wisconsin,Postman Square,0.6408437710140916
+777 East Wisconsin,Mason & Prospect,0.25399665140491784
+777 East Wisconsin,Couture,0.31609843862100473
+777 East Wisconsin,State & Van Buren,0.3696832327714569
+777 East Wisconsin,Kilbourn & Marshall,0.3983860565605885
+777 East Wisconsin,Plankinton & St Paul,0.744767177834714
+777 East Wisconsin,MSOE Diercks Hall,0.6281039758061476
+777 East Wisconsin,MLK & Wisconsin,0.6178507033761227
+777 East Wisconsin,MLK & State,0.8148882396166283
+777 East Wisconsin,War Memorial,0.6743851418488164
+777 East Wisconsin,Zeidler Union Square Park,0.7804089118312922
+777 East Wisconsin,Summerfest Midgate,0.5986304103394093
+777 East Wisconsin,Vel R. Phillips & Wisconsin,0.7044302403082234
+777 East Wisconsin,East Juneau Post Office,0.5214867454149685
+777 East Wisconsin,Discovery World,0.4595777317862473
+777 East Wisconsin,Erie & Menomonee,0.8407178019606234
+777 East Wisconsin,Juneau & Water,0.8947589897169349
+777 East Wisconsin,Vel R. Phillips & Kilbourn,0.8861834254416859
+Cathedral Square,411 East Wisconsin ,0.36612026860154284
+Cathedral Square,Water & Wisconsin,0.5353610027269666
+Cathedral Square,Jefferson & Clybourn,0.5212172519572343
+Cathedral Square,777 East Wisconsin,0.5238229432822611
+Cathedral Square,Cathedral Square,0.0
+Cathedral Square,Veolia,0.7362293489482813
+Cathedral Square,Broadway & St Paul,0.7269092756393456
+Cathedral Square,MSOE Library,0.28092786491792854
+Cathedral Square,Red Arrow Park,0.49575112804960036
+Cathedral Square,Postman Square,0.6376033970294971
+Cathedral Square,Mason & Prospect,0.34085330623024324
+Cathedral Square,Couture,0.5372545059844418
+Cathedral Square,State & Van Buren,0.24884866487768947
+Cathedral Square,Kilbourn & Marshall,0.277551488666821
+Cathedral Square,Plankinton & St Paul,0.9631059534578646
+Cathedral Square,MSOE Diercks Hall,0.5072694079123801
+Cathedral Square,MLK & Wisconsin,0.7499560307633127
+Cathedral Square,MLK & State,0.7614131825633831
+Cathedral Square,War Memorial,0.7468321147662736
+Cathedral Square,Zeidler Union Square Park,0.9263057859726327
+Cathedral Square,Summerfest Midgate,0.8193346337107903
+Cathedral Square,Vel R. Phillips & Wisconsin,0.8354528657434551
+Cathedral Square,East Juneau Post Office,0.400652177521201
+Cathedral Square,Discovery World,0.6807337991496843
+Cathedral Square,Erie & Menomonee,1.059056577583774
+Cathedral Square,Juneau & Water,0.7897887336957088
+Cathedral Square,Vel R. Phillips & Kilbourn,0.8829430514570913
+Veolia,411 East Wisconsin ,0.3924560380713774
+Veolia,Water & Wisconsin,0.21445573690528785
+Veolia,Jefferson & Clybourn,0.42498762885096103
+Veolia,777 East Wisconsin,0.5528984437564163
+Veolia,Cathedral Square,0.6141475890927478
+Veolia,Veolia,0.0
+Veolia,Broadway & St Paul,0.37548480079182983
+Veolia,MSOE Library,0.7677334448587714
+Veolia,Red Arrow Park,0.5034868099149964
+Veolia,Postman Square,0.2790604995578153
+Veolia,Mason & Prospect,0.7508404165016792
+Veolia,Couture,0.6918998960591691
+Veolia,State & Van Buren,0.8598799129436477
+Veolia,Kilbourn & Marshall,0.8885827367327793
+Veolia,Plankinton & St Paul,0.4311218031068174
+Veolia,MSOE Diercks Hall,0.7427553451544484
+Veolia,MLK & Wisconsin,0.2560674319198463
+Veolia,MLK & State,0.4531049681603524
+Veolia,War Memorial,1.1712289069455786
+Veolia,Zeidler Union Square Park,0.28346332410525177
+Veolia,Summerfest Midgate,0.8446419825030205
+Veolia,Vel R. Phillips & Wisconsin,0.342646968851947
+Veolia,East Juneau Post Office,0.9540969631136907
+Veolia,Discovery World,0.8353791892244119
+Veolia,Erie & Menomonee,0.6194567744097231
+Veolia,Juneau & Water,0.7360639192390463
+Veolia,Vel R. Phillips & Kilbourn,0.52440015398541
+Broadway & St Paul,411 East Wisconsin ,0.3671036796664134
+Broadway & St Paul,Water & Wisconsin,0.2974932446904126
+Broadway & St Paul,Jefferson & Clybourn,0.23983443872998678
+Broadway & St Paul,777 East Wisconsin,0.49588960145246863
+Broadway & St Paul,Cathedral Square,0.6061435685895664
+Broadway & St Paul,Veolia,0.37077974897017935
+Broadway & St Paul,Broadway & St Paul,0.0
+Broadway & St Paul,MSOE Library,0.7607001947684195
+Broadway & St Paul,Red Arrow Park,0.602265540582085
+Broadway & St Paul,Postman Square,0.6211839592843345
+Broadway & St Paul,Mason & Prospect,0.7415048747871105
+Broadway & St Paul,Couture,0.5639325061626543
+Broadway & St Paul,State & Van Buren,0.8518758924404664
+Broadway & St Paul,Kilbourn & Marshall,0.8805787162295979
+Broadway & St Paul,Plankinton & St Paul,0.24403039624808737
+Broadway & St Paul,MSOE Diercks Hall,0.7357220950640967
+Broadway & St Paul,MLK & Wisconsin,0.5981908916463656
+Broadway & St Paul,MLK & State,0.795228427886871
+Broadway & St Paul,War Memorial,1.159339463390275
+Broadway & St Paul,Zeidler Union Square Park,0.5903111474583433
+Broadway & St Paul,Summerfest Midgate,0.4795081683185479
+Broadway & St Paul,Vel R. Phillips & Wisconsin,0.6847704285784664
+Broadway & St Paul,East Juneau Post Office,0.9470637130233389
+Broadway & St Paul,Discovery World,0.6510189709480491
+Broadway & St Paul,Erie & Menomonee,0.337898031959141
+Broadway & St Paul,Juneau & Water,0.8753747728805713
+Broadway & St Paul,Vel R. Phillips & Kilbourn,0.8665236137119287
+MSOE Library,411 East Wisconsin ,0.4041275130068293
+MSOE Library,Water & Wisconsin,0.44698877563452405
+MSOE Library,Jefferson & Clybourn,0.5592244963625208
+MSOE Library,777 East Wisconsin,0.6856337960843231
+MSOE Library,Cathedral Square,0.29742166748533444
+MSOE Library,Veolia,0.6417741624853853
+MSOE Library,Broadway & St Paul,0.6385370485469031
+MSOE Library,MSOE Library,0.0
+MSOE Library,Red Arrow Park,0.22476706814486533
+MSOE Library,Postman Square,0.5100614532858534
+MSOE Library,Mason & Prospect,0.6287389373776147
+MSOE Library,Couture,0.8240215971190592
+MSOE Library,State & Van Buren,0.3520501596825057
+MSOE Library,Kilbourn & Marshall,0.4005013395643576
+MSOE Library,Plankinton & St Paul,0.8699722327301554
+MSOE Library,MSOE Diercks Hall,0.23431658217357118
+MSOE Library,MLK & Wisconsin,0.6502648306315311
+MSOE Library,MLK & State,0.5084250915591436
+MSOE Library,War Memorial,1.0347177459136454
+MSOE Library,Zeidler Union Square Park,0.8289446485438742
+MSOE Library,Summerfest Midgate,0.9788788500145806
+MSOE Library,Vel R. Phillips & Wisconsin,0.7354573976125685
+MSOE Library,East Juneau Post Office,0.4457805650469107
+MSOE Library,Discovery World,0.967500890284302
+MSOE Library,Erie & Menomonee,0.9706843504913317
+MSOE Library,Juneau & Water,0.5368006426914691
+MSOE Library,Vel R. Phillips & Kilbourn,0.6376783386932746
+Red Arrow Park,411 East Wisconsin ,0.512217702285116
+Red Arrow Park,Water & Wisconsin,0.33449299601241983
+Red Arrow Park,Jefferson & Clybourn,0.6673146856408074
+Red Arrow Park,777 East Wisconsin,0.7943160668967687
+Red Arrow Park,Cathedral Square,0.4272306768738291
+Red Arrow Park,Veolia,0.47296425719464646
+Red Arrow Park,Broadway & St Paul,0.6182680207025048
+Red Arrow Park,MSOE Library,0.43015633072093407
+Red Arrow Park,Red Arrow Park,0.0
+Red Arrow Park,Postman Square,0.30300358276270634
+Red Arrow Park,Mason & Prospect,0.7377325543362528
+Red Arrow Park,Couture,0.9327038679315047
+Red Arrow Park,State & Van Buren,0.5012658490983962
+Red Arrow Park,Kilbourn & Marshall,0.5510941091503223
+Red Arrow Park,Plankinton & St Paul,0.724408352612487
+Red Arrow Park,MSOE Diercks Hall,0.38349534846886885
+Red Arrow Park,MLK & Wisconsin,0.44320696010838406
+Red Arrow Park,MLK & State,0.30136722103599645
+Red Arrow Park,War Memorial,1.143711362872284
+Red Arrow Park,Zeidler Union Square Park,0.6292123290203632
+Red Arrow Park,Summerfest Midgate,1.086969039292867
+Red Arrow Park,Vel R. Phillips & Wisconsin,0.5283995270894217
+Red Arrow Park,East Juneau Post Office,0.5949962544628014
+Red Arrow Park,Discovery World,1.076183161096748
+Red Arrow Park,Erie & Menomonee,0.862239994320398
+Red Arrow Park,Juneau & Water,0.3297427721683221
+Red Arrow Park,Vel R. Phillips & Kilbourn,0.4306204681701277
+Postman Square,411 East Wisconsin ,0.47960906341566417
+Postman Square,Water & Wisconsin,0.30160876224957467
+Postman Square,Jefferson & Clybourn,0.6347060467713556
+Postman Square,777 East Wisconsin,0.7617074280273171
+Postman Square,Cathedral Square,0.48784151966925476
+Postman Square,Veolia,0.24326032721314045
+Postman Square,Broadway & St Paul,0.5853837869396596
+Postman Square,MSOE Library,0.636386166555292
+Postman Square,Red Arrow Park,0.36859110784332505
+Postman Square,Postman Square,0.0
+Postman Square,Mason & Prospect,0.7983433971316787
+Postman Square,Couture,0.9000952290620531
+Postman Square,State & Van Buren,0.7286211211955487
+Postman Square,Kilbourn & Marshall,0.7573239449846803
+Postman Square,Plankinton & St Paul,0.5216774607474675
+Postman Square,MSOE Diercks Hall,0.6109292893693563
+Postman Square,MLK & Wisconsin,0.19617591944368348
+Postman Square,MLK & State,0.30050626593671875
+Postman Square,War Memorial,1.2043222056677096
+Postman Square,Zeidler Union Square Park,0.3725256746530035
+Postman Square,Summerfest Midgate,1.054360400423415
+Postman Square,Vel R. Phillips & Wisconsin,0.2816727544238257
+Postman Square,East Juneau Post Office,0.8223932722426955
+Postman Square,Discovery World,1.043574522227296
+Postman Square,Erie & Menomonee,0.8293557605575528
+Postman Square,Juneau & Water,0.6011682171673752
+Postman Square,Vel R. Phillips & Kilbourn,0.3718014517617764
+Mason & Prospect,411 East Wisconsin ,0.3807313361549411
+Mason & Prospect,Water & Wisconsin,0.5499720702803649
+Mason & Prospect,Jefferson & Clybourn,0.535688357563146
+Mason & Prospect,777 East Wisconsin,0.4076747242987114
+Mason & Prospect,Cathedral Square,0.353593026165554
+Mason & Prospect,Veolia,0.7508404165016795
+Mason & Prospect,Broadway & St Paul,0.7415203431927438
+Mason & Prospect,MSOE Library,0.5004128634501337
+Mason & Prospect,Red Arrow Park,0.7136247790640127
+Mason & Prospect,Postman Square,0.8307267579118347
+Mason & Prospect,Mason & Prospect,0.0
+Mason & Prospect,Couture,0.421106287000892
+Mason & Prospect,State & Van Buren,0.43984292895640903
+Mason & Prospect,Kilbourn & Marshall,0.3095575502031605
+Mason & Prospect,Plankinton & St Paul,0.9777170210112629
+Mason & Prospect,MSOE Diercks Hall,0.7267544064445851
+Mason & Prospect,MLK & Wisconsin,0.850800546552672
+Mason & Prospect,MLK & State,0.9664637553819935
+Mason & Prospect,War Memorial,0.44486951519955525
+Mason & Prospect,Zeidler Union Square Park,1.0133587550078416
+Mason & Prospect,Summerfest Midgate,0.7648215736492971
+Mason & Prospect,Vel R. Phillips & Wisconsin,0.9373800834847728
+Mason & Prospect,East Juneau Post Office,0.6101140522831291
+Mason & Prospect,Discovery World,0.5645855801661346
+Mason & Prospect,Erie & Menomonee,1.0724572298954533
+Mason & Prospect,Juneau & Water,0.9948393065143191
+Mason & Prospect,Vel R. Phillips & Kilbourn,1.0760664123394288
+Couture,411 East Wisconsin ,0.4386885574353793
+Couture,Water & Wisconsin,0.6220859694492431
+Couture,Jefferson & Clybourn,0.3581842897001127
+Couture,777 East Wisconsin,0.3115500310515447
+Couture,Cathedral Square,0.5600063378725437
+Couture,Veolia,0.6978135992902796
+Couture,Broadway & St Paul,0.5488078785145842
+Couture,MSOE Library,0.7068261751571232
+Couture,Red Arrow Park,0.9186082046120565
+Couture,Postman Square,0.9459075133595193
+Couture,Mason & Prospect,0.4315954147856143
+Couture,Couture,0.0
+Couture,State & Van Buren,0.6747469751168841
+Couture,Kilbourn & Marshall,0.7034497989060157
+Couture,Plankinton & St Paul,0.7849838984230393
+Couture,MSOE Diercks Hall,0.9331677181515747
+Couture,MLK & Wisconsin,0.9229144457215503
+Couture,MLK & State,1.119951981962056
+Couture,War Memorial,0.6383814214962964
+Couture,Zeidler Union Square Park,0.9173449977784434
+Couture,Summerfest Midgate,0.3866897509170823
+Couture,Vel R. Phillips & Wisconsin,1.009493982653651
+Couture,East Juneau Post Office,0.8265504877603956
+Couture,Discovery World,0.21936585065167727
+Couture,Erie & Menomonee,0.8151107430032435
+Couture,Juneau & Water,1.199822732062362
+Couture,Vel R. Phillips & Kilbourn,1.1912471677871133
+State & Van Buren,411 East Wisconsin ,0.49170673415090665
+State & Van Buren,Water & Wisconsin,0.6609474682763302
+State & Van Buren,Jefferson & Clybourn,0.646803717506598
+State & Van Buren,777 East Wisconsin,0.6498840973710874
+State & Van Buren,Cathedral Square,0.25969449318271276
+State & Van Buren,Veolia,0.8572430309789799
+State & Van Buren,Broadway & St Paul,0.8524957411887092
+State & Van Buren,MSOE Library,0.22344390767271458
+State & Van Buren,Red Arrow Park,0.4402359366384602
+State & Van Buren,Postman Square,0.7255303217794481
+State & Van Buren,Mason & Prospect,0.439842928956409
+State & Van Buren,Couture,0.6647348631640928
+State & Van Buren,State & Van Buren,0.0
+State & Van Buren,Kilbourn & Marshall,0.20769470609034607
+State & Van Buren,Plankinton & St Paul,1.0854411012237504
+State & Van Buren,MSOE Diercks Hall,0.3045398618887168
+State & Van Buren,MLK & Wisconsin,0.865733699125126
+State & Van Buren,MLK & State,0.5875614806784522
+State & Van Buren,War Memorial,0.8458217374924396
+State & Van Buren,Zeidler Union Square Park,1.0444135170374687
+State & Van Buren,Summerfest Midgate,0.9449210992601542
+State & Van Buren,Vel R. Phillips & Wisconsin,0.9509262661061634
+State & Van Buren,East Juneau Post Office,0.19226386701928994
+State & Van Buren,Discovery World,0.8082141563293356
+State & Van Buren,Erie & Menomonee,1.1846430431331374
+State & Van Buren,Juneau & Water,0.6159370318107777
+State & Van Buren,Vel R. Phillips & Kilbourn,0.7638765180780367
+Kilbourn & Marshall,411 East Wisconsin ,0.536456667271585
+Kilbourn & Marshall,Water & Wisconsin,0.7056974013970087
+Kilbourn & Marshall,Jefferson & Clybourn,0.6915536506272765
+Kilbourn & Marshall,777 East Wisconsin,0.6416873157546901
+Kilbourn & Marshall,Cathedral Square,0.3044444263033911
+Kilbourn & Marshall,Veolia,0.9065657476183233
+Kilbourn & Marshall,Broadway & St Paul,0.8972456743093876
+Kilbourn & Marshall,MSOE Library,0.29490702113206574
+Kilbourn & Marshall,Red Arrow Park,0.5116990500978115
+Kilbourn & Marshall,Postman Square,0.7969934352387994
+Kilbourn & Marshall,Mason & Prospect,0.25849361621163575
+Kilbourn & Marshall,Couture,0.6551188784568706
+Kilbourn & Marshall,State & Van Buren,0.219140883937523
+Kilbourn & Marshall,Kilbourn & Marshall,0.0
+Kilbourn & Marshall,Plankinton & St Paul,1.133442352127907
+Kilbourn & Marshall,MSOE Diercks Hall,0.5098301891862029
+Kilbourn & Marshall,MLK & Wisconsin,0.9202924294333551
+Kilbourn & Marshall,MLK & State,0.792851807975938
+Kilbourn & Marshall,War Memorial,0.6644724247476662
+Kilbourn & Marshall,Zeidler Union Square Park,1.0966421846426748
+Kilbourn & Marshall,Summerfest Midgate,0.9896710323808325
+Kilbourn & Marshall,Vel R. Phillips & Wisconsin,1.0057892644134976
+Kilbourn & Marshall,East Juneau Post Office,0.389412007264243
+Kilbourn & Marshall,Discovery World,0.7985981716221133
+Kilbourn & Marshall,Erie & Menomonee,1.2293929762538158
+Kilbourn & Marshall,Juneau & Water,0.8212273591082637
+Kilbourn & Marshall,Vel R. Phillips & Kilbourn,0.9246103206462206
+Plankinton & St Paul,411 East Wisconsin ,0.5983297317513129
+Plankinton & St Paul,Water & Wisconsin,0.43678001611665523
+Plankinton & St Paul,Jefferson & Clybourn,0.4514190159665817
+Plankinton & St Paul,777 East Wisconsin,0.7271156535373683
+Plankinton & St Paul,Cathedral Square,0.836385085263069
+Plankinton & St Paul,Veolia,0.47195267799117835
+Plankinton & St Paul,Broadway & St Paul,0.2390629933591045
+Plankinton & St Paul,MSOE Library,0.9899709410290926
+Plankinton & St Paul,Red Arrow Park,0.7439705925775202
+Plankinton & St Paul,Postman Square,0.7223568883053336
+Plankinton & St Paul,Mason & Prospect,0.9727309268720101
+Plankinton & St Paul,Couture,0.7755170833992489
+Plankinton & St Paul,State & Van Buren,1.0821174091139691
+Plankinton & St Paul,Kilbourn & Marshall,1.1108202329031005
+Plankinton & St Paul,Plankinton & St Paul,0.0
+Plankinton & St Paul,MSOE Diercks Hall,0.9649928413247695
+Plankinton & St Paul,MLK & Wisconsin,0.6577363669925231
+Plankinton & St Paul,MLK & State,0.8964013569078702
+Plankinton & St Paul,War Memorial,1.3709240406268692
+Plankinton & St Paul,Zeidler Union Square Park,0.49038253720072605
+Plankinton & St Paul,Summerfest Midgate,0.6822647631898497
+Plankinton & St Paul,Vel R. Phillips & Wisconsin,0.5921971341779204
+Plankinton & St Paul,East Juneau Post Office,1.1763344592840117
+Plankinton & St Paul,Discovery World,0.8626035481846437
+Plankinton & St Paul,Erie & Menomonee,0.44204138205823335
+Plankinton & St Paul,Juneau & Water,0.9765477019015701
+Plankinton & St Paul,Vel R. Phillips & Kilbourn,0.8603824174786646
+MSOE Diercks Hall,411 East Wisconsin ,0.5032616759832246
+MSOE Diercks Hall,Water & Wisconsin,0.5461229386109191
+MSOE Diercks Hall,Jefferson & Clybourn,0.6583586593389159
+MSOE Diercks Hall,777 East Wisconsin,0.7847679590607183
+MSOE Diercks Hall,Cathedral Square,0.3964503943319284
+MSOE Diercks Hall,Veolia,0.7409083254617802
+MSOE Diercks Hall,Broadway & St Paul,0.7376712115232981
+MSOE Diercks Hall,MSOE Library,0.36019980882193015
+MSOE Diercks Hall,Red Arrow Park,0.32390123112126057
+MSOE Diercks Hall,Postman Square,0.6091956162622484
+MSOE Diercks Hall,Mason & Prospect,0.7278731003540099
+MSOE Diercks Hall,Couture,0.9231557600954543
+MSOE Diercks Hall,State & Van Buren,0.3045398618887168
+MSOE Diercks Hall,Kilbourn & Marshall,0.4983840113390258
+MSOE Diercks Hall,Plankinton & St Paul,0.9691063957065507
+MSOE Diercks Hall,MSOE Diercks Hall,0.0
+MSOE Diercks Hall,MLK & Wisconsin,0.7493989936079263
+MSOE Diercks Hall,MLK & State,0.46979098004892483
+MSOE Diercks Hall,War Memorial,1.133851908890041
+MSOE Diercks Hall,Zeidler Union Square Park,0.9280788115202692
+MSOE Diercks Hall,Summerfest Midgate,1.0780130129909755
+MSOE Diercks Hall,Vel R. Phillips & Wisconsin,0.8345915605889637
+MSOE Diercks Hall,East Juneau Post Office,0.2432124448038145
+MSOE Diercks Hall,Discovery World,1.0666350532606974
+MSOE Diercks Hall,Erie & Menomonee,1.0698185134677265
+MSOE Diercks Hall,Juneau & Water,0.3935393806018825
+MSOE Diercks Hall,Vel R. Phillips & Kilbourn,0.6461060174485092
+MLK & Wisconsin,411 East Wisconsin ,0.49241616812237
+MLK & Wisconsin,Water & Wisconsin,0.31441586695628054
+MLK & Wisconsin,Jefferson & Clybourn,0.6475131514780613
+MLK & Wisconsin,777 East Wisconsin,0.7745145327340226
+MLK & Wisconsin,Cathedral Square,0.6359943257477451
+MLK & Wisconsin,Veolia,0.2560674319198463
+MLK & Wisconsin,Broadway & St Paul,0.5981908916463654
+MLK & Wisconsin,MSOE Library,0.7773674796305049
+MLK & Wisconsin,Red Arrow Park,0.4799821852333712
+MLK & Wisconsin,Postman Square,0.2604834959049203
+MLK & Wisconsin,Mason & Prospect,0.8508005465526718
+MLK & Wisconsin,Couture,0.9129023337687587
+MLK & Wisconsin,State & Van Buren,0.8696024342707616
+MLK & Wisconsin,Kilbourn & Marshall,0.8983052580598931
+MLK & Wisconsin,Plankinton & St Paul,0.49007855905307124
+MLK & Wisconsin,MSOE Diercks Hall,0.7518674937362924
+MLK & Wisconsin,MLK & Wisconsin,0.0
+MLK & Wisconsin,MLK & State,0.2971199432445174
+MLK & Wisconsin,War Memorial,1.2711890369965708
+MLK & Wisconsin,Zeidler Union Square Park,0.20092364755908748
+MLK & Wisconsin,Summerfest Midgate,1.0671675051301206
+MLK & Wisconsin,Vel R. Phillips & Wisconsin,0.11223054255826723
+MLK & Wisconsin,East Juneau Post Office,0.9633541638907034
+MLK & Wisconsin,Discovery World,1.0563816269340018
+MLK & Wisconsin,Erie & Menomonee,0.8421628652642587
+MLK & Wisconsin,Juneau & Water,0.6261489099060872
+MLK & Wisconsin,Vel R. Phillips & Kilbourn,0.3684151290695751
+MLK & State,411 East Wisconsin ,0.6937835563166764
+MLK & State,Water & Wisconsin,0.515783255150587
+MLK & State,Jefferson & Clybourn,0.8488805396723679
+MLK & State,777 East Wisconsin,0.9758819209283291
+MLK & State,Cathedral Square,0.6473743998342495
+MLK & State,Veolia,0.4574348201141529
+MLK & State,Broadway & St Paul,0.7995582798406716
+MLK & State,MSOE Library,0.6432214276116655
+MLK & State,Red Arrow Park,0.35291475928422056
+MLK & State,Postman Square,0.25008171778941357
+MLK & State,Mason & Prospect,0.9578762772966734
+MLK & State,Couture,1.1142697219630653
+MLK & State,State & Van Buren,0.587561480678452
+MLK & State,Kilbourn & Marshall,0.7712378321107425
+MLK & State,Plankinton & St Paul,0.7571295040931523
+MLK & State,MSOE Diercks Hall,0.4697909800489246
+MLK & State,MLK & Wisconsin,0.2971199432445173
+MLK & State,MLK & State,0.0
+MLK & State,War Memorial,1.3638550858327043
+MLK & State,Zeidler Union Square Park,0.48312531215649623
+MLK & State,Summerfest Midgate,1.2685348933244271
+MLK & State,Vel R. Phillips & Wisconsin,0.38231251022555496
+MLK & State,East Juneau Post Office,0.6812918860428571
+MLK & State,Discovery World,1.2577490151283084
+MLK & State,Erie & Menomonee,1.0435302534585653
+MLK & State,Juneau & Water,0.33919142171005057
+MLK & State,Vel R. Phillips & Kilbourn,0.18448188576846056
+War Memorial,411 East Wisconsin ,0.8176731052057874
+War Memorial,Water & Wisconsin,0.9869138393312111
+War Memorial,Jefferson & Clybourn,0.9726301266139924
+War Memorial,777 East Wisconsin,0.8446164933495577
+War Memorial,Cathedral Square,0.7761251133085325
+War Memorial,Veolia,1.187782185552526
+War Memorial,Broadway & St Paul,1.1784621122435905
+War Memorial,MSOE Library,0.9229449505931121
+War Memorial,Red Arrow Park,1.1361568662069912
+War Memorial,Postman Square,1.2532588450548128
+War Memorial,Mason & Prospect,0.4614227938065035
+War Memorial,Couture,0.7921946066084558
+War Memorial,State & Van Buren,0.8623750160993875
+War Memorial,Kilbourn & Marshall,0.7320896373461389
+War Memorial,Plankinton & St Paul,1.41465879006211
+War Memorial,MSOE Diercks Hall,1.149286493587564
+War Memorial,MLK & Wisconsin,1.287742315603518
+War Memorial,MLK & State,1.3889958425249724
+War Memorial,War Memorial,0.0
+War Memorial,Zeidler Union Square Park,1.4503005240586877
+War Memorial,Summerfest Midgate,1.1191835524620526
+War Memorial,Vel R. Phillips & Wisconsin,1.3743218525356184
+War Memorial,East Juneau Post Office,1.032646139426108
+War Memorial,Discovery World,0.8857704278908192
+War Memorial,Erie & Menomonee,1.5093989989463
+War Memorial,Juneau & Water,1.4173713936572978
+War Memorial,Vel R. Phillips & Kilbourn,1.498598499482407
+Zeidler Union Square Park,411 East Wisconsin ,0.6389388686368743
+Zeidler Union Square Park,Water & Wisconsin,0.4772821980364624
+Zeidler Union Square Park,Jefferson & Clybourn,0.6398139755174744
+Zeidler Union Square Park,777 East Wisconsin,0.7677247904229297
+Zeidler Union Square Park,Cathedral Square,0.8223039626588289
+Zeidler Union Square Park,Veolia,0.28683842409394483
+Zeidler Union Square Park,Broadway & St Paul,0.5903111474583431
+Zeidler Union Square Park,MSOE Library,0.9636771165415884
+Zeidler Union Square Park,Red Arrow Park,0.6662918221444549
+Zeidler Union Square Park,Postman Square,0.4467931328160038
+Zeidler Union Square Park,Mason & Prospect,1.0133400637575716
+Zeidler Union Square Park,Couture,0.9067262427256826
+Zeidler Union Square Park,State & Van Buren,1.055912071181845
+Zeidler Union Square Park,Kilbourn & Marshall,1.0846148949709766
+Zeidler Union Square Park,Plankinton & St Paul,0.46338128913029925
+Zeidler Union Square Park,MSOE Diercks Hall,0.9381771306473758
+Zeidler Union Square Park,MLK & Wisconsin,0.20092364755908748
+Zeidler Union Square Park,MLK & State,0.48296163117537527
+Zeidler Union Square Park,War Memorial,1.4337285542014706
+Zeidler Union Square Park,Zeidler Union Square Park,0.0
+Zeidler Union Square Park,Summerfest Midgate,1.0594683291695342
+Zeidler Union Square Park,Vel R. Phillips & Wisconsin,0.13538441474448476
+Zeidler Union Square Park,East Juneau Post Office,1.1496638008017868
+Zeidler Union Square Park,Discovery World,1.0502055358909257
+Zeidler Union Square Park,Erie & Menomonee,0.8342831210762363
+Zeidler Union Square Park,Juneau & Water,0.8092996725592247
+Zeidler Union Square Park,Vel R. Phillips & Kilbourn,0.4035696980452288
+Summerfest Midgate,411 East Wisconsin ,0.5808118888264698
+Summerfest Midgate,Water & Wisconsin,0.7639950860624909
+Summerfest Midgate,Jefferson & Clybourn,0.4311465455879087
+Summerfest Midgate,777 East Wisconsin,0.45746169155185534
+Summerfest Midgate,Cathedral Square,0.7059179983728545
+Summerfest Midgate,Veolia,0.837281590342258
+Summerfest Midgate,Broadway & St Paul,0.4795081683185479
+Summerfest Midgate,MSOE Library,0.8527378356574341
+Summerfest Midgate,Red Arrow Park,1.0619724725637114
+Summerfest Midgate,Postman Square,1.087685800656413
+Summerfest Midgate,Mason & Prospect,0.7030769648864972
+Summerfest Midgate,Couture,0.38668975091708235
+Summerfest Midgate,State & Van Buren,0.8206586356171948
+Summerfest Midgate,Kilbourn & Marshall,0.8493614594063263
+Summerfest Midgate,Plankinton & St Paul,0.6960601484441259
+Summerfest Midgate,MSOE Diercks Hall,1.0777556157088783
+Summerfest Midgate,MLK & Wisconsin,1.064692733018444
+Summerfest Midgate,MLK & State,1.2617302692589498
+Summerfest Midgate,War Memorial,0.9580510441770076
+Summerfest Midgate,Zeidler Union Square Park,1.0568129888304216
+Summerfest Midgate,Summerfest Midgate,0.0
+Summerfest Midgate,Vel R. Phillips & Wisconsin,1.1512722699505444
+Summerfest Midgate,East Juneau Post Office,0.9724621482607063
+Summerfest Midgate,Discovery World,0.44871806755914506
+Summerfest Midgate,Erie & Menomonee,0.47138998433297924
+Summerfest Midgate,Juneau & Water,1.3418766142526495
+Summerfest Midgate,Vel R. Phillips & Kilbourn,1.3330254550840073
+Vel R. Phillips & Wisconsin,411 East Wisconsin ,0.5789957050544707
+Vel R. Phillips & Wisconsin,Water & Wisconsin,0.40099540388838123
+Vel R. Phillips & Wisconsin,Jefferson & Clybourn,0.7340926884101622
+Vel R. Phillips & Wisconsin,777 East Wisconsin,0.8610940696661233
+Vel R. Phillips & Wisconsin,Cathedral Square,0.7214911607278877
+Vel R. Phillips & Wisconsin,Veolia,0.34264696885194706
+Vel R. Phillips & Wisconsin,Broadway & St Paul,0.6847704285784659
+Vel R. Phillips & Wisconsin,MSOE Library,0.8628643146106472
+Vel R. Phillips & Wisconsin,Red Arrow Park,0.5654790202135137
+Vel R. Phillips & Wisconsin,Postman Square,0.3459803308850625
+Vel R. Phillips & Wisconsin,Mason & Prospect,0.9373800834847725
+Vel R. Phillips & Wisconsin,Couture,0.9994818707008595
+Vel R. Phillips & Wisconsin,State & Van Buren,0.9550992692509038
+Vel R. Phillips & Wisconsin,Kilbourn & Marshall,0.9838020930400354
+Vel R. Phillips & Wisconsin,Plankinton & St Paul,0.5736992851299737
+Vel R. Phillips & Wisconsin,MSOE Diercks Hall,0.8373643287164346
+Vel R. Phillips & Wisconsin,MLK & Wisconsin,0.11223054255826724
+Vel R. Phillips & Wisconsin,MLK & State,0.382148829244434
+Vel R. Phillips & Wisconsin,War Memorial,1.3577685739286718
+Vel R. Phillips & Wisconsin,Zeidler Union Square Park,0.13538441474448473
+Vel R. Phillips & Wisconsin,Summerfest Midgate,1.153747042062222
+Vel R. Phillips & Wisconsin,Vel R. Phillips & Wisconsin,0.0
+Vel R. Phillips & Wisconsin,East Juneau Post Office,1.0488509988708459
+Vel R. Phillips & Wisconsin,Discovery World,1.142961163866103
+Vel R. Phillips & Wisconsin,Erie & Menomonee,0.9287424021963593
+Vel R. Phillips & Wisconsin,Juneau & Water,0.7084868706282835
+Vel R. Phillips & Wisconsin,Vel R. Phillips & Kilbourn,0.3027568961142875
+East Juneau Post Office,411 East Wisconsin ,0.5878274157858521
+East Juneau Post Office,Water & Wisconsin,0.7570681499112757
+East Juneau Post Office,Jefferson & Clybourn,0.7429243991415435
+East Juneau Post Office,777 East Wisconsin,0.7460047790060329
+East Juneau Post Office,Cathedral Square,0.35581517481765806
+East Juneau Post Office,Veolia,0.9523723083351199
+East Juneau Post Office,Broadway & St Paul,0.9486164228236547
+East Juneau Post Office,MSOE Library,0.31956458930765985
+East Juneau Post Office,Red Arrow Park,0.5353652139946001
+East Juneau Post Office,Postman Square,0.8206595991355881
+East Juneau Post Office,Mason & Prospect,0.610114052283129
+East Juneau Post Office,Couture,0.8165383758076044
+East Juneau Post Office,State & Van Buren,0.19226386701928994
+East Juneau Post Office,Kilbourn & Marshall,0.3828718586682532
+East Juneau Post Office,Plankinton & St Paul,1.1805703785798898
+East Juneau Post Office,MSOE Diercks Hall,0.24321244480381446
+East Juneau Post Office,MLK & Wisconsin,0.960862976481266
+East Juneau Post Office,MLK & State,0.6812918860428572
+East Juneau Post Office,War Memorial,1.0160928608191595
+East Juneau Post Office,Zeidler Union Square Park,1.1395427943936085
+East Juneau Post Office,Summerfest Midgate,1.0410417808950994
+East Juneau Post Office,Vel R. Phillips & Wisconsin,1.0460555434623033
+East Juneau Post Office,East Juneau Post Office,0.0
+East Juneau Post Office,Discovery World,0.9600176689728471
+East Juneau Post Office,Erie & Menomonee,1.2807637247680828
+East Juneau Post Office,Juneau & Water,0.486647249655112
+East Juneau Post Office,Vel R. Phillips & Kilbourn,0.8576069234424417
+Discovery World,411 East Wisconsin ,0.5405792899997915
+Discovery World,Water & Wisconsin,0.7239767020136553
+Discovery World,Jefferson & Clybourn,0.5001886540493778
+Discovery World,777 East Wisconsin,0.41344076361595683
+Discovery World,Cathedral Square,0.661897070436956
+Discovery World,Veolia,0.7997043318546919
+Discovery World,Broadway & St Paul,0.6908122428638497
+Discovery World,MSOE Library,0.8087169077215356
+Discovery World,Red Arrow Park,1.0204989371764686
+Discovery World,Postman Square,1.0477982459239314
+Discovery World,Mason & Prospect,0.5334861473500265
+Discovery World,Couture,0.19109203402718197
+Discovery World,State & Van Buren,0.7766377076812963
+Discovery World,Kilbourn & Marshall,0.8053405314704278
+Discovery World,Plankinton & St Paul,0.9269882627723051
+Discovery World,MSOE Diercks Hall,1.035058450715987
+Discovery World,MLK & Wisconsin,1.0248051782859624
+Discovery World,MLK & State,1.2218427145264683
+Discovery World,War Memorial,0.6829036323191239
+Discovery World,Zeidler Union Square Park,1.0192357303428556
+Discovery World,Summerfest Midgate,0.5081136907410817
+Discovery World,Vel R. Phillips & Wisconsin,1.111384715218063
+Discovery World,East Juneau Post Office,0.9284412203248078
+Discovery World,Discovery World,0.0
+Discovery World,Erie & Menomonee,0.936534682827243
+Discovery World,Juneau & Water,1.3017134646267747
+Discovery World,Vel R. Phillips & Kilbourn,1.2931379003515258
+Erie & Menomonee,411 East Wisconsin ,0.7015521808199445
+Erie & Menomonee,Water & Wisconsin,0.5795790607135496
+Erie & Menomonee,Jefferson & Clybourn,0.5526619875654584
+Erie & Menomonee,777 East Wisconsin,0.8269996017907822
+Erie & Menomonee,Cathedral Square,0.9408429677083525
+Erie & Menomonee,Veolia,0.614751722588073
+Erie & Menomonee,Broadway & St Paul,0.3408538133783372
+Erie & Menomonee,MSOE Library,1.0958032781320444
+Erie & Menomonee,Red Arrow Park,0.8867696371744147
+Erie & Menomonee,Postman Square,0.8651559329022281
+Erie & Menomonee,Mason & Prospect,1.0726148751254239
+Erie & Menomonee,Couture,0.8352401323046194
+Erie & Menomonee,State & Van Buren,1.1865752915592531
+Erie & Menomonee,Kilbourn & Marshall,1.2152781153483845
+Erie & Menomonee,Plankinton & St Paul,0.463733059392646
+Erie & Menomonee,MSOE Diercks Hall,1.0708251784277212
+Erie & Menomonee,MLK & Wisconsin,0.8421628652642592
+Erie & Menomonee,MLK & State,1.039200401504765
+Erie & Menomonee,War Memorial,1.4066014255645454
+Erie & Menomonee,Zeidler Union Square Park,0.8342831210762367
+Erie & Menomonee,Summerfest Midgate,0.47138998433297913
+Erie & Menomonee,Vel R. Phillips & Wisconsin,0.92874240219636
+Erie & Menomonee,East Juneau Post Office,1.2821667963869636
+Erie & Menomonee,Discovery World,0.8972684489466829
+Erie & Menomonee,Erie & Menomonee,0.0
+Erie & Menomonee,Juneau & Water,1.1193467464984643
+Erie & Menomonee,Vel R. Phillips & Kilbourn,1.1104955873298223
+Juneau & Water,411 East Wisconsin ,0.7293505353602522
+Juneau & Water,Water & Wisconsin,0.5516258290875559
+Juneau & Water,Jefferson & Clybourn,0.8844475187159436
+Juneau & Water,777 East Wisconsin,1.011448899971905
+Juneau & Water,Cathedral Square,0.6443635099489653
+Juneau & Water,Veolia,0.6900970902697827
+Juneau & Water,Broadway & St Paul,0.8354008537776406
+Juneau & Water,MSOE Library,0.6250960729865952
+Juneau & Water,Red Arrow Park,0.34990386939893636
+Juneau & Water,Postman Square,0.5201364158378425
+Juneau & Water,Mason & Prospect,0.954865387411389
+Juneau & Water,Couture,1.149836701006641
+Juneau & Water,State & Van Buren,0.5617421187903616
+Juneau & Water,Kilbourn & Marshall,0.7523501104393254
+Juneau & Water,Plankinton & St Paul,0.9415411856876231
+Juneau & Water,MSOE Diercks Hall,0.29521022593106677
+Juneau & Water,MLK & Wisconsin,0.6558398709609996
+Juneau & Water,MLK & State,0.3668867760853581
+Juneau & Water,War Memorial,1.36084419594742
+Juneau & Water,Zeidler Union Square Park,0.8418452398729784
+Juneau & Water,Summerfest Midgate,1.3041018723680027
+Juneau & Water,Vel R. Phillips & Wisconsin,0.741032437942037
+Juneau & Water,East Juneau Post Office,0.3883180949842963
+Juneau & Water,Discovery World,1.2933159941718841
+Juneau & Water,Erie & Menomonee,1.079372827395534
+Juneau & Water,Juneau & Water,0.0
+Juneau & Water,Vel R. Phillips & Kilbourn,0.5432018134849427
+Vel R. Phillips & Kilbourn,411 East Wisconsin ,0.6879158247944499
+Vel R. Phillips & Kilbourn,Water & Wisconsin,0.5099155236283605
+Vel R. Phillips & Kilbourn,Jefferson & Clybourn,0.8430128081501413
+Vel R. Phillips & Kilbourn,777 East Wisconsin,0.9700141894061026
+Vel R. Phillips & Kilbourn,Cathedral Square,0.6961482810480407
+Vel R. Phillips & Kilbourn,Veolia,0.4515670885919264
+Vel R. Phillips & Kilbourn,Broadway & St Paul,0.7936905483184451
+Vel R. Phillips & Kilbourn,MSOE Library,0.7022256795469718
+Vel R. Phillips & Kilbourn,Red Arrow Park,0.4048403851498381
+Vel R. Phillips & Kilbourn,Postman Square,0.24421398626718707
+Vel R. Phillips & Kilbourn,Mason & Prospect,1.0066501585104641
+Vel R. Phillips & Kilbourn,Couture,1.1084019904408386
+Vel R. Phillips & Kilbourn,State & Van Buren,0.7944606341872285
+Vel R. Phillips & Kilbourn,Kilbourn & Marshall,0.82316345797636
+Vel R. Phillips & Kilbourn,Plankinton & St Paul,0.7512617725709257
+Vel R. Phillips & Kilbourn,MSOE Diercks Hall,0.6767256936527591
+Vel R. Phillips & Kilbourn,MLK & Wisconsin,0.28506424062256785
+Vel R. Phillips & Kilbourn,MLK & State,0.2200395808228105
+Vel R. Phillips & Kilbourn,War Memorial,1.412628967046495
+Vel R. Phillips & Kilbourn,Zeidler Union Square Park,0.3201208876909304
+Vel R. Phillips & Kilbourn,Summerfest Midgate,1.2626671618022005
+Vel R. Phillips & Kilbourn,Vel R. Phillips & Wisconsin,0.21930808575998906
+Vel R. Phillips & Kilbourn,East Juneau Post Office,0.8882123638071704
+Vel R. Phillips & Kilbourn,Discovery World,1.2518812836060818
+Vel R. Phillips & Kilbourn,Erie & Menomonee,1.0376625219363385
+Vel R. Phillips & Kilbourn,Juneau & Water,0.5463776222066598
+Vel R. Phillips & Kilbourn,Vel R. Phillips & Kilbourn,0.0
