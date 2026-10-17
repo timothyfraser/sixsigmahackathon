@@ -105,7 +105,7 @@ tasks:
   - id: H-06
     title: Deploy to the course Posit Connect server
     points: "protects the 25 working-tool points - judges must be able to open it"
-    status: in_progress
+    status: blocked
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 23:29"
     owns: [".github/workflows/", ".github/scripts/", "app/manifest.json", "app/.python-version"]
@@ -120,7 +120,7 @@ tasks:
     definition_of_done: >
       The workflow run is green, and the public URL answers HTTP 200 from a
       logged-out browser and returns the H-03 numbers for one test dataset.
-    result: ""
+    result: "blocked: manifest.json and the course Shiny workflow (APP_DIR app) committed and pushed on feat/h06-deploy (99d94ba); workflow checks replayed locally; waiting for the CONNECT_SERVER/CONNECT_API_KEY repo secrets and approval to publish; not deployed, DoD not run"
 
   - id: H-07
     title: README and function documentation
@@ -199,9 +199,9 @@ tasks:
   - id: H-10
     title: Simulation engine and policy comparison (Improvement tab)
     points: "supports 25 - Tool Implementation: valid improvement evaluation (tier 1)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 23:39"
     owns: ["app/sim.R", "tests/test-sim.R", "app/app.R", "app/plots.R", "app/prep.R"]
     notes: >
       docs/methods.md sections 4.3 and 5 (D-2, D-4): van, task and event model, reservations,
@@ -212,7 +212,7 @@ tasks:
       bike and dock conservation at every event, and identical output for the same seed;
       Rscript -e "testthat::test_dir('tests')" passes; a Playwright check of the
       Improvement tab on data/baseline.csv shows the paired CI table.
-    result: ""
+    result: "done: test-sim.R 131 and test_dir 467 pass (KA-4b, conservation at every event, same seed, KA-5/5b); Playwright shows the paired CI table on baseline 2026-10-05 (d 3.933, 98.333% CI [-2.615, 10.48]); stats-reviewer PASS after the lazy-evaluation fix; check-in confirmed by YuCiciFu 2026-10-17"
 
   - id: H-11
     title: c chart, X-bar/R for response time, Cpu with an operator-entered USL

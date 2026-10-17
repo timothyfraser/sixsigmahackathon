@@ -17,6 +17,7 @@
 #   7. data source            builtin_scenarios, default_scenario_path
 #   8. data health            table_health, table_block_message, issue_summary, issue_detail,
 #                             signal_label, format_p, as_whole_numbers
+#   9. simulation display     SIM_METRIC_LABELS, paired_table_display, policy_summary_display
 
 APP_TZ <- "America/New_York"
 STATE_LEVELS <- c("rent-unusable", "return-unusable", "rent- and return-unusable",
@@ -364,4 +365,43 @@ format_p <- function(p) {
 as_whole_numbers <- function(df, cols) {
   for (col in intersect(cols, names(df))) df[[col]] <- as.integer(round(df[[col]]))
   df
+}
+
+# ---------------------------------------------------------------- 9. simulation display
+# Wording and rounding only; every number comes from app/sim.R.
+
+SIM_METRIC_LABELS <- c(
+  either_min = "Either-unusable station-minutes (PRIMARY)",
+  fail_prop = "Failed attempts, percentage points of all attempts",
+  van_km = "Van distance, km (estimated, not a road route)",
+  recovery_min = "Recovery time, minutes from failure onset to usable")
+
+# Paired-difference table (sim.R paired_table) -> readable table. d = none - reactive.
+# The failed share is shown in percentage points (x 100). Numbers are printed as text with 4
+# significant digits, so a small difference (e.g. 0.01318 pp) is not rounded to "0.00".
+paired_table_display <- function(tbl) {
+  scale <- ifelse(tbl$metric == "fail_prop", 100, 1)
+  num <- function(x) ifelse(is.na(x), NA_character_,
+                            formatC(signif(x * scale, 4), format = "fg", digits = 4))
+  data.frame(
+    metric = unname(SIM_METRIC_LABELS[tbl$metric]), role = tbl$role,
+    seeds_used = as.integer(tbl$n), mean_difference = num(tbl$mean_d),
+    CI_low = num(tbl$ci_low), CI_high = num(tbl$ci_high),
+    CI_level = paste0(format(round(tbl$ci_level_pct, 3), nsmall = 0), "%"),
+    label = tbl$label, note = tbl$note, stringsAsFactors = FALSE)
+}
+
+# Per-policy means (sim.R compare_policies$summary) -> readable table; the failed share is in percent.
+policy_summary_display <- function(s) {
+  data.frame(
+    policy = ifelse(s$policy == "none", "none (no rebalancing)", "reactive"),
+    seeds = as.integer(s$seeds),
+    # 2 decimals, like the paired table, so the two means visibly differ by the mean difference
+    mean_either_unusable_min = round(s$either_min, 2),
+    mean_failed_attempts_pct = round(100 * s$fail_prop, 2),
+    mean_van_km = round(s$van_km, 2),
+    mean_van_tasks = round(s$tasks, 2),
+    mean_recovery_min = round(s$recovery_min, 2),
+    seeds_with_a_recovery = as.integer(s$recovery_seeds),
+    stringsAsFactors = FALSE)
 }

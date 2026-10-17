@@ -134,3 +134,21 @@ plot_mr <- function(res, dates, title) {
                           lcl = NA_real_, ooc = mr_ooc),
                dates, "moving range (percentage points)", title)
 }
+
+# Per-seed paired differences for the primary metric: one point per seed, the mean (green) and its
+# confidence interval (dashed blue band edges; NA = not drawn), zero = no difference.
+# d = metric(none) - metric(reactive), so points above 0 favour the reactive policy.
+# ci_low / ci_high / mean_d come from sim.R paired_table; this function only draws.
+plot_paired_diff <- function(d, seeds, mean_d, ci_low, ci_high, ci_text, ylab, title) {
+  df <- data.frame(seed = seeds, d = d)
+  g <- ggplot2::ggplot(df, ggplot2::aes(seed, d)) +
+    ggplot2::geom_hline(yintercept = 0, colour = "grey40") +
+    ggplot2::geom_point(size = 2.5, colour = "#2166ac", na.rm = TRUE) +
+    ggplot2::labs(title = title, x = "seed", y = ylab, caption = ci_text) +
+    ggplot2::theme_minimal()
+  if (!is.na(mean_d)) g <- g + ggplot2::geom_hline(yintercept = mean_d, colour = "darkgreen")
+  if (!is.na(ci_low) && !is.na(ci_high)) {
+    g <- g + ggplot2::geom_hline(yintercept = c(ci_low, ci_high), colour = "#2166ac", linetype = "dashed")
+  }
+  g
+}
