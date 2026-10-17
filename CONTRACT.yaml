@@ -74,7 +74,7 @@ tasks:
   - id: H-04
     title: Working tool - one demo copied to app/ and wired to the H-03 function
     points: "25 - Tool Implementation: an effective, working tool (does it run?)"
-    status: in_progress
+    status: blocked
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 18:59"
     owns: ["app/", "tests/test-prep.R"]
@@ -86,7 +86,7 @@ tasks:
       The testme script in app/ starts the tool with one command, and a call
       on one data/ file (endpoint, function call or app upload) returns the
       same numbers as the H-03 known-answer test.
-    result: "in progress: (paused for the H-02 offset fix and the H-03 dispersion check, then resumed) data-health pauses by record type, capped issue list, 100 MiB upload, whole-number counts, dispersion shown; 292 tests pass; Playwright on the three data/ CSVs matches qc.R; DoD known-answer match on a data/ file still open"
+    result: "blocked (does not block development): testme starts the app; built-in scenarios ship as app/data/*.csv.gz; 336 tests pass; Playwright on all three data/ files matches qc.R; edge_case.csv reproduces the KA-1b rule outcomes, but no data/ file gives the H-03 known-answer numbers themselves"
 
   - id: H-05
     title: Demonstration of the tool on every test dataset

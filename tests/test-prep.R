@@ -182,6 +182,31 @@ test_that("default_scenario_path finds the first existing file, else NA", {
   expect_match(default_scenario_path(app), "baseline.csv$")
 })
 
+test_that("builtin_scenarios prefers the bundled .csv.gz, then ../data/*.csv, and skips missing ones", {
+  d <- tempfile("appdir")
+  app <- file.path(d, "app")
+  dir.create(file.path(app, "data"), recursive = TRUE)
+  expect_length(builtin_scenarios(app), 0)
+  dir.create(file.path(d, "data"))
+  file.create(file.path(d, "data", c("baseline.csv", "edge_case.csv")))
+  b <- builtin_scenarios(app)
+  expect_equal(names(b), c("baseline", "edge_case"))          # order kept, planted_shift absent
+  expect_match(b[["baseline"]], "\\.\\./data/baseline\\.csv$")
+  file.create(file.path(app, "data", "baseline.csv.gz"))
+  expect_match(builtin_scenarios(app)[["baseline"]], "/data/baseline\\.csv\\.gz$")
+  expect_false(grepl("\\.\\.", builtin_scenarios(app)[["baseline"]]))
+})
+
+test_that("Bundled copies app/data/*.csv.gz match the formal data/*.csv line for line", {
+  for (s in c("baseline", "planted_shift", "edge_case")) {
+    src <- testthat::test_path("..", "data", paste0(s, ".csv"))
+    gz <- testthat::test_path("..", "app", "data", paste0(s, ".csv.gz"))
+    skip_if_not(file.exists(src) && file.exists(gz),
+                "data/ or app/data/ copies are not in this checkout; run Rscript app/make_app_data.R")
+    expect_identical(readLines(gzfile(gz), warn = FALSE), readLines(src, warn = FALSE), label = s)
+  }
+})
+
 test_that("pipeline on the fixture: the rebalancing plan at 07:01 and at a stale minute", {
   g <- build_day_grids(fx$status, fx$stations, day)[[day]]
   r <- rank_stations(unusable_summary(g))

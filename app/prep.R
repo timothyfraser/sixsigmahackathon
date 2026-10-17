@@ -14,7 +14,7 @@
 #                             kpi_summary
 #   5. charts' inputs         hour_station_matrix, pareto_order
 #   6. baseline               baseline_count, baseline_flags
-#   7. data source            default_scenario_path
+#   7. data source            builtin_scenarios, default_scenario_path
 #   8. data health            table_health, table_block_message, issue_summary, issue_detail,
 #                             signal_label, format_p, as_whole_numbers
 
@@ -256,6 +256,21 @@ baseline_flags <- function(eligible, share = 0.5) {
 }
 
 # ---------------------------------------------------------------- 7. data source
+
+# The formal scenario files the app can offer without an upload (task H-02's data/).
+# For each scenario the first existing file wins: the gzip copy shipped inside the app bundle
+# (app/data/<name>.csv.gz, written by make_app_data.R, used on Posit Connect), then the repo
+# file (../data/<name>.csv, when running from a clone). Output: named character vector of
+# paths, in the order baseline, planted_shift, edge_case; scenarios with no file are left out.
+builtin_scenarios <- function(app_dir = ".", names = c("baseline", "planted_shift", "edge_case")) {
+  found <- vapply(names, function(s) {
+    paths <- file.path(app_dir, c(file.path("data", paste0(s, ".csv.gz")),
+                                  file.path("..", "data", paste0(s, ".csv"))))
+    hit <- paths[file.exists(paths)]
+    if (length(hit) == 0) NA_character_ else hit[1]
+  }, character(1))
+  found[!is.na(found)]
+}
 
 # First existing default scenario file, looked up relative to the app folder; NA if none.
 default_scenario_path <- function(app_dir = ".",

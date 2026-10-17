@@ -17,8 +17,19 @@ source("qc.R", local = TRUE)      # the working directory is the app folder when
 source("prep.R", local = TRUE)
 source("plots.R", local = TRUE)
 
-DEFAULT_PATH <- default_scenario_path(".")   # NA when no default file ships with the app
+# Built-in scenarios (H-02 data): app/data/*.csv.gz in the deployed bundle, ../data/*.csv in a
+# clone. With none, fall back to the tiny test fixture, else ask for an upload.
+BUILTIN <- builtin_scenarios(".")
+DEFAULT_PATH <- if (length(BUILTIN) > 0) unname(BUILTIN[1]) else default_scenario_path(".")
 options(shiny.maxRequestSize = 100 * 1024^2)  # 100 MiB uploads (planted_shift.csv is about 47 MB)
+
+# Shared by every session of this R process: a built-in scenario is loaded (and its minute
+# grids built) once, not once per visitor. Uploads are never cached.
+CACHE <- new.env(parent = emptyenv())
+cached <- function(key, value) {
+  if (!exists(key, envir = CACHE, inherits = FALSE)) assign(key, value, envir = CACHE)
+  get(key, envir = CACHE, inherits = FALSE)
+}
 
 # What pauses when a record type cannot be used (see table_block_message in prep.R).
 NEEDS_STATUS <- "the map, the minute grid, the station views, the I-MR chart and rebalancing"
@@ -47,8 +58,11 @@ ui <- page_navbar(
   sidebar = sidebar(
     width = 320,
     tags$b("Data (simulated)"),
-    fileInput("upload", "Upload a scenario CSV (long form, with a `table` column)",
-              accept = c(".csv", "text/csv")),
+    if (length(BUILTIN) > 0) {
+      selectInput("scenario", "Built-in scenario (simulated test data)", choices = names(BUILTIN))
+    },
+    fileInput("upload", "Or upload a scenario CSV (long form, with a `table` column)",
+              accept = c(".csv", "text/csv", ".gz")),
     uiOutput("data_info"),
     tags$hr(),
     tags$b("Rush window"),
@@ -149,16 +163,26 @@ ui <- page_navbar(
 # ------------------------------------------------------------------ server
 server <- function(input, output, session) {
 
-  # ---- data source: upload, else default file, else an upload panel
+  # ---- data source: the latest choice wins (an upload, or a built-in scenario picked after it);
+  # with neither, the default file; with no default file, an upload panel.
+  use_upload <- reactiveVal(FALSE)
+  observeEvent(input$upload, use_upload(TRUE))
+  observeEvent(input$scenario, use_upload(FALSE), ignoreInit = TRUE)
   scn <- reactive({
-    path <- if (!is.null(input$upload)) input$upload$datapath else DEFAULT_PATH
-    label <- if (!is.null(input$upload)) input$upload$name else if (is.na(path)) NA else basename(path)
+    upload <- use_upload() && !is.null(input$upload)
+    path <- if (upload) input$upload$datapath else if (!is.null(input$scenario) &&
+                                                       input$scenario %in% names(BUILTIN)) {
+      unname(BUILTIN[input$scenario])
+    } else DEFAULT_PATH
+    label <- if (upload) input$upload$name else if (is.na(path)) NA else basename(path)
     if (is.na(path)) {
       return(list(ok = FALSE, label = NA, message = paste(
         "No scenario file found. Upload a long-form scenario CSV with a `table` column",
         "(record types: stations, status, attempts, tasks; schema in docs/methods.md section 7).")))
     }
-    tryCatch(list(ok = TRUE, label = label, data = load_scenario(path)),
+    key <- if (upload) NULL else normalizePath(path, winslash = "/")
+    tryCatch(list(ok = TRUE, label = label, key = key, fixture = !upload && grepl("fixtures", path),
+                  data = if (is.null(key)) load_scenario(path) else cached(paste("scenario", key), load_scenario(path))),
              error = function(e) list(ok = FALSE, label = label, message = conditionMessage(e)))
   })
 
@@ -202,7 +226,9 @@ server <- function(input, output, session) {
   stale_limit <- reactive({ req(input$stale_limit >= 0); input$stale_limit })
   grids <- reactive({
     validate(need(is.null(status_msg()), status_msg()))
-    build_day_grids(sc()$status, sc()$stations, dates(), stale_limit())
+    key <- scn()$key
+    if (is.null(key)) return(build_day_grids(sc()$status, sc()$stations, dates(), stale_limit()))
+    cached(paste("grids", key, stale_limit()), build_day_grids(sc()$status, sc()$stations, dates(), stale_limit()))
   })
   grid <- reactive({           # the chosen day, with the chosen early-warning threshold
     req(input$date, input$date %in% names(grids()), input$warn_k)
@@ -244,7 +270,7 @@ server <- function(input, output, session) {
   output$upload_help <- renderUI({
     s <- scn()
     if (isTRUE(s$ok)) {
-      if (!is.na(DEFAULT_PATH) && is.null(input$upload) && grepl("fixtures", DEFAULT_PATH)) {
+      if (isTRUE(s$fixture)) {
         alert_box(paste("Showing the tiny test fixture (edge_small.csv) because data/baseline.csv was not",
                         "found. Most minutes are unknown there on purpose. Simulated data."), "info")
       }
