@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "locale": "en_US",
+  "platform": "4.6.1",
+  "metadata": {
+    "appmode": "static",
+    "primary_rmd": null,
+    "primary_html": "index.html",
+    "content_category": null,
+    "has_parameters": false
+  },
+  "packages": null,
+  "files": {
+    "404.html": {
+      "checksum": "17ec9c50dfc99285f9c381195ca12a07"
+    },
+    "authors.html": {
+      "checksum": "84bdb2e0a708f08e9c8bc600a85ab1d6"
+    },
+    "bootstrap-toc.css": {
+      "checksum": "5eec6702c35b15a8c2c123301987735d"
+    },
+    "bootstrap-toc.js": {
+      "checksum": "aaa610b29d895e1128447e76b9bc0076"
+    },
+    "docsearch.css": {
+      "checksum": "828dbea96017a994efccb7c30c041577"
+    },
+    "docsearch.js": {
+      "checksum": "2f3c1f7995c9f4f966323f008e3984ad"
+    },
+    "index.html": {
+      "checksum": "b6d3b334e9a740d7a02664628bf29dee"
+    },
+    "LICENSE-text.html": {
+      "checksum": "0f9bf238fe2a2b1b00dfec1cea7e934a"
+    },
+    "link.svg": {
+      "checksum": "4759f31f8a585e9af173fc579d730265"
+    },
+    "pkgdown.css": {
+      "checksum": "9cd7da30627ce8d0e18fd1cf1f48c83f"
+    },
+    "pkgdown.js": {
+      "checksum": "916db342671c073ca830f33df8c36adc"
+    },
+    "pkgdown.yml": {
+      "checksum": "011f7ab91b558634fd70b807f01d6c04"
+    },
+    "reference/aggregate_snapshots.html": {
+      "checksum": "304015fc0b0cfd2e9541882c8a21e230"
+    },
+    "reference/apply_failure_factor.html": {
+      "checksum": "99e96a3fb72cdb5c0327b36d0dcc59f6"
+    },
+    "reference/check_rates.html": {
+      "checksum": "292b5364831336bee4238008ec05148f"
+    },
+    "reference/check_start_hours.html": {
+      "checksum": "7f679a29c77fd21d4ba50ac489692727"
+    },
+    "reference/compute_dock_rates.html": {
+      "checksum": "8aa41e4f8551b71f6a32269f8ab9dd29"
+    },
+    "reference/daily_service_counts.html": {
+      "checksum": "4ef39b034ee8ec02f78afbef4636151d"
+    },
+    "reference/dispatch_recommendation.html": {
+      "checksum": "80deaad106283c84413dd9b319619a3f"
+    },
+    "reference/dock_distances.html": {
+      "checksum": "aa6b237e4adb24489afd55ab24a477b7"
+    },
+    "reference/failure_breakdown.html": {
+      "checksum": "5da959bb6b67d50e06865209d9cebc7a"
+    },
+    "reference/failure_factor.html": {
+      "checksum": "ece165e2e0237e1863b3721b06d79aa1"
+    },
+    "reference/get_bike_availability.html": {
+      "checksum": "7cc078cca251af0a666443bd6e2ab44a"
+    },
+    "reference/get_slot_availability.html": {
+      "checksum": "4f21f0287608c0a2caa7fbaeb1052001"
+    },
+    "reference/index.html": {
+      "checksum": "557c9ca9678b120bf3005435fc3881e8"
+    },
+    "reference/maintenance_alerts.html": {
+      "checksum": "82567b3e3935ae381de4b1d19884a83f"
+    },
+    "reference/optimize_docks.html": {
+      "checksum": "3b7b0fe563a65de97e28b590939f9957"
+    },
+    "reference/p_chart.html": {
+      "checksum": "cc528cbfd58c4e4e1510e3b29d7d440c"
+    },
+    "reference/parse_city_time.html": {
+      "checksum": "5b0485e39c1a30d8457c2837ecd68f9f"
+    },
+    "reference/parse_time.html": {
+      "checksum": "d13715f94c772eed436d1c901d66c889"
+    },
+    "reference/pc_parse_time.html": {
+      "checksum": "87cc6bd4c5c432d7a2b0fb7a199d17d1"
+    },
+    "reference/plot_p_chart.html": {
+      "checksum": "545e7d5aebf243ab377f3ad119f94d12"
+    },
+    "reference/predict_dock.html": {
+      "checksum": "a12d193798f590b67adcd1bb6f1bdc59"
+    },
+    "reference/rank_stations.html": {
+      "checksum": "d5cd7f04e48037761caa8135f6ee1109"
+    },
+    "reference/recommend_dock.html": {
+      "checksum": "fe47a771e1610d5abfcaef1ceba92813"
+    },
+    "reference/return_discount.html": {
+      "checksum": "e9d5309024ec13907ab7455cba702ab3"
+    },
+    "reference/service_status.html": {
+      "checksum": "1d515554bc1271b537da8bdac6d0f5bf"
+    },
+    "reference/simulate_start_hours.html": {
+      "checksum": "1c3a3a8317fe7dce7b774352e412a43b"
+    },
+    "reference/station_service_priority.html": {
+      "checksum": "dc7ff26db64bed3f511b286cfe14463f"
+    },
+    "reference/transit_runs.html": {
+      "checksum": "199e19755992dce7003ee20c2717b41a"
+    },
+    "sitemap.xml": {
+      "checksum": "0e58ec31545e6483be10b6f101d4f628"
+    }
+  },
+  "users": null
+}

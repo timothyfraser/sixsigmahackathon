@@ -5,3 +5,5 @@ coverage/
 playwright-report/
 test-results/
 *.log
+server/data/service-log.json
+server/data/service-log.json.tmp

@@ -1,12 +1,15 @@
 # BikeSmart rider website
 
-Smarter rides. Better-balanced cities.
+React + Vite + React Leaflet guided rider planner for Jersey City, Milwaukee
+and Tampa. Start by choosing pickup or return, then select a location and a dock.
+All steps use the same R optimizer results and the same mounted city map.
+The five highest-ranked eligible docks appear in the default list and occupancy
+chart, with green map markers. Other docks appear only as yellow map markers;
+any eligible one can be selected and confirmed. Excluded docks keep their
+reasons and cannot be confirmed. The planner sits above a map-left, list-right
+layout, and the final page shows the user’s itinerary beside the map.
 
-Standalone React + Vite + React Leaflet prototype for the Big Red Crew. All application files, fixtures, dependencies and tests are isolated in this directory. No shared team dataset, simulation, architecture, R package or ledger is imported or changed.
-
-## Preview locally
-
-Requires Node.js 20.19+ or 22.12+ (developed with Node 24).
+## Run locally
 
 ```sh
 cd bike-wise-ui
@@ -14,80 +17,211 @@ npm ci
 npm run dev
 ```
 
-Open the localhost address printed by Vite (normally http://127.0.0.1:5173).
+Open the local URL printed by Vite (normally http://127.0.0.1:5173).
 
 ```sh
 npm test
 npm run build
-npm run preview
-# Browser verification, first install the test browser if needed:
-npx playwright install chromium
+# Full suite: supply MAINTENANCE_TEST_PASSWORD as described below.
 npm run test:browser
 ```
 
-Browser screenshots are written to ignored `test-results/`. `npm run build` produces ignored `dist/`. The project follows the professor's `demos/reactfront` React 18 / Vite / Vitest starter conventions, with relative asset paths (`base: './'`) suitable for static content under a Posit Connect content URL. Preview and development scripts serve locally; neither deploys anything.
+Browser checks require Playwright Chromium (`npx playwright install chromium`).
+Screenshots are written to ignored `test-results/`; build output goes to `dist/`.
 
-## Review walkthrough
+## Demo walkthrough
 
-1. Home offers Rent and Return; the header switches mock networks.
-2. Rent opens five curated pickup cards. Map numbers represent bikes available now. Select a card or marker; the selected state is synchronized. Marker popups show both bikes and docks, capacity, and arrival expectations.
-3. Advance 5 minutes advances the simulated planning clock and cycles three mock inventory snapshots. Cards, popups and markers read the same snapshot; scheduled predictions also update. This is replay, not polling.
-4. Choose a pickup, choose a preset destination, then find return docks. Pickup remains saved. Rental return numbers represent predicted free docks at each dock’s estimated arrival; Direct Return now still shows current free docks.
-5. Return cards show No discount / 5% / 10% / 15% / 20% by current recommendation rank. Choose a return dock and inspect its demo discount in the summary. Change individual selections or restart. Direct Return skips pickup entirely.
-6. Test Milwaukee and Tampa. Changing network clears incompatible station selections. All three networks use the same OpenStreetMap tile URL, attribution and Leaflet map controls.
-7. All networks have eight selectable stations. Five teal markers are recommended; three muted markers are additional choices. Click an extra station to see its selected detail card, then continue through pickup or return as usual. The main list remains five recommendations. Replay preserves the selected station; if a forecast becomes unavailable, choose another station.
-8. Inspect at phone width: controls and map precede the recommendation cards, with no functionality removed.
+1. Choose a city, then **Rent a Bike** or **Return a Bike**.
+2. Select one of ten sourced user locations and click **Find pickup docks**
+   or **Find return docks**. Recommendations appear only after this step.
+3. Start with the five nearest eligible docks in the list, or select another
+   eligible yellow marker from the map. Other eligible docks stay out of the
+   recommendation list; their details appear in the planner. Selecting a card,
+   map marker, or chart bar updates the same selected dock. Confirm with **Choose this
+   pickup station** or **Choose this return dock**.
+4. Rentals continue to a destination-area selector, then five eligible return
+   docks, then a summary containing the saved pickup and return choices.
+   Direct returns go straight from the return choice to a summary.
+5. Use Back, Change location, Change pickup, or Change return dock to revise
+   the plan. Plan another ride returns to the initial function selection.
+6. The Excluded tab shows removed docks with their reasons. They cannot be
+   confirmed. Eligible options are sorted by the original R rank before
+   taking the first five; incentive percentages do not change their order.
+7. The bottom chart shows the same five recommended eligible docks (or excluded
+   docks when that tab is open), with 25% and 50% threshold lines. The map keeps
+   all docks visible: green recommendations, yellow other docks, and dashed
+   outlines for excluded docks. Markers also support Enter and Space.
+8. Review the itinerary beside the map on the final page. Pickup, starting
+   location, return area and chosen return dock match your saved selections.
+   Use its edit buttons to revise either dock.
 
-The banner is persistent. No GPS, address geocoding, accounts, reservations, payments, redeemable credits or backend requests exist. Return cards, popups and summaries show clearly labeled demo discounts only; nothing is issued or applied to a fare. Real-city basemaps use OpenStreetMap public tiles and attribution; those tiles need internet. Controls, fixtures and map markers work without tiles. Fonts request Google Fonts, with local sans-serif fallbacks.
+Dock cards emphasize station name and walk/ride time; projected availability
+is secondary text. The “Your next ride” planner stays above the map and list.
 
-## Mock data and assumptions
+Changing city restarts the flow and clears incompatible selections. Selecting
+another function starts at location selection. Navigation within a city keeps
+the same map mounted; choosing a location updates its bounds.
 
-`src/data/mockStations.js` contains only UI fixtures. Station identities/coordinates in Jersey City, Milwaukee and Tampa are illustrative, not official station metadata. IDs are prefixed with the mock network and `demo`. Tampa uses a fictional bikeshare network placed on the real Tampa, Florida basemap. The station names, IDs, capacities and inventory are not an official Tampa operator’s data. Explicit per-station UI coordinates place examples in the downtown, Riverwalk, Water Street, Tampa Heights and Ybor City areas. No Lexi data or backup simulation was copied.
+## Data and assumptions
 
-Each network has eight UI-only stations. Every station has capacity 15. Maintenance/unrentable bikes are not modeled, so bikes + free docks = capacity in every snapshot and prediction. Time-aware arrival inventory uses deterministic demo buckets, not a statistical model. Rankings are curated demonstration orders, varied by selected preset and scheduled-time bucket, not optimized routes. All walking/riding times and distances are fixed illustrative estimates; no road-routing engine is connected. Total walking adds access to pickup (rental only) and walking from the return dock. Total journey time adds walking and cycling, excluding waiting introduced by an adjusted return time; planned timestamps are displayed separately. Direct Return uses only cycling and walking from the return dock. Replay changes inventory and never runs in the background.
+`src/services/optimizer.js` reads the exported R results in
+`src/data/optimizer.json`. The source files are
+`data/optimizer/demo_recommendations.csv`, `demo_exclusions.csv`,
+`user_locations.csv`, and city station/zoning CSVs. The export contains 27 docks per city; the list shows up to five recommended eligible choices, with
+30 saved user locations, and 1,620 recorded results (60 input combinations).
+The old eight-station fixture results are not used in the guided journey;
+legacy service utilities remain isolated from the optimizer screen.
 
-Community labels appear only at the two fixture stations that have few bikes in all three snapshots. These describe a mock restocking opportunity, not measured fleet improvement. A zero-bike option is explicitly labeled unavailable now; expectations never guarantee future inventory. Current fixtures do not have zero free docks, but future demo predictions can have zero bikes or zero docks and require reselection.
+Each dock's arrival uses saved walking/cycling road distance at 3/10 mph.
+Return discounts are copied from R: occupancy below 25% earns 20%, 25% to
+below 50% earns 10%, and at least 50% earns zero. Occupancy is measured before
+the rider's bike is added. Discounts never change distance rank.
 
-## Time-aware planning
+The reference instant is October 15, 2026 at 23:55 EDT (22:55 CDT in Milwaukee),
+shown in the selected city's timezone. Inventory is simulated, and projections
+are historical model expectations. The export cannot predict arbitrary new
+planning times. Pickup and return recommendations are separate saved legs from
+the same reference instant. Return distance is from the selected area, not from
+the pickup dock; the summary does not claim a combined route or journey arrival. No bikes/docks are reserved and no credits are issued.
 
-Rent → choose a starting location → **Leave now** or **Leave later**. Later reveals a network-local date/time input. Try today at 5:00 PM or tomorrow at 8:30 AM. Cards show current inventory separately from **DEMO PREDICTION** values at each station’s arrival time; future maps emphasize predictions. Choose a pickup and destination to see each return dock’s expected arrival. **Adjust return time** can replace that estimate. Direct Return has independent **Return now / Return later** controls. Summaries show exact planned timestamps.
+Refresh after rerunning the R optimizer demo, from the repository root:
 
-The network timezone is always explicit (Eastern for Jersey City/Tampa, Central for Milwaukee). Invalid/past dates block continuation. Repeated daylight-saving times require first/second occurrence; nonexistent spring-forward times are rejected. The simulated clock is frozen between replay advances; refresh to initialize it again. Predictions support up to 365 days in this demo. The R package is not yet connected.
+```sh
+Rscript data/optimizer/run_demo.R
+python3 tools/export_optimizer_ui.py
+npm --prefix bike-wise-ui run build
+```
 
-## Adapter contract and later integration
+The export validates record counts/uniqueness without refitting the R model.
+See `data/optimizer/README.md` for route sources, assumptions, and model details.
+OpenStreetMap tiles need internet; controls, dock markers and results work without
+tiles. Basemap © OpenStreetMap contributors. Icons: Lucide. Fonts: DM Sans and
+Manrope with system fallbacks. No GPS, accounts, payments, or deployment required.
 
-React consumes `src/services/dataAdapter.js`; components do not import fixture arrays.
+## Completed BikeSmart package integration
 
-- `getNetworks()` → networks with `id`, `name`, `timeZone`, `[lat,lng] center`, optional `stationCoordinates`, and preset `places` (`name`, `lat`, `lng`).
-- `getStations(networkId, snapshot=0)` → stations: `id`, `name`, `lat`, `lng`, `capacity`, `availableBikes`, `freeDocks`, `predictedBikes`, `predictedFreeDocks`, nullable `communityImpact`.
-- `getPickupRecommendations(networkId, origin, planning, snapshot=0)` and `getReturnRecommendations(networkId, destination, planning, snapshot=0)` → station objects plus `rank`, `recommended`, `discountPercent`, `discountLabel`, `incentiveSource`, `label`, `walkingMinutes`, `walkingMeters`, `ridingMinutes`, `arrivalTime`, `status`, `explanation`.
-- `getStationOptions(networkId, mode, point, planning, snapshot=0)` → all eight choices with the same recommendation schema. The app uses these options to resolve saved selections; the recommendation methods return only the top five.
-- `getDemoReturnDiscount(rank)` → isolated demo policy: 0, 5, 10, 15, 20 percent for ranks 1–5, capped at 20 percent beyond rank 5. Missing, fractional or invalid ranks return 0.
-- `getStationDetails(networkId, stationId, snapshot=0)` → station or null.
-- `getTripSummary({origin,destination,pickup,returnStation,direct})` → selections, total walking/cycling/overall minutes and optional community message plus selected `discountPercent`, `discountLabel` and `incentiveSource`.
+The rider export now calls the completed `bikesmart/` package's
+`compute_dock_rates()`, `predict_dock()` and `optimize_docks()` functions.
+The existing guided rider journey, green top-five recommendations, selectable
+yellow alternatives, exclusions, incentives and itinerary use those results.
+The exported metadata identifies the package and reference instant.
 
-Objects use decimal-degree coordinates, integer counts, meters and minutes. Arrival timestamps are computed per station from the departure, walking and riding estimates, or an explicit expected return time. See [PREDICTION_CONTRACT.md](PREDICTION_CONTRACT.md) for the exact prediction interface, timezone rules, failure statuses and Ally’s connection points. Current methods are synchronous. Later, replace the adapter with an approved API client, add asynchronous loading/error/empty states to the workflow, validate responses, and define prediction horizons, timezone, reliability, capacity/maintenance semantics and official IDs with the R team. No API or URL is assumed today. Backend ranking, predictions and statistics remain the team's responsibility. Integrate Lexi's approved dataset through that contract; do not use the backup simulation.
+Refresh rider and maintenance reports from the repository root:
 
-## Tampa demo network and shared basemap
+```sh
+Rscript bikesmart/tests/test_all.R
+Rscript tools/export_bikesmart_ui.R
+```
 
-Jersey City, Milwaukee and Tampa all use the identical Leaflet `TileLayer`, OpenStreetMap tile service, map styling and “© OpenStreetMap contributors” attribution. Tampa is a real geographical backdrop for a simulated bikeshare scenario; it is not a fictional city. No custom map renderer or synthetic city artwork is used. Tiles need internet; cards and marker data remain available without a backend.
+R needs `dplyr` and `jsonlite`. The exporter runs one city per child process to
+limit memory use. It uses the full saved movement history up to the recorded
+reference, excludes the reference snapshot from the projection fit, and calls
+package functions without duplicating the statistical formulas in the UI.
+`python3 tools/export_optimizer_ui.py` now delegates to the R package exporter
+with `--rider-only`; it no longer republishes the older root-script CSV outputs.
 
-Tampa replaces the former third network in this UI. Only UI fixtures and documentation have changed. The team must coordinate the new network’s official dataset, station IDs/coordinates and optimization output separately; this prototype has not migrated or regenerated any shared dataset, statistical package, simulation, architecture, SPEC or ledger.
+## Maintenance workspace
 
-## Connecting Ally’s optimization results
+The header's **maintenance login here** button opens a separate sign-in screen.
+Use the maintenance credentials supplied for this demo. Validation happens in
+`server/api.mjs`, not in browser JavaScript. A successful login creates an
+HttpOnly, SameSite=Strict session cookie; logout invalidates the server session.
+Reports are served only through authenticated API routes. The raw maintenance
+JSON and server source are denied by the Vite file server and excluded from the
+frontend build.
 
-All incentive logic lives in `src/services/dataAdapter.js`: `getDemoReturnDiscount(rank)` is the current fallback; `getStationOptions()` attaches `discountPercent`, `discountLabel` and `incentiveSource: 'demo-rank-policy'`. Cards and popups only render those fields; `getTripSummary()` carries them through without recalculating. Ranks are the current curated UI return order, including destination- and time-based changes. Discounts use `riderConvenienceRank`; `networkOptimizationRank` remains null until Ally supplies it. Picks outside the top five receive 20% in this fixture policy and never exceed the cap. These percentages have no link to a price, payment, entitlement, reservation or redemption service.
+The workspace supports all three cities:
 
-When Ally supplies results, map her official station IDs, ordered ranks and approved incentives into these fields at the adapter boundary. Replace the fallback with validated output there, including the agreed 20% cap and missing-output behavior. Keep optimization/statistics on the team backend, coordinate availability snapshots and prediction horizons with Lexi’s dataset and the R team, and add async loading/error handling. No new production endpoint is invented or configured here. The original community labels remain independent scenario metadata; the demo discount does not claim a quantified rebalancing benefit.
+- **Fleet monitor (landing view):** recorded daily fleet playback from `demo/fleet_viz`, with date/time controls, speed, all-bike animation, single-bike history, empty/full highlights and a station inventory inspector. Cyan paths and navy bike markers render above the map; Play moves bikes smoothly between snapshots at the selected speed. Routes follow directed bicycle-accessible OpenStreetMap streets using the same graph filters and dock snapping as the distance matrices. They are inferred from dock observations, not GPS.
+- **Service log:** record completed maintenance or import a CSV; saved service events update accumulated ride hours, the due queue and dispatch rankings through BikeSmart.
+- **Dispatch priorities:** package-ranked station visits by due bikes and overdue
+  hours, a station map, and links to each station's service queue.
+- **Service due:** package service statuses with bike search, station filters,
+  ride hours, due timestamps and current recorded location.
+- **In-transit alerts:** only rows whose package `flagged` value is true by
+  default; optionally inspect all open trips, including those below threshold.
+- **Quality chart:** package daily counts, P-chart center and three-sigma limits,
+  out-of-control signals, and the underlying values for every day.
+- **Fleet reliability:** editable hypothetical defect shares and projected bike
+  count. The server calls the R package for usable share, inventory scaling and
+  the ordered defect breakdown. Independence of defects is an assumption.
 
-The product name is **BikeSmart** throughout the local UI, title, package metadata and documentation. The `bike-wise-ui/` folder path is intentionally retained to preserve the agreed ownership boundary and local preview commands.
+The saved maintenance scenarios use a **60 ride-hour service interval**,
+**90-minute trip alert**, and reproducible staggered starting hours (seed 42).
+The Jersey City report includes the team's 405 simulated service records and supplied starting hours. Milwaukee and Tampa retain seeded starting hours without recorded service logs. All cities use the updated package default: assumed servicing every 70 ride hours, with bikes due at 60 hours in the current cycle. The P-chart counts daily service-cycle
+crossings; it is distinct from the current overdue queue. All movement records
+are simulated. Viewing reports does not mark bikes serviced or dispatch a van.
 
-## Pending team decisions / delivery
+`npm run dev` and `npm run preview` include the maintenance API through the Vite
+plugin. To run a built site with the API:
 
-- The UI now combines community impact with the user-approved ranking-based demo discounts. The current rank does not prove inconvenience or system benefit; this is a visual placeholder pending Ally’s optimization output. No fare calculation or financial transaction is implemented.
-- Task ownership is pending: H-04 currently owns `app/`, not `bike-wise-ui/`. User authorized local UI implementation without editing the ledger. No H-01–H-08 ownership or status has been changed, and no ledger task is claimed complete.
-- SPEC still has placeholders; completion belongs to the team, not this isolated UI work.
-- Static publishing: build this directory and publish `dist/` through the professor's `connect-publish` React static workflow once approved. Configure its application directory for this folder. Shared CI, publisher scripts, manifest generation, credentials and deployment are intentionally deferred until authorized. No deploy script that could publish accidentally is included.
-- Production integration and deployment require coordinated review. No staging, commit, push, merge or deployment is part of local development.
+```sh
+npm run build
+npm start
+```
 
-References: repository `demos/reactfront`, [React Leaflet](https://react-leaflet.js.org/docs/start-introduction/), [Leaflet](https://leafletjs.com/), [Vite static deployment](https://vite.dev/guide/static-deploy.html), and [OpenStreetMap contributors](https://www.openstreetmap.org/copyright). Icons: Lucide (ISC license). Fonts: DM Sans and Manrope via Google Fonts (SIL Open Font License).
+This serves the built UI and API together on local port 4173 (override `PORT`
+if needed). Login and R reliability calculations require this server; a purely
+static upload of `dist/` does not run them. The R package and server report file
+must remain available alongside the built frontend.
+
+Optional server configuration is `MAINTENANCE_EMAIL` and
+`MAINTENANCE_PASSWORD_SHA256` (a SHA-256 digest). Keep overrides in the server
+environment. When serving HTTPS through a proxy, set
+`MAINTENANCE_COOKIE_SECURE=true`. The checked-in demo verifier is a digest; the plaintext login
+password is not shipped in frontend files.
+
+For the full browser suite, supply the known demo password only in the test
+process environment:
+
+```sh
+MAINTENANCE_TEST_PASSWORD='<demo password>' npm run test:browser
+```
+
+The checks cover invalid login, authenticated report access, session/logout,
+city-specific package output, the reliability known answer, direct file access,
+mobile layout, and preservation of an in-progress rider selection.
+
+### Service records
+
+Select **Service log** after maintenance login. Manual timestamps use the selected
+city's clock. CSVs require `BIKEID,service_time`; optional columns are `note,city`.
+Use ISO timestamps with seconds and a timezone offset, such as
+`2026-10-16T03:55:00Z`. Each import accepts up to 500 rows / 128 KB. Unknown bike
+IDs, city mismatches and invalid timestamps are rejected atomically. A repeated
+bike/time event is stored once. Jersey City includes the team-supplied simulated service history from `data/service_log_jersey_city.csv`; cities without supplied logs start empty.
+
+The server combines the supplied baseline records with operator entries. It persists entries in the gitignored `server/data/service-log.json`.
+Set `MAINTENANCE_SERVICE_LOG_FILE` to an absolute persistent path for deployment.
+Keep that file across server restarts. Events after the report snapshot are saved
+but do not change historical status. Fleet replay and the historical quality
+chart retain their original observations. For earlier events the server calls
+package `service_status(..., service_log=...)` and `rank_stations`; a service
+exactly at the snapshot has zero elapsed ride hours, handled by the adapter
+because the package cannot process an entirely filtered history.
+
+Run `npm run fleet:refresh` to regenerate the protected, compressed daily replay
+files. The exporter reuses the demo's data-loading and trip helpers, replaces corner routes with complete street paths, and validates every snapshot in all three cities. Street geometry is built by `tools/export_fleet_roads.py` from cached `data/sources/*_roads.json` extracts; it reuses `data/prepare_networks.py` so bicycle access, one-way rules, connected components, snapping, and edge weights match the distance matrices. All 702 directed pairs per city match the committed matrix distances within floating point precision. Short dock-to-street connectors remain part of that model. The generated network bundles are private and need no routing network requests during playback. `npm run data:refresh` regenerates
+rider and maintenance reports plus the fleet replay. R, the package source,
+source RDS data and the private generated report files must be present on the
+server for service-log updates.
+
+Mutation tests must use a disposable journal. Start a separate server with
+`MAINTENANCE_SERVICE_LOG_FILE` pointing to a fresh temporary path, then run
+`service-log.spec.js` with `SERVICE_LOG_TEST_ISOLATED=true` and
+`BIKESMART_TEST_BASE_URL` set to that server. The regular browser suite skips
+journal mutations to preserve operator records.
+
+The fleet monitor has explicit **Jersey City / Tampa / Milwaukee** city buttons.
+These synchronize with the header selector and maintenance reports. Bike movement
+uses cumulative street length, preserving smooth speed around every street bend.
+
+Latest maintenance inputs were synchronized from `origin/main` at `29e5fce`:
+`service_status` now defaults to `assume_service_h=70`; actual service events take
+precedence. The baseline Jersey City log is visibly labeled as team-supplied
+simulated data. Its source file and `data/start_hours_jersey_city2.csv` remain
+unchanged. The new upstream assumed-service test was converted to equivalent
+base-R assertions to run with the package's existing standalone test runner.
+The historical P-chart continues to use package `daily_service_counts` (60-hour
+cycle crossings), independently of the current due queue and assumed 70-hour
+servicing; it does not invent historical completion events.

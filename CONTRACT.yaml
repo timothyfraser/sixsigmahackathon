@@ -170,3 +170,77 @@ tasks:
       data/optimizer/user_locations.csv contains 10 sourced real locations
       per city (30 total), with 1620 walking/cycling road distances.
     result: "READY FOR REVIEW: optimizer, 30 real user inputs, 1620 road distances, CSV demos and interactive local viewer added; optimizer checks and all 60 data cases pass; defaults 3 mph pickup and 10 mph return; viewer browser checks recorded under data/optimizer/."
+
+  - id: H-10
+    title: Integrate dock optimizer viewer into BikeWise home
+    points: "Supports working rider UI and transparent optimizer results"
+    status: done
+    owner: "Codex"
+    started_at: "2026-10-17"
+    owns: ["bike-wise-ui/", "tools/export_optimizer_ui.py"]
+    notes: "User approved on 2026-10-17; unfinished SPEC fields deferred. Integrate recorded R results, eligibility/exclusions, and synchronized occupancy chart."
+    definition_of_done: >
+      python3 tools/export_optimizer_ui.py and npm --prefix bike-wise-ui test and
+      npm --prefix bike-wise-ui run build pass; browser checks verify city/location/mode,
+      eligible and excluded docks, selection synchronization and mobile layout.
+    result: "Completed: compact guided planner above left map/right options; removed duplicate map headings, demo banner and mock city suffixes. Top five green recommendations, selectable yellow alternatives, revised card typography and final itinerary retained. 25 unit tests and 7 browser tests passed including all 60 inputs and full journeys; production build passed."
+
+  - id: H-11
+    title: Connect completed BikeSmart package to rider projections and maintenance portal
+    points: "Supports integrated rider and maintenance workflows"
+    status: done
+    owner: "Codex"
+    started_at: "2026-10-17"
+    owns: ["bikesmart/", "bike-wise-ui/", "tools/export_bikesmart_ui.R", "tools/bikesmart_reliability.R", "tools/export_optimizer_ui.py"]
+    notes: "User requested package integration and separate maintenance login; package imported unchanged from origin/main. Prior SPEC placeholder deferral continues; login is explicitly in scope for this task."
+    definition_of_done: >
+      Rscript bikesmart/tests/test_all.R and Rscript tools/export_bikesmart_ui.R pass;
+      npm --prefix bike-wise-ui test and npm --prefix bike-wise-ui run build pass;
+      browser checks verify rider journeys, login rejection/success/logout, protected
+      report access, city-specific maintenance reports and package reliability calculations.
+    result: "Completed: completed bikesmart package imported unchanged from origin/main; rider projections regenerated from its R functions; separate server-validated maintenance login, protected cookie sessions/reports, dispatch map/queue, service search, trip alerts, P-chart and R reliability calculator added. Package 5 suites PASS; all 3 city reports and 1620 projections validated; 25 unit and 11 browser tests passed; build passed; 4 maintenance checks also passed against built server."
+
+  - id: H-12
+    title: Add fleet_viz landing replay and apply maintenance service logs
+    points: "Supports maintenance fleet visibility"
+    status: done
+    owner: "Codex"
+    started_at: "2026-10-17"
+    owns: ["bike-wise-ui/", "tools/export_fleet_viz.R", "tools/bikesmart_service_log.R", "tools/export_bikesmart_ui.R"]
+    notes: "User requested fleet_viz first after login, then service-log support; reuse demo helpers and package service_status with service_log. No service dataset exists, so support CSV import and completed-service records without inventing history."
+    definition_of_done: >
+      Rscript tools/export_fleet_viz.R validates all city/day snapshots;
+      npm --prefix bike-wise-ui test and npm --prefix bike-wise-ui run build pass;
+      authenticated browser checks verify fleet monitor landing, day/time playback,
+      all/single-bike trails, empty/full highlights, station inspector, city switches,
+      report navigation, logout protection and mobile layout; isolated service-log checks
+      verify record/import persistence, duplicate rejection, ride-hour resets and priority
+      updates; historical, exact-snapshot and future service events match expected hours
+      in all three cities.
+    result: "Completed: fleet_viz replay is first after maintenance login, with day/time playback, all/single-bike trails, outage highlights and station inspector for three cities. Added persistent manual/CSV service log using package service_status and station ranking, protected API and atomic duplicate-safe saves; exact-snapshot zero-hour boundary handled in adapter. Export printed PASS: fleet_viz replay exported and validated for all cities and available dates. Unit output: 31 passed (31); browser: 16 passed, 1 intentionally skipped mutation test; isolated service-log run: 2 passed; all three city historical/snapshot/future known-answer checks PASS; production build passed."
+
+  - id: H-13
+    title: Fix visible bike paths and continuous fleet replay animation
+    status: done
+    owner: "Codex"
+    started_at: "2026-10-17"
+    owns: ["bike-wise-ui/"]
+    notes: "User requested visible bikes and smooth transit between docks; repair fleet canvas layering and playback."
+    definition_of_done: >
+      Unit tests and production build pass; browser checks verify painted bike paths
+      above map tiles, moving bike heads between snapshot ticks, pause stability,
+      and existing fleet controls across cities and mobile.
+    result: "Completed: corrected canvas stacking above Leaflet map pane; cyan inferred paths and navy bike heads now visible. Playback interpolates positions on every animation frame with speed controls and exact paused/scrubbed snapshots. Regression check verifies painted pixels, canvas visibility above tiles, fractional-frame movement and pause stability. Output: 31 passed (31) unit tests; 5 passed (6.0s) fleet browser tests across cities/mobile; production build passed."
+
+  - id: H-14
+    title: Street-routed three-city fleet replay and latest maintenance integration
+    status: done
+    owner: "Codex"
+    started_at: "2026-10-17"
+    owns: ["bike-wise-ui/", "bikesmart/", "tools/", "data/sources/", "data/service_log_jersey_city.csv", "data/start_hours_jersey_city2.csv"]
+    notes: "User authorized latest Git changes, city toggles, road geometry based on distance matrices and streets, updated maintenance package and data. Preserve existing uncommitted UI work."
+    definition_of_done: >
+      Street exporter validates all directed station pairs and matrix comparisons;
+      package tests, report exporter, unit tests and build pass; browser tests verify
+      explicit three-city switching, road-following animation and updated maintenance reports/logs.
+    result: "Completed: pulled current branch and synced latest origin/main package/data at 29e5fce while preserving local UI work. Explicit Jersey City/Tampa/Milwaukee fleet buttons; 2106 directed bicycle street routes from the distance-matrix graph, all edges validated and all matrix lengths match within floating point precision; cumulative-distance animation follows all road bends. Imported 405 supplied Jersey City service events/starting hours and new assumed 70-hour servicing; refreshed reports show 56/54/71 due bikes. Package output ALL BIKESMART PACKAGE TESTS PASSED SUCCESSFULLY; base-R equivalent of new upstream test supports standalone runner. Exporter printed PASS: fleet_viz replay exported and validated for all cities and available dates. Two path known-answer tests OK; 32 unit tests passed; browser 17 passed, one deliberate journal-mutation skip; separate isolated mutation run 2 passed; production build passed."

@@ -1,0 +1,27 @@
+Package: bikesmart
+Version: 0.1.0
+Date: 2026-10-17
+Title: Bike-Share Quality Control, Predictive Dock Balancing, and Maintenance Analytics
+Authors@R: c(
+  person("Big Red Crew", email = "sixsigma@cornell.edu", role = c("aut", "cre")) )
+Author: Big Red Crew [aut, cre]
+Maintainer: Big Red Crew <sixsigma@cornell.edu>
+Description: Comprehensive quality control, reliability analysis, and predictive
+    rebalancing toolkit for micro-mobility bike-share networks. Provides tools
+    for: (1) calculating arrival-time dock inventory projections and distance-based
+    recommendations with rebalancing incentives; (2) modeling usable fleet reliability
+    using multiplicative failure factors (rolled throughput survival); (3) attribute
+    Statistical Process Control (P-chart) with sample-size-dependent 3-sigma limits
+    to monitor fleet defect rates; and (4) operational maintenance dispatch ranking
+    and stuck-bike anomaly detection. Developed for the Cornell Six Sigma Hackathon.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.0.0)
+Imports:
+    dplyr (>= 1.1.4)
+Suggests:
+    ggplot2,
+    testthat (>= 3.0.0)
+Config/roxygen2/version: 8.1.1
