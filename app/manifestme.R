@@ -8,10 +8,15 @@ if (!requireNamespace("rsconnect", quietly = TRUE)) {
   stop("Please install 'rsconnect' first: install.packages('rsconnect')")
 }
 
-# Exactly these files are bundled: the app code and the built-in scenario copies
-# (app/data/*.csv.gz, written by app/make_app_data.R). The run/deploy scripts stay out.
-app_files <- c("app.R", "qc.R", "prep.R", "plots.R",
+# Exactly these files are bundled: app.R, every R file that app.R sources (read from its
+# source("...") calls, so a new file such as sim.R can never be forgotten), and the built-in
+# scenario copies (app/data/*.csv.gz, written by app/make_app_data.R). The run/deploy scripts stay out.
+app_code <- readLines(file.path("app", "app.R"), warn = FALSE)
+src_calls <- regmatches(app_code, regexpr("source\\(\"[^\"]+\\.R\"", app_code))
+sourced <- unique(sub("^source\\(\"", "", sub("\"$", "", src_calls)))
+app_files <- c("app.R", sourced,
                file.path("data", list.files(file.path("app", "data"), pattern = "\\.csv\\.gz$")))
+message("Bundling: ", paste(app_files, collapse = ", "))
 missing <- app_files[!file.exists(file.path("app", app_files))]
 if (length(missing) > 0) stop("Missing in app/: ", paste(missing, collapse = ", "))
 if (!any(grepl("^data/", app_files))) {

@@ -2147,7 +2147,7 @@
   },
   "files": {
     "app.R": {
-      "checksum": "7dd95d543553fdbed6b45024d7351b78"
+      "checksum": "a9398260713c62e2e3ee90190f5c1148"
     },
     "data/baseline.csv.gz": {
       "checksum": "ddb0d064fb0d6a6b762e8061bacfaa1a"
@@ -2159,13 +2159,16 @@
       "checksum": "0f86a97543262bef7039082a322c7d7a"
     },
     "plots.R": {
-      "checksum": "e9ac443d51f6885b7c4d4538d0ffcf8c"
+      "checksum": "5e95f11d9ee3fbf1806959c1d8d80d79"
     },
     "prep.R": {
-      "checksum": "62f81680bf2e9c4efb1d31765ce31a4e"
+      "checksum": "78c608f22ead99eb55af64610dace64d"
     },
     "qc.R": {
       "checksum": "ab4edc62d946381f767f004df99ed778"
+    },
+    "sim.R": {
+      "checksum": "7c2985278f77bbec12c4bfedb65754e4"
     }
   },
   "users": null
