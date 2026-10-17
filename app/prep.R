@@ -19,6 +19,8 @@
 #                             signal_label, format_p, as_whole_numbers
 #   8b. tier 2 tables         onset_window_table, c_chart_table, xbar_r_table, capability_table
 #   9. simulation display    SIM_METRIC_LABELS, paired_table_display, policy_summary_display
+#  10. Kaplan-Meier display  km_days, km_counts_table, km_horizon_table, km_mean_table,
+#                            km_excluded_table, km_plot_data (needs app/survival.R sourced)
 
 APP_TZ <- "America/New_York"
 STATE_LEVELS <- c("rent-unusable", "return-unusable", "rent- and return-unusable",
@@ -450,4 +452,77 @@ policy_summary_display <- function(s) {
     mean_recovery_min = round(s$recovery_min, 2),
     seeds_with_a_recovery = as.integer(s$recovery_seeds),
     stringsAsFactors = FALSE)
+}
+
+# ---------------------------------------------------------------- 10. Kaplan-Meier display
+# Wording, rounding and picking days only; every number comes from app/survival.R.
+
+KM_FAILURE_LABELS <- c(either = "either-unusable (rent or return)", rent = "rent-unusable", `return` = "return-unusable")
+
+# Which weekdays the History panel uses: "all" weekdays, or those up to and including `chosen`.
+km_days <- function(dates, scope = "all", chosen = NULL) {
+  if (identical(scope, "upto") && !is.null(chosen) && nzchar(chosen)) dates[dates <= chosen] else dates
+}
+
+# "0.123 [0.100, 0.150]" or "0.123 (interval n/a)"; NA estimate -> "n/a".
+km_interval_text <- function(est, lo, hi, digits = 3) {
+  f <- function(x) formatC(x, format = "f", digits = digits)
+  ifelse(is.na(est), "n/a",
+         ifelse(is.na(lo) | is.na(hi), paste0(f(est), " (95% interval n/a)"),
+                paste0(f(est), "  [", f(lo), ", ", f(hi), "]")))
+}
+
+# Counts table: what went into the estimate (station-days, events, censored, excluded at 07:00).
+km_counts_table <- function(h) {
+  c <- h$counts
+  data.frame(
+    item = c("weekdays used", "station-days usable at 07:00 (n)", "failures (events)",
+             "censored at 10:00 (never unusable)", "censored at an unknown gap (start of the gap)",
+             "left out: 07:00 unknown or stale", "left out: already unusable at 07:00"),
+    count = as.integer(c(c$days, c$n, c$events, c$cens_end, c$cens_gap, c$excl_unknown, c$excl_unusable)),
+    stringsAsFactors = FALSE)
+}
+
+# F(10/20/30) with 95% Greenwood (log-log) intervals; the reason when there is none.
+km_horizon_table <- function(s) {
+  h <- s$horizons
+  data.frame(
+    `minutes after a usable 07:00` = as.integer(h$t),
+    `F(t) = share failed by t  [95% CI]` = km_interval_text(h$F, h$F_low, h$F_high),
+    `S(t) = still unfailed` = ifelse(is.na(h$surv), "n/a", formatC(h$surv, format = "f", digits = 3)),
+    reason_if_missing = h$note,
+    check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+# RMST and MTTF, each with its reason when it is not reported.
+km_mean_table <- function(s) {
+  num <- function(x) if (is.na(x)) "n/a" else paste(formatC(x, format = "f", digits = 2), "min")
+  data.frame(
+    measure = c(paste0("RMST to ", s$rmst_tau, " min (restricted mean time to first failure)"),
+                "MTTF (mean time to first failure, full area under the curve)"),
+    value = c(num(s$rmst), num(s$mttf)),
+    reason_if_not_reported = c(s$rmst_note, s$mttf_note),
+    stringsAsFactors = FALSE)
+}
+
+# Station-days left out at 07:00, by reason (one row per reason; none -> a note row).
+km_excluded_table <- function(h) {
+  c <- h$counts
+  data.frame(reason = c("unknown or stale at 07:00", "unusable at 07:00 (already empty, full or switched off)"),
+             station_days = c(c$excl_unknown, c$excl_unusable), stringsAsFactors = FALSE)
+}
+
+# Curve data for plot_km(): S and its interval on every minute 0..tau (a step on [m, m+1)),
+# plus one censoring tick per distinct censored time. Times are whole minutes.
+km_plot_data <- function(h, xmax = SURVIVAL_TAU) {
+  s <- h$summary
+  grid_t <- 0:xmax
+  at <- km_at(s$fit, grid_t)
+  curve <- data.frame(t = grid_t, surv = at$surv, lo = at$ci_low, hi = at$ci_high)
+  cens <- h$obs[h$obs$event == 0 & h$obs$time <= xmax, ]
+  ticks <- if (nrow(cens) == 0) data.frame(t = numeric(0), surv = numeric(0)) else {
+    tt <- sort(unique(cens$time))
+    data.frame(t = tt, surv = km_at(s$fit, tt)$surv)
+  }
+  list(curve = curve, ticks = ticks[!is.na(ticks$surv), ])
 }

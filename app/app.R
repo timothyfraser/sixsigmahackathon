@@ -5,6 +5,7 @@
 #   app/prep.R  data shaping (dates, counts of attempts, ranking, baseline choice)
 #   app/plots.R ggplot drawing
 #   app/sim.R   the seeded policy simulation (Improvement tab)
+#   app/survival.R  the historical Kaplan-Meier statistics (Forecast & Reliability tab, History)
 # Started from the demo in demos/shinyapp (one app.R with ui + server + shinyApp()).
 #
 # Run from the repo root:  Rscript app/testme.R
@@ -15,6 +16,7 @@ library(ggplot2)
 library(leaflet)
 
 source("qc.R", local = TRUE)      # the working directory is the app folder when the app runs
+source("survival.R", local = TRUE)   # Kaplan-Meier (H-12); prep.R only formats its results
 source("prep.R", local = TRUE)
 source("plots.R", local = TRUE)
 source("sim.R", local = TRUE)     # the policy simulation (H-10); the page only shows its results
@@ -190,6 +192,51 @@ ui <- page_navbar(
          tableOutput("cap_tbl"),
          uiOutput("normality_box"),
          plotOutput("cap_hist", height = 300))
+  ),
+
+  nav_panel("Forecast & Reliability",
+    panel_card(card_header("History: time to first service failure after a usable 07:00 (Kaplan-Meier)"),
+      help_text("Descriptive about PAST days; this is not a forecast. Question: starting from a station that",
+                " is known and usable at 07:00, how many minutes pass until its first unusable minute? A station-day",
+                " is one station on one weekday. The failure time is measured to the START of the first unusable",
+                " minute (a failure in 07:05-07:06 is 5 minutes). A station-day with no failure is censored at 180",
+                " (10:00); one whose data go unknown before any failure is censored at the START of the unknown gap",
+                " (we do not guess what happened in it). Stations unknown or already unusable at 07:00 give no",
+                " observation and are counted below."),
+      layout_columns(
+        fill = FALSE, col_widths = c(4, 4, 4),
+        selectInput("km_failure", "Failure type (the event)",
+                    choices = c("Either unusable (rent or return)" = "either", "Rent unusable" = "rent",
+                                "Return unusable" = "return")),
+        radioButtons("km_scope", "Days used",
+                     choices = c("All weekdays in the file" = "all",
+                                 "Weekdays up to and including the sidebar date" = "upto")),
+        uiOutput("km_head")),
+      plotOutput("km_plot", height = 380),
+      help_text("How to read this: the line is the share of station-days still without a failure after t minutes;",
+                " the shaded band is the 95% Greenwood (log-log) interval; + marks censoring (stations whose",
+                " follow-up ended without a failure). A fast fall means failures come soon after 07:00."),
+      uiOutput("km_notes"),
+      layout_columns(
+        fill = FALSE, col_widths = c(5, 7),
+        tags$div(tags$b("What went into the estimate"), tableOutput("km_counts_tbl")),
+        tags$div(tags$b("Share failed within 10, 20 and 30 minutes (F = 1 - S)"), tableOutput("km_horizon_tbl"),
+                 tags$b("Mean time to first failure"), tableOutput("km_mean_tbl"))),
+      help_text("RMST (restricted mean survival time) is the area under the curve up to 180 minutes: the average",
+                " number of minutes, out of 180, a usable station lasts before its first failure. The MTTF (mean",
+                " time to first failure) is reported only when the curve reaches 0; otherwise it is not estimable",
+                " and the RMST is the honest summary."),
+      help_text("Assumptions: censoring is non-informative (a station whose data go unknown is no more or less",
+                " likely to fail than the others). The intervals treat station-days as independent (Greenwood);",
+                " nearby stations, and one station on different days, may be correlated, so the intervals may be",
+                " too narrow. F(t) is read as: of the station-days usable at 07:00, the share that failed by t.",
+                " The rent and return curves use the same starting group (stations fully usable, for both rent",
+                " and return, at 07:00), so they are conditional on that group, not fleet-wide rates."),
+      tags$b("Stations left out at 07:00"), tableOutput("km_excluded_tbl")),
+    panel_card(card_header("Now: risk forecast from the current state"),
+      help_text("Placeholder. The forward-simulated risk forecast (probability of a rent- or return-unusable",
+                " minute in the next 10, 20 and 30 minutes from the current inventory) comes in a later task",
+                " (H-13). No forecast is shown here yet, and the History panel above must not be read as one."))
   ),
 
   nav_panel("Rebalancing",
@@ -698,6 +745,41 @@ server <- function(input, output, session) {
     cp <- cap()
     plot_response_hist(as.vector(r$sub$values), cp$xbarbar, cp$usl, cp$lsl)
   })
+
+  # ---- Forecast & Reliability: History (statistics in survival.R, wording in prep.R, drawing in plots.R)
+  km <- reactive({
+    validate(need(is.null(status_msg()), status_msg()))   # needs the minute grid
+    d <- km_days(dates(), input$km_scope, input$date)
+    validate(need(length(d) > 0, "No weekday is selected."))
+    km_history(grids(), d, input$km_failure)
+  })
+  km_ok <- reactive({           # the history, or the reason nothing can be estimated
+    h <- km()
+    validate(need(h$summary$n > 0, KM_NO_START_REASON))
+    h
+  })
+  output$km_head <- renderUI({
+    h <- km()
+    help_text(KM_FAILURE_LABELS[[h$failure]], ", ", length(h$dates), " weekday(s) (",
+              if (length(h$dates) > 0) paste(h$dates[1], "to", h$dates[length(h$dates)]), "), n = ",
+              h$counts$n, " station-days usable at 07:00. Simulated data.")
+  })
+  output$km_plot <- renderPlot({
+    h <- km_ok()
+    plot_km(km_plot_data(h), paste0("Time to first failure (", KM_FAILURE_LABELS[[h$failure]], ")"),
+            paste0("n = ", h$summary$n, " station-days, ", h$summary$events, " failures, ",
+                   h$summary$censored, " censored; 95% Greenwood log-log band; step at whole minutes"))
+  })
+  output$km_notes <- renderUI({
+    h <- km()
+    s <- h$summary
+    if (s$n == 0) return(alert_box(paste0(s$reason, "."), "warning"))
+    if (length(s$notes) > 0) alert_box(paste0(toupper(substr(s$notes, 1, 1)), substring(s$notes, 2), "."), "info")
+  })
+  output$km_counts_tbl <- renderTable(km_counts_table(km()))
+  output$km_horizon_tbl <- renderTable(km_horizon_table(km()$summary), na = "n/a")
+  output$km_mean_tbl <- renderTable(km_mean_table(km()$summary), na = "n/a")
+  output$km_excluded_tbl <- renderTable(km_excluded_table(km()))
 
   # ---- Rebalancing
   plan <- reactive({

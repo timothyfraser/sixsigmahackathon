@@ -230,15 +230,15 @@ tasks:
   - id: H-12
     title: Historical Kaplan-Meier, RMST and F(10/20/30) (History panel)
     points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 00:40"
     owns: ["app/survival.R", "tests/test-survival.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-survival.R')" passes, including KA-8, no
       usable 07:00 starts (NA with a reason) and censoring at unknown gaps;
       Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-survival.R 75 and test_dir 656 pass (KA-8, no usable 07:00 starts NA with reason, censoring at unknown gaps); stats-reviewer PASS (matches survival::survfit on 300 random samples); Playwright shows the History panel on baseline and planted_shift; check-in authorised by YuCiciFu 2026-10-17"
 
   - id: H-13
     title: Forecast step 5a, fixed Poisson rates (Now panel)

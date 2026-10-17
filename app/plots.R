@@ -176,6 +176,27 @@ plot_response_hist <- function(x, xbarbar = NA_real_, usl = NA_real_, lsl = NA_r
   g
 }
 
+# Kaplan-Meier step curve S(t) with its 95% interval band and censoring ticks (+).
+# d = prep.R km_plot_data(): d$curve (t, surv, lo, hi on whole minutes), d$ticks (t, surv).
+# Whole-minute steps: each value holds on [m, m+1), so the curve and band are drawn as exact steps.
+plot_km <- function(d, title, caption) {
+  cv <- d$curve
+  steps <- data.frame(t = c(rbind(cv$t, cv$t + 1)), surv = rep(cv$surv, each = 2),
+                      lo = rep(cv$lo, each = 2), hi = rep(cv$hi, each = 2))
+  g <- ggplot2::ggplot(steps, ggplot2::aes(t, surv)) +
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = lo, ymax = hi), fill = "#4575b4", alpha = 0.2, na.rm = TRUE) +
+    ggplot2::geom_line(colour = "#08519c", linewidth = 0.8, na.rm = TRUE) +
+    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::labs(title = title, x = "minutes after 07:00 (station usable at 07:00)",
+                  y = "S(t): share of station-days with no failure yet", caption = caption) +
+    ggplot2::theme_minimal()
+  if (nrow(d$ticks) > 0) {
+    g <- g + ggplot2::geom_point(data = d$ticks, ggplot2::aes(t, surv), shape = 3, size = 2.5,
+                                 colour = "black", inherit.aes = FALSE)
+  }
+  g
+}
+
 # Per-seed paired differences for the primary metric: one point per seed, the mean (green) and its
 # confidence interval (dashed blue band edges; NA = not drawn), zero = no difference.
 # d = metric(none) - metric(reactive), so points above 0 favour the reactive policy.
