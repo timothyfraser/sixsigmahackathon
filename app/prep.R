@@ -21,6 +21,8 @@
 #   9. simulation display    SIM_METRIC_LABELS, paired_table_display, policy_summary_display
 #  10. Kaplan-Meier display  km_days, km_counts_table, km_horizon_table, km_mean_table,
 #                            km_excluded_table, km_plot_data (needs app/survival.R sourced)
+#  11. Now forecast display  forecast_p_text, forecast_table_display, forecast_transit_display,
+#                            forecast_rate_display, forecast_plot_data (numbers from app/forecast.R)
 
 APP_TZ <- "America/New_York"
 STATE_LEVELS <- c("rent-unusable", "return-unusable", "rent- and return-unusable",
@@ -525,4 +527,64 @@ km_plot_data <- function(h, xmax = SURVIVAL_TAU) {
     data.frame(t = tt, surv = km_at(s$fit, tt)$surv)
   }
   list(curve = curve, ticks = ticks[!is.na(ticks$surv), ])
+}
+
+# ---------------------------------------------------------------- 11. Now forecast display (H-13)
+# Wording and rounding only; every number comes from app/forecast.R.
+
+# "0.264 (SE 0.003)"; an NA probability -> "n/a".
+forecast_p_text <- function(p, se) {
+  ifelse(is.na(p), "n/a", paste0(formatC(p, format = "f", digits = 3), " (SE ", formatC(se, format = "f", digits = 3), ")"))
+}
+
+# One row per station, sorted as forecast_now() sorted it (highest 30-minute risk first).
+# Columns: station, bikes / docks at t0, snapshot age, P(rent-unusable) and P(return-unusable) for
+# each horizon with the simulation SE, and the flags or the reason there is no forecast.
+forecast_table_display <- function(f) {
+  tb <- f$table
+  out <- data.frame(station = tb$station_id,
+                    `bikes / docks at t0` = ifelse(tb$known, paste(tb$bikes, "/", tb$docks), "unknown"),
+                    `snapshot age (min)` = ifelse(tb$known, formatC(tb$age, format = "f", digits = 1), "n/a"),
+                    check.names = FALSE, stringsAsFactors = FALSE)
+  for (type in c("rent", "return")) {
+    for (h in f$horizons) {
+      label <- paste0("P(", type, "-unusable) within ", h, " min", if (isTRUE(f$past_10[[as.character(h)]])) " *" else "")
+      out[[label]] <- forecast_p_text(tb[[paste0("p_", type, "_", h)]], tb[[paste0("se_", type, "_", h)]])
+    }
+  }
+  out$`flags / reason` <- ifelse(tb$reason != "", tb$reason, tb$flags)
+  out
+}
+
+# The in-transit van tasks, for display.
+forecast_transit_display <- function(f) {
+  it <- f$in_transit
+  if (nrow(it) == 0) return(data.frame(note = "No van task is in transit at t0 (assigned by t0 and not yet completed)."))
+  data.frame(task = it$task_id, from = it$source, to = it$destination, bikes = it$planned,
+             `assigned at` = format(it$assigned_at, "%H:%M", tz = APP_TZ),
+             `estimated arrival (min after t0)` = round(it$eta_min, 1),
+             counted = ifelse(it$known_destination, "yes", "no: destination not forecast"),
+             check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+# The mean bin rates (attempts per station-minute, 12 bins) of the stations used, for display.
+forecast_rate_display <- function(f) {
+  if (is.null(f$rates)) return(data.frame(note = "No rates: nothing could be estimated."))
+  r <- f$rates
+  bins <- sprintf("%02d:%02d", 7 + ((seq_len(dim(r)[3]) - 1) * 15) %/% 60, ((seq_len(dim(r)[3]) - 1) * 15) %% 60)
+  data.frame(`15-min bin starts` = bins,
+             `rent, network mean (per station-min)` = round(apply(r[, "rent", , drop = FALSE], 3, mean), 4),
+             `return, network mean (per station-min)` = round(apply(r[, "return", , drop = FALSE], 3, mean), 4),
+             check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+# Top stations by the larger of their 30-minute rent and return risk: long table for the plot.
+forecast_plot_data <- function(f, top = 10) {
+  h <- max(f$horizons)
+  tb <- f$table[!is.na(f$table[[paste0("p_rent_", h)]]), ]
+  if (nrow(tb) == 0) return(NULL)
+  worst <- pmax(tb[[paste0("p_rent_", h)]], tb[[paste0("p_return_", h)]])
+  tb <- head(tb[order(-worst, tb$station_id, method = "radix"), ], top)
+  rbind(data.frame(station = tb$station_id, type = "rent-unusable", p = tb[[paste0("p_rent_", h)]], se = tb[[paste0("se_rent_", h)]]),
+        data.frame(station = tb$station_id, type = "return-unusable", p = tb[[paste0("p_return_", h)]], se = tb[[paste0("se_return_", h)]]))
 }

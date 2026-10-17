@@ -214,3 +214,18 @@ plot_paired_diff <- function(d, seeds, mean_d, ci_low, ci_high, ci_text, ylab, t
   }
   g
 }
+
+# Risk of the top stations: P(at least one unusable minute within the horizon), rent and return side
+# by side, with +/- 1 simulation SE as a thin bar. d = prep.R forecast_plot_data().
+plot_forecast_risk <- function(d, title, caption) {
+  d$station <- factor(d$station, levels = rev(unique(d$station)))
+  ggplot2::ggplot(d, ggplot2::aes(station, p, fill = type)) +
+    ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.8), width = 0.7) +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin = pmax(0, p - se), ymax = pmin(1, p + se)),
+                           position = ggplot2::position_dodge(width = 0.8), width = 0.25) +
+    ggplot2::coord_flip() +
+    ggplot2::scale_y_continuous(limits = c(0, 1)) +
+    ggplot2::scale_fill_manual(values = c("rent-unusable" = "#d73027", "return-unusable" = "#4575b4"), name = NULL) +
+    ggplot2::labs(title = title, x = "station", y = "probability of at least one unusable minute", caption = caption) +
+    ggplot2::theme_minimal() + ggplot2::theme(legend.position = "bottom")
+}

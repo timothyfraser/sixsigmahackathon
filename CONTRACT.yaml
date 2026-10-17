@@ -243,15 +243,15 @@ tasks:
   - id: H-13
     title: Forecast step 5a, fixed Poisson rates (Now panel)
     points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 01:02"
     owns: ["app/forecast.R", "tests/test-forecast.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-forecast.R')" passes, including KA-8b
       (within 4 simulation SE), KA-8c (no look-ahead) and stale inventory giving NA;
       Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-forecast.R 37 and test_dir 693 pass (KA-8b within 4 SE at R = 20000, KA-8c no look-ahead, stale inventory NA with reason); stats-reviewer PASS (own analytic case and independent re-simulation agree); Playwright shows the Now panel on baseline 2026-10-05 07:30"
 
   - id: H-14
     title: Forecast step 5b, day bootstrap

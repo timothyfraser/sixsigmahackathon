@@ -6,6 +6,7 @@
 #   app/plots.R ggplot drawing
 #   app/sim.R   the seeded policy simulation (Improvement tab)
 #   app/survival.R  the historical Kaplan-Meier statistics (Forecast & Reliability tab, History)
+#   app/forecast.R  the current-state risk forecast, step 5a (Forecast & Reliability tab, Now)
 # Started from the demo in demos/shinyapp (one app.R with ui + server + shinyApp()).
 #
 # Run from the repo root:  Rscript app/testme.R
@@ -20,6 +21,7 @@ source("survival.R", local = TRUE)   # Kaplan-Meier (H-12); prep.R only formats 
 source("prep.R", local = TRUE)
 source("plots.R", local = TRUE)
 source("sim.R", local = TRUE)     # the policy simulation (H-10); the page only shows its results
+source("forecast.R", local = TRUE)   # the Now risk forecast, step 5a (H-13)
 
 # Built-in scenarios (H-02 data): app/data/*.csv.gz in the deployed bundle, ../data/*.csv in a
 # clone. With none, fall back to the tiny test fixture, else ask for an upload.
@@ -233,10 +235,52 @@ ui <- page_navbar(
                 " The rent and return curves use the same starting group (stations fully usable, for both rent",
                 " and return, at 07:00), so they are conditional on that group, not fleet-wide rates."),
       tags$b("Stations left out at 07:00"), tableOutput("km_excluded_tbl")),
-    panel_card(card_header("Now: risk forecast from the current state"),
-      help_text("Placeholder. The forward-simulated risk forecast (probability of a rent- or return-unusable",
-                " minute in the next 10, 20 and 30 minutes from the current inventory) comes in a later task",
-                " (H-13). No forecast is shown here yet, and the History panel above must not be read as one."))
+    panel_card(card_header("Now: risk forecast from the current state (a model, step 5a: fixed rates)"),
+      help_text("A model, unlike the History panel above. Question: starting from each station's inventory at the",
+                " origin t0 (sidebar date + observation minute), what is the probability of at least one rent-unusable",
+                " minute, and separately of at least one return-unusable minute, within the next 10, 20 and 30",
+                " minutes? It is simulated forward R times with the demand rates of the earlier weekdays."),
+      layout_columns(
+        fill = FALSE, col_widths = c(3, 3, 6),
+        numericInput("fc_R", "Simulated paths R", 2000, min = 100, max = 20000, step = 100),
+        numericInput("fc_seed", "Seed", 1, step = 1),
+        tags$div(help_text("Uses the sidebar date, observation minute, stale_limit, detour factor and the van speed",
+                           " of the Improvement tab. Runs only when you click."),
+                 actionButton("run_fc", "Run forecast", class = "btn-primary"))),
+      uiOutput("fc_head"),
+      tableOutput("fc_tbl"),
+      help_text("How to read this: each cell is the share of R simulated futures with at least one unusable minute",
+                " in the horizon, and (SE) is the simulation error. Sorted by the highest 30-minute risk. A station",
+                " that is already unusable at t0 says so in the last column. * = the horizon extends past 10:00 and",
+                " reuses the last 15-minute bin rate (09:45-10:00). n/a = no forecast, with the reason."),
+      plotOutput("fc_plot", height = 380),
+      tags$b("Vans on the way at t0"), tableOutput("fc_transit_tbl"),
+      help_text("A van counts as on the way when its task was assigned by t0 and not completed by t0. Demo assumption:",
+                " it arrives at assigned_at + straight-line km x detour / speed, the pickup has already happened",
+                " (its effect is in the source's snapshot) and the planned bikes are added to the destination then,",
+                " capped by its free docks. The logged arrival times are never used, because they may lie after t0."),
+      tags$b("Uncertainty, reported as three separate things"), uiOutput("fc_uncertainty"),
+      tags$b("Assumptions"),
+      tags$ul(
+        tags$li("Rents and returns arrive as independent Poisson processes per station; the rate is constant inside each",
+                " 15-minute bin; stations are independent (no interaction between stations)."),
+        tags$li("Rate = attempts (successful + failed) / known station-minutes in that bin, over the weekdays STRICTLY",
+                " BEFORE t0's date; nothing after t0 is used (no look-ahead). A rate of 0 is valid and does not show",
+                " that the risk is zero."),
+        tags$li("Riders who gave up without trying are not in the log, so demand may be understated."),
+        tags$li("Start inventory = the latest valid snapshot at or before t0 that passes the stale_limit age rule;",
+                " otherwise no forecast (n/a). Renting and returning flags stay at their t0 values."),
+        tags$li("The next h minutes are the intervals starting at t0+1, ..., t0+h, with the events of all h minutes",
+                " applied. A closed station (flag off) has risk 1 on that side by construction; a station with 0 bikes",
+                " or 0 docks at t0 can still recover before the next minute, so its risk is simulated and flagged.",
+                " So a station that is empty NOW can show slightly below 1: that is the chance it is still (or again)",
+                " unusable at some minute from t0+1 on."),
+        tags$li("The simulation SE sqrt(p(1-p)/R) is only a rough guide near 0 or 1 (e.g. 0.999 at R = 2000 can",
+                " be about 0.997 in a longer run); raise R for such stations."),
+        tags$li("A van's estimated arrival is rounded down to the start of its minute (up to 1 minute early);",
+                " demo assumption.")),
+      tags$b("Source days (weekdays before t0's date)"), textOutput("fc_days"),
+      tags$b("Bin rates used (network mean over the stations forecast)"), tableOutput("fc_rates_tbl"))
   ),
 
   nav_panel("Rebalancing",
@@ -780,6 +824,53 @@ server <- function(input, output, session) {
   output$km_horizon_tbl <- renderTable(km_horizon_table(km()$summary), na = "n/a")
   output$km_mean_tbl <- renderTable(km_mean_table(km()$summary), na = "n/a")
   output$km_excluded_tbl <- renderTable(km_excluded_table(km()))
+
+  # ---- Forecast & Reliability: Now (statistics in forecast.R, wording in prep.R, drawing in plots.R)
+  # Runs only on the button. A paused data type shows its message instead of running.
+  fc_res <- eventReactive(input$run_fc, {
+    validate(need(is.null(status_msg()), status_msg()), need(is.null(attempts_msg()), attempts_msg()))
+    req(input$date, input$date %in% names(grids()))
+    validate(need(isTRUE(input$fc_R >= 1), "Simulated paths R must be at least 1."),
+             need(!is.na(input$fc_seed), "Seed must be a number."))
+    params <- tryCatch(sim_params(vans = default_van_count(sc()$tasks), detour = input$detour,
+                                  speed_kmh = input$sim_speed),
+                       error = function(e) conditionMessage(e))
+    validate(need(is.list(params), params))
+    withProgress(message = "Running the forecast", value = 0.5, {
+      forecast_now(sc(), grids(), input$date, dates(), input$minute, R = input$fc_R,
+                   seed = input$fc_seed, params = params)
+    })
+  })
+  output$fc_head <- renderUI({
+    f <- fc_res()
+    clock <- format(f$t0, "%Y-%m-%d %H:%M", tz = APP_TZ)
+    if (!f$ok) return(alert_box(paste0("No forecast for t0 = ", clock, ": ", f$reason, "."), "warning"))
+    alert_box(paste0("Origin t0 = ", clock, ". ", sum(!is.na(f$table$p_rent_10)), " of ", nrow(f$table),
+                     " stations forecast from ", length(f$source_days), " earlier weekday(s) (", f$n_attempts,
+                     " attempts), R = ", f$R, " paths, seed ", f$seed, ". Simulated; inputs changed since the click",
+                     " are not reflected until you run again."), "info")
+  })
+  output$fc_tbl <- renderTable(forecast_table_display(fc_res()), na = "n/a")
+  output$fc_plot <- renderPlot({
+    f <- fc_res()
+    d <- forecast_plot_data(f)
+    validate(need(!is.null(d), f$reason))
+    h <- max(f$horizons)
+    plot_forecast_risk(d, paste0("Risk within ", h, " min of ", format(f$t0, "%H:%M", tz = APP_TZ), ": top stations"),
+                       paste0("Bars = probability of at least one unusable minute; whiskers = +/- 1 simulation SE (R = ",
+                              f$R, "). Model with fixed rates (step 5a), not a measurement."))
+  })
+  output$fc_transit_tbl <- renderTable(forecast_transit_display(fc_res()), na = "n/a")
+  output$fc_uncertainty <- renderUI({
+    f <- fc_res()
+    tags$ul(lapply(f$uncertainty, tags$li))
+  })
+  output$fc_days <- renderText({
+    f <- fc_res()
+    if (length(f$source_days) == 0) return("none: no earlier weekday")
+    paste0(length(f$source_days), " weekday(s): ", paste(f$source_days, collapse = ", "))
+  })
+  output$fc_rates_tbl <- renderTable(forecast_rate_display(fc_res()), na = "n/a")
 
   # ---- Rebalancing
   plan <- reactive({
