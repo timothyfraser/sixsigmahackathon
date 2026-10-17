@@ -54,7 +54,7 @@ tasks:
       pass; ls data/*.csv.gz lists
       exactly 3 movement datasets, and data/README.md describes every
       column, mile distances, source metadata, and synthetic assumptions.
-    result: "Reviewed: Jersey City, Milwaukee, Tampa zoned datasets; 27 real locations and 3499200 rows each; usage 33.382%, 33.322%, 33.395%; Rscript data/validate_simulation.R and python3 data/validate_tampa_locations.py pass; 8640 observations per bike, no duplicate bike-timestamp pairs; three compressed CSVs and complete codebook."
+    result: "Reviewed: Jersey City, Milwaukee, Tampa zoned datasets; 27 real locations and 3499200 rows each; usage 33.382%, 33.322%, 33.395%; movement/zoning and Tampa intersection validation pass; 8640 observations per bike, no duplicate bike-timestamp pairs; three compressed CSVs, codebook, and city input requirements guide."
 
   - id: H-03
     title: Core QC statistic as one plain, tested function

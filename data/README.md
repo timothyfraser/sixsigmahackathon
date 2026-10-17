@@ -1,5 +1,8 @@
 # BikeWise simulated data
 
+For requirements to apply BikeWise to another city, see
+[City input requirements](CITY_INPUT_REQUIREMENTS.md).
+
 These datasets implement `system_architecture.md` plus the team's approved
 simulation decisions, including replacing the fictional network with Tampa.
 Only the location identities and coordinates are real. All bikes,
