@@ -128,6 +128,7 @@ These rules turn status snapshots into a station-minute grid.
   - **Phases.** Control limits come from a baseline (phase I) and are applied to later days (phase II). In the app the default baseline is the first half of the weekdays, and this can be changed. Every chart function takes the baseline rows as an explicit argument, so the tests state exactly which rows they use.
   - **Run rules.** Out-of-control means Western Electric rule 1 (a point beyond 3 sigma) or rule 4 (8 points in a row on one side of the center line).
   - **Comparable windows.** Only weekdays are compared, and each subgroup is the same 07:00-10:00 window.
+  - **Binomial for the p charts.** The limits assume independent attempts with one common failure probability. The tool checks the baseline with the Pearson dispersion ratio X2 / df, where X2 = sum((x_i - n_i p-bar)^2 / (n_i p-bar (1 - p-bar))) over the baseline windows and df = k - 1, and gives the chi-square p-value. It warns when the ratio is above 1.5. Then the limits are likely too narrow (attempts at one station and time are not independent), so a point beyond them is a prompt to investigate, not a confirmed special cause. The limits themselves are not changed. The ratio and p-value rely on the chi-square approximation (expected counts of about 5 or more) and do not identify a cause.
   - **Poisson for the c chart.** The tool shows the dispersion ratio variance/mean and warns when it is above 1.5.
   - **Capability.** It needs an in-control process and an approximately normal distribution. The tool shows a histogram and a Shapiro-Wilk test, and warns that response times are often right-skewed. Spec limits are never invented: there is no USL means no Cpu.
   - **Historical Kaplan-Meier.** It assumes non-informative censoring. Its Greenwood confidence intervals treat station-days as independent, and nearby stations may be correlated, so the tool says the intervals may be too narrow.
@@ -160,6 +161,8 @@ These rules turn status snapshots into a station-minute grid.
     - sigma = sqrt(0.05 x 0.95 / 100) = 0.021794.
     - UCL = 0.05 + 3 x 0.021794 = 0.115383. LCL = max(0, 0.05 - 0.065383) = 0.
     - No point is out of control.
+    - Dispersion: each expected count is 5 and n p-bar (1 - p-bar) = 4.75, so X2 = (1 + 1 + 0 + 4 + 4) / 4.75 = 2.105 on 4 df, ratio 0.526, p-value 0.716; no warning.
+    - Overdispersed variant: failures 0, 10, 0, 10, 5 (same n and p-bar, so the same limits and no point beyond them). X2 = 100 / 4.75 = 21.053, ratio 5.263 (above 1.5, warning), p-value 0.0003.
   - **KA-2b, UCL cap:** baseline p-bar = 0.5, with n = 4 in the subgroup being checked.
     - 0.5 +/- 3 x sqrt(0.25/4) = 0.5 +/- 0.75, which gives 1.25 and -0.25.
     - Reported as UCL = 1 and LCL = 0.
