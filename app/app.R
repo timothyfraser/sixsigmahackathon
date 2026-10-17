@@ -18,14 +18,30 @@ source("prep.R", local = TRUE)
 source("plots.R", local = TRUE)
 
 DEFAULT_PATH <- default_scenario_path(".")   # NA when no default file ships with the app
+options(shiny.maxRequestSize = 100 * 1024^2)  # 100 MiB uploads (planted_shift.csv is about 47 MB)
+
+# What pauses when a record type cannot be used (see table_block_message in prep.R).
+NEEDS_STATUS <- "the map, the minute grid, the station views, the I-MR chart and rebalancing"
+NEEDS_ATTEMPTS <- "the failure rates and the p charts"
 
 help_text <- function(...) tags$p(class = "text-muted small", ...)
 # A card that keeps its natural height (the page scrolls instead of squeezing cards).
 panel_card <- function(...) card(..., fill = FALSE)
 alert_box <- function(text, type = "warning") tags$div(class = paste0("alert alert-", type), text)
+# The p chart's overdispersion check (computed in qc.R p_dispersion; shown here only).
+dispersion_box <- function(d) {
+  if (is.na(d$ratio)) return(alert_box(paste("Dispersion check:", d$note), "secondary"))
+  p_text <- format_p(d$p_value)
+  note <- paste0(toupper(substr(d$note, 1, 1)), substring(d$note, 2))
+  alert_box(paste0("Dispersion check on the baseline: X2 = ", sprintf("%.1f", d$chi_sq), " on ", d$df,
+                   " df, ratio X2/df = ", sprintf("%.2f", d$ratio), ", chi-square p ",
+                   if (startsWith(p_text, "<")) p_text else paste("=", p_text), ". ", note, "."),
+            if (isTRUE(d$warning)) "warning" else "info")
+}
 
 # ------------------------------------------------------------------ UI
 ui <- page_navbar(
+  id = "tabs",
   title = "Rush Hour Autopilot",
   fillable = FALSE,
   sidebar = sidebar(
@@ -53,6 +69,7 @@ ui <- page_navbar(
 
   nav_panel("Overview",
     uiOutput("upload_help"),
+    uiOutput("health_banner"),
     help_text("How to read this: the map shows each station's state at the chosen date and minute,",
               " from the minute grid (most recent snapshot at or before that minute, no older than",
               " stale_limit). Grey = unknown/stale data; it is never shown as normal."),
@@ -60,12 +77,18 @@ ui <- page_navbar(
     layout_columns(
       fill = FALSE,
       col_widths = c(7, 5),
-      panel_card(card_header("Station map at the chosen minute"), leafletOutput("map", height = 450)),
+      panel_card(card_header("Station map at the chosen minute"), uiOutput("map_note"),
+                 leafletOutput("map", height = 450)),
       panel_card(card_header("Station ranking (whole 07:00-10:00 window of the chosen date)"),
            help_text("Rank 1 = worst: either-unusable minutes + early-warning minutes; ties by station_id."),
            tableOutput("ranking"))
     ),
     panel_card(card_header("Data issues (rows rejected or flagged when the file was loaded)"),
+         help_text("Rows per record type: in the file, valid after loading, rejected, and identical copies kept once."),
+         tableOutput("health_tbl"),
+         help_text("Issues counted by record type and rule:"),
+         tableOutput("issue_summary_tbl"),
+         textOutput("issue_detail_caption"),
          tableOutput("issues"))
   ),
 
@@ -94,7 +117,8 @@ ui <- page_navbar(
     uiOutput("baseline_info"),
     panel_card(card_header("p chart: rent failure proportion"),
          help_text("How to read this: each point is one weekday rush window (% of rent attempts that failed);",
-                   " red points signal; dashed lines are the 3-sigma limits from the baseline."),
+                   " red points are beyond the 3-sigma limits from the baseline (dashed) or in a run of 8.",
+                   " The box below checks whether the binomial model behind the limits fits the baseline."),
          uiOutput("p_rent_note"), plotOutput("p_rent_plot", height = 350), tableOutput("p_rent_tbl")),
     panel_card(card_header("p chart: return failure proportion"),
          help_text("How to read this: same as above for return attempts."),
@@ -144,12 +168,27 @@ server <- function(input, output, session) {
     validate(need(isTRUE(s$ok), if (isTRUE(s$ok)) "" else s$message))
     s$data
   })
+  # Rows per record type. Stations are required for everything; status and attempts each
+  # pause only the features that need them; tasks are not used yet.
+  health <- reactive(table_health(sc()))
+  stations_ok <- reactive({
+    msg <- table_block_message(health(), sc()$issues, "stations", "no part of the scenario")
+    validate(need(is.null(msg), msg))
+    TRUE
+  })
+  status_msg <- reactive(table_block_message(health(), sc()$issues, "status", NEEDS_STATUS))
+  attempts_msg <- reactive(table_block_message(health(), sc()$issues, "attempts", NEEDS_ATTEMPTS))
 
   dates <- reactive({
+    stations_ok()
     d <- scenario_dates(sc()$status, sc()$attempts)
-    validate(need(length(d) > 0, "The scenario has no weekday status or attempt rows."))
+    validate(need(length(d) > 0, paste(c("The scenario has no weekday status or attempt rows.",
+                                         status_msg(), attempts_msg()), collapse = " ")))
     d
   })
+
+  # A new file first clears the date list, so dates of the previous file never linger.
+  observeEvent(sc(), updateSelectInput(session, "date", choices = character(0)), priority = 10)
 
   observeEvent(dates(), {
     updateSelectInput(session, "date", choices = dates(), selected = dates()[1])
@@ -162,6 +201,7 @@ server <- function(input, output, session) {
 
   stale_limit <- reactive({ req(input$stale_limit >= 0); input$stale_limit })
   grids <- reactive({
+    validate(need(is.null(status_msg()), status_msg()))
     build_day_grids(sc()$status, sc()$stations, dates(), stale_limit())
   })
   grid <- reactive({           # the chosen day, with the chosen early-warning threshold
@@ -169,7 +209,10 @@ server <- function(input, output, session) {
     set_warning_threshold(grids()[[input$date]], input$warn_k)
   })
   summ <- reactive(rank_stations(unusable_summary(grid())))
-  att_all <- reactive(attempts_by_day(sc()$attempts, dates()))
+  att_all <- reactive({
+    validate(need(is.null(attempts_msg()), attempts_msg()))
+    attempts_by_day(sc()$attempts, dates())
+  })
   state <- reactive({
     req(input$minute)
     state_at(grid(), input$minute)
@@ -216,37 +259,102 @@ server <- function(input, output, session) {
   })
 
   output$kpis <- renderUI({
-    counts <- grid_window_counts(grid(), NULL, input$date)
-    att <- att_all()[att_all()$date == input$date, ]
+    req(input$date)
+    # Each half pauses on its own: status feeds the minute boxes, attempts the failure boxes.
+    s_ok <- is.null(status_msg())
+    a_ok <- is.null(attempts_msg())
+    counts <- if (s_ok) grid_window_counts(grid(), NULL, input$date) else
+      data.frame(known = 0, unknown = 0, either_min = 0)
+    att <- if (a_ok) att_all()[att_all()$date == input$date, ] else
+      data.frame(rent_n = 0, rent_fail = 0, return_n = 0, return_fail = 0)
     k <- kpi_summary(counts, att)
     pct <- function(x) if (is.na(x)) "n/a" else sprintf("%.1f%%", x)
     box <- function(title, value, detail) value_box(title, value, tags$small(detail))
+    paused <- function(title, what) box(title, "paused", paste("no valid", what, "records"))
     layout_column_wrap(
       width = 1 / 3, fill = FALSE,
-      box("Either-unusable share", pct(k$either_share_pct),
-          paste0(counts$either_min, " of ", k$known, " known station-minutes")),
-      box("Rent failure", pct(k$rent_fail_pct), paste0(k$rent_fail, "/", k$rent_n, " rent attempts")),
-      box("Return failure", pct(k$return_fail_pct), paste0(k$return_fail, "/", k$return_n, " return attempts")),
-      box("Known minutes", format(k$known), "station-minutes with a valid recent snapshot"),
-      box("Unknown minutes", format(k$unknown), "left out of every rate; never counted as usable"),
-      box("Coverage", pct(100 * k$coverage), "known / (known + unknown)")
+      if (s_ok) box("Either-unusable share", pct(k$either_share_pct),
+                    paste0(counts$either_min, " of ", k$known, " known station-minutes"))
+      else paused("Either-unusable share", "status"),
+      if (a_ok) box("Rent failure", pct(k$rent_fail_pct), paste0(k$rent_fail, "/", k$rent_n, " rent attempts"))
+      else paused("Rent failure", "attempts"),
+      if (a_ok) box("Return failure", pct(k$return_fail_pct), paste0(k$return_fail, "/", k$return_n, " return attempts"))
+      else paused("Return failure", "attempts"),
+      if (s_ok) box("Known minutes", format(k$known), "station-minutes with a valid recent snapshot")
+      else paused("Known minutes", "status"),
+      if (s_ok) box("Unknown minutes", format(k$unknown), "left out of every rate; never counted as usable")
+      else paused("Unknown minutes", "status"),
+      if (s_ok) box("Coverage", pct(100 * k$coverage), "known / (known + unknown)")
+      else paused("Coverage", "status")
     )
   })
 
+  output$health_banner <- renderUI({
+    req(isTRUE(scn()$ok))
+    h <- health()
+    msgs <- c(table_block_message(h, sc()$issues, "stations", "no part of the scenario"),
+              status_msg(), attempts_msg())
+    partial <- h[h$state == "some rejected", ]
+    tagList(
+      lapply(msgs, function(m) alert_box(m, "danger")),
+      if (nrow(partial) > 0) {
+        alert_box(paste0("Some rows were rejected and left out: ",
+                         paste0(partial$rejected, " of ", partial$in_file, " ", partial$table, collapse = "; "),
+                         ". The rest of the file is used. See Data issues."), "warning")
+      }
+    )
+  })
+
+  # The map widget is built ONCE (tiles + legend) and never rebuilt; markers and the view are
+  # updated through leafletProxy. Rebuilding the whole widget on every minute/date/file change
+  # while the Overview tab was hidden left a stale resize handler on a removed map
+  # ("Cannot read properties of undefined (reading '_leaflet_pos')").
   output$map <- renderLeaflet({
+    leaflet() |>
+      addTiles() |>
+      setView(lng = -76.5, lat = 42.44, zoom = 13) |>
+      addLegend("bottomright", colors = unname(STATE_COLOURS[STATE_LEVELS]), labels = STATE_LEVELS,
+                title = "Station state", opacity = 1)
+  })
+  map_ready <- reactiveVal(FALSE)          # TRUE once the browser has drawn the map
+  observeEvent(input$map_zoom, map_ready(TRUE), once = TRUE)
+
+  # Fit the view to the stations of each new file, once, and only while the Overview tab is
+  # shown: a hidden map has zero size, so fitting it then would zoom out to the whole world.
+  # Not on every minute or tab change, so a user's own zoom stays.
+  fit_pending <- reactiveVal(FALSE)
+  observeEvent(sc(), fit_pending(TRUE))
+  observeEvent(list(fit_pending(), map_ready(), input$tabs), {
+    req(fit_pending(), map_ready(), identical(input$tabs, "Overview"))
+    stn <- sc()$stations
+    req(nrow(stn) > 0)
+    pad <- 0.005
+    leafletProxy("map") |>
+      fitBounds(min(stn$longitude) - pad, min(stn$latitude) - pad,
+                max(stn$longitude) + pad, max(stn$latitude) + pad)
+    fit_pending(FALSE)
+  })
+
+  # Station markers for the chosen date and minute. Old markers are cleared first, so a file
+  # without valid status rows never keeps the previous file's stations on the map.
+  observe({
+    req(map_ready())
+    proxy <- leafletProxy("map") |> clearMarkers()
+    req(isTRUE(scn()$ok), is.null(status_msg()))
     st <- state()
     stn <- sc()$stations
     m <- stn[match(st$station_id, stn$station_id), ]
     m$state <- factor(st$state, levels = STATE_LEVELS)
     pal <- colorFactor(unname(STATE_COLOURS[STATE_LEVELS]), domain = factor(STATE_LEVELS, levels = STATE_LEVELS))
-    popup <- paste0("<b>", m$station_name, "</b> (", m$station_id, ")<br>state: ", m$state,
-                    "<br>bikes: ", st$bikes_available, ", docks: ", st$docks_available)
-    leaflet(m) |>
-      addTiles() |>
-      addCircleMarkers(lng = ~longitude, lat = ~latitude, radius = 9, color = "black", weight = 1,
-                       fillColor = ~pal(state), fillOpacity = 0.9, popup = popup) |>
-      addLegend("bottomright", colors = unname(STATE_COLOURS[STATE_LEVELS]), labels = STATE_LEVELS,
-                title = "Station state", opacity = 1)
+    popup <- station_popup(m$station_name, m$station_id, as.character(m$state),
+                           st$bikes_available, st$docks_available)
+    proxy |>
+      addCircleMarkers(data = m, lng = ~longitude, lat = ~latitude, radius = 9, color = "black", weight = 1,
+                       fillColor = ~pal(state), fillOpacity = 0.9, popup = popup)
+  })
+  output$map_note <- renderUI({
+    req(isTRUE(scn()$ok))
+    if (!is.null(status_msg())) alert_box(status_msg(), "danger")
   })
 
   output$ranking <- renderTable({
@@ -255,9 +363,18 @@ server <- function(input, output, session) {
     r[, c("rank", "station_id", "station", "either_unusable_min", "warning_min", "known_min", "coverage_pct")]
   }, digits = 1)
 
+  output$health_tbl <- renderTable(health())
+  output$issue_summary_tbl <- renderTable({
+    s <- issue_summary(sc()$issues)
+    if (nrow(s) == 0) data.frame(note = "No data issues found.") else s
+  })
+  output$issue_detail_caption <- renderText({
+    n <- nrow(sc()$issues)
+    if (n == 0) "" else sprintf("Issue rows: showing the first %d of %d.", min(n, 200), n)
+  })
   output$issues <- renderTable({
     iss <- sc()$issues
-    if (nrow(iss) == 0) data.frame(note = "No data issues found.") else iss
+    if (nrow(iss) == 0) NULL else issue_detail(iss, 200)
   })
 
   # ---- Stations
@@ -280,15 +397,16 @@ server <- function(input, output, session) {
   # ---- Quality
   output$baseline_info <- renderUI({
     d <- dates()
-    w <- windows()
-    inc <- w$included
-    k_p <- baseline_count(sum(att_all()$rent_n > 0), input$baseline_share)
-    k_i <- baseline_count(sum(inc), input$baseline_share)
-    tagList(
-      alert_box(paste0("Baseline (limits are estimated from these only): the first ", input$baseline_share * 100,
-                       "% of weekdays, at least 1. p charts: first ", k_p, " of ", sum(att_all()$rent_n > 0),
-                       " weekdays with attempts. I-MR: first ", k_i, " of ", sum(inc),
-                       " included windows. ", length(d), " weekdays in the scenario."), "info"))
+    p_part <- if (is.null(attempts_msg())) {
+      n_p <- sum(att_all()$rent_n > 0)
+      paste0("p charts: first ", baseline_count(n_p, input$baseline_share), " of ", n_p, " weekdays with attempts. ")
+    } else "p charts: paused (no valid attempts records). "
+    i_part <- if (is.null(status_msg())) {
+      inc <- windows()$included
+      paste0("I-MR: first ", baseline_count(sum(inc), input$baseline_share), " of ", sum(inc), " included windows. ")
+    } else "I-MR: paused (no valid status records). "
+    alert_box(paste0("Baseline (limits are estimated from these only): the first ", input$baseline_share * 100,
+                     "% of weekdays, at least 1. ", p_part, i_part, length(d), " weekdays in the scenario."), "info")
   })
 
   p_panel <- function(kind) {
@@ -301,19 +419,23 @@ server <- function(input, output, session) {
     out <- list()
     out$note <- renderUI({
       r <- res()
-      if (nzchar(r$note)) alert_box(paste("Control limits not drawn or limited:", r$note), "warning")
+      tagList(
+        if (nzchar(r$note)) alert_box(paste("Control limits not drawn or limited:", r$note), "warning"),
+        dispersion_box(r$dispersion)
+      )
     })
     out$plot <- renderPlot({
       validate(need(any(!is.na(res()$data$p)), paste("No", kind, "attempts in the weekday windows: nothing to plot.")))
-      plot_p(res(), att_all()$date, paste0(kind, " failure (%)"), paste("p chart:", kind, "failures"))
+      plot_p(res(), att_all()$date, paste0(kind, " failure (%)"), paste("p chart:", kind, "failures"),
+             ooc_label = signal_label(TRUE, res()$dispersion$warning),
+             ok_label = signal_label(FALSE, res()$dispersion$warning))
     })
     out$tbl <- renderTable({
       d <- res()$data
       data.frame(date = att_all()$date, failures_over_n = paste0(d$failures, "/", d$n),
                  percent = round(100 * d$p, 2), center_pct = round(100 * d$center, 2),
                  UCL_pct = round(100 * d$ucl, 2), LCL_pct = round(100 * d$lcl, 2),
-                 signal = ifelse(is.na(d$out_of_control), "not assessed",
-                                 ifelse(d$out_of_control, "OUT OF CONTROL", "in control")))
+                 signal = signal_label(d$out_of_control, res()$dispersion$warning))
     }, na = "n/a")
     out
   }
@@ -370,7 +492,7 @@ server <- function(input, output, session) {
   output$moves_tbl <- renderTable({
     mv <- plan()$moves
     if (nrow(mv) == 0) return(data.frame(note = "No move is recommended at this minute."))
-    data.frame(from = mv$from_station, to = mv$to_station, bikes = mv$quantity,
+    data.frame(from = mv$from_station, to = mv$to_station, bikes = as.integer(round(mv$quantity)),
                `estimated_distance_km (estimated, not a road route)` = mv$est_distance_km,
                check.names = FALSE)
   })
@@ -383,7 +505,7 @@ server <- function(input, output, session) {
   })
   output$unmet_tbl <- renderTable({
     u <- plan()$unmet
-    if (nrow(u) == 0) data.frame(note = "None.") else u
+    if (nrow(u) == 0) data.frame(note = "None.") else as_whole_numbers(u, "remaining_deficit")
   })
 }
 

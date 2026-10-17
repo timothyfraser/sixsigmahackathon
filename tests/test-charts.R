@@ -51,6 +51,50 @@ test_that("n_i = 0 gives p NA with a note; one baseline subgroup gives NA limits
   expect_equal(one$data$p, c(0.02, 0.03))
 })
 
+test_that("KA-2 dispersion: X2 2.1053 on 4 df, ratio 0.5263, p 0.7164, no warning; limits unchanged", {
+  p <- p_chart(failures = c(4, 6, 5, 3, 7), n = rep(100, 5))
+  d <- p$dispersion
+  expect_near(d$chi_sq, 2.105263)     # (1 + 1 + 0 + 4 + 4) / (100 x 0.05 x 0.95)
+  expect_equal(d$df, 4L)
+  expect_near(d$ratio, 0.526316)
+  expect_near(d$p_value, 0.716406)
+  expect_false(d$warning)
+  expect_match(d$note, "chi-square approximation", fixed = TRUE)
+  expect_near(p$data$ucl[1], 0.115383)
+  expect_equal(p$note, "")
+})
+
+test_that("overdispersed baseline: ratio 5.2632 warns, limits and signals unchanged", {
+  p <- p_chart(failures = c(0, 10, 0, 10, 5), n = rep(100, 5))
+  d <- p$dispersion
+  expect_near(d$chi_sq, 21.052632)    # (25 + 25 + 25 + 25 + 0) / 4.75
+  expect_near(d$ratio, 5.263158)
+  expect_near(d$p_value, 0.000309)
+  expect_true(d$warning)
+  expect_match(d$note, "not a confirmed special cause", fixed = TRUE)
+  expect_near(p$p_bar, 0.05)
+  expect_near(p$data$ucl[1], 0.115383)
+  expect_equal(p$data$out_of_control, rep(FALSE, 5))
+})
+
+test_that("dispersion uses only the baseline subgroups with n > 0", {
+  p <- p_chart(failures = c(4, 6, 5, 3, 7, 90, 0), n = c(rep(100, 6), 0), baseline = c(rep(TRUE, 5), FALSE, TRUE))
+  expect_near(p$dispersion$chi_sq, 2.105263)
+  expect_equal(p$dispersion$df, 4L)
+})
+
+test_that("dispersion degenerate cases: p-bar 0, one subgroup, small expected counts", {
+  zero <- p_chart(failures = c(0, 0, 0), n = rep(100, 3))$dispersion
+  expect_true(is.na(zero$ratio) && is.na(zero$p_value) && is.na(zero$warning))
+  expect_match(zero$note, "p-bar = 0: dispersion cannot be estimated", fixed = TRUE)
+  one <- p_chart(failures = c(2, 3), n = c(100, 100), baseline = 1)$dispersion
+  expect_true(is.na(one$ratio))
+  expect_match(one$note, "fewer than 2 baseline subgroups", fixed = TRUE)
+  small <- p_chart(failures = c(1, 0, 2), n = rep(20, 3))$dispersion
+  expect_false(is.na(small$ratio))
+  expect_match(small$note, "below 5", fixed = TRUE)
+})
+
 test_that("p chart rejects impossible input", {
   expect_error(p_chart(failures = 5, n = 3), "failures")
   expect_error(p_chart(failures = c(1, 2), n = 10), "same length")

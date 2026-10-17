@@ -9,7 +9,7 @@
 #   2. parse_ts          ISO 8601 text with offset -> UTC time
 #   3. read_scenario, validate_scenario, load_scenario   (loader + validator)
 #   4. build_grid, unusable_summary, grid_window_counts, window_summary (4.1)
-#   5. p_chart, imr_chart (+ the run rule used by both)
+#   5. p_chart (+ p_dispersion, its overdispersion check), imr_chart (+ the run rule used by both)
 #   6. rebalance_plan    (4.3)
 #   7. paired_diff_ci
 
@@ -500,8 +500,8 @@ as_baseline_flag <- function(baseline, k) {
 #'         Limits p-bar +/- 3*sqrt(p-bar*(1 - p-bar)/n_i) for each subgroup, UCL capped
 #'         at 1 and LCL floored at 0. Out of control = Western Electric rule 1 (outside
 #'         the limits) or rule 4 (8 in a row on one side of p-bar).
-#' Output: list(data, p_bar, totals, note). data has subgroup, failures, n, p, center,
-#'         ucl, lcl, rule1, rule4, out_of_control.
+#' Output: list(data, p_bar, totals, note, dispersion). data has subgroup, failures, n, p,
+#'         center, ucl, lcl, rule1, rule4, out_of_control. dispersion: see p_dispersion().
 #' NA rules: p-bar = 0 or 1, or fewer than 2 usable baseline subgroups -> limits and
 #'         signals are NA with a reason in `note`. n_i = 0 -> that p is NA. Counts,
 #'         p and totals are always kept.
@@ -548,7 +548,57 @@ p_chart <- function(failures, n, baseline = rep(TRUE, length(failures))) {
                      out_of_control = out)
   list(data = data, p_bar = p_bar,
        totals = c(failures = sum(failures[usable]), n = sum(n[usable])),
-       note = paste(notes, collapse = "; "))
+       note = paste(notes, collapse = "; "),
+       dispersion = p_dispersion(failures[in_base], n[in_base]))
+}
+
+#' Overdispersion check for a p chart's baseline (does the baseline vary more than the
+#' binomial model behind the limits allows?). It only adds information: the limits stay.
+#' Input : failures and n of the usable baseline subgroups (n > 0).
+#' Method: p-bar = sum(failures) / sum(n). Pearson chi-square
+#'         X2 = sum((failures_i - n_i*p-bar)^2 / (n_i*p-bar*(1 - p-bar))), df = k - 1,
+#'         ratio = X2 / df (about 1 under the binomial model), p_value = P(chi2_df > X2).
+#'         warning = ratio > 1.5 (the same demo threshold as the c chart's variance/mean).
+#'         The p-value relies on the chi-square approximation (expected counts n_i*p-bar and
+#'         n_i*(1 - p-bar) of about 5 or more); the note says so when that does not hold.
+#' Output: list(chi_sq, df, ratio, p_value, warning, note).
+#' NA rules: fewer than 2 baseline subgroups, or p-bar = 0 or 1 -> all NA with a reason.
+p_dispersion <- function(failures, n) {
+  out <- list(chi_sq = NA_real_, df = NA_integer_, ratio = NA_real_, p_value = NA_real_,
+              warning = NA, note = "")
+  k <- length(failures)
+  if (k < 2) {
+    out$note <- "fewer than 2 baseline subgroups: dispersion cannot be estimated"
+    return(out)
+  }
+  p_bar <- sum(failures) / sum(n)
+  if (p_bar == 0 || p_bar == 1) {
+    out$note <- sprintf("p-bar = %g: dispersion cannot be estimated", p_bar)
+    return(out)
+  }
+  expected_fail <- n * p_bar
+  chi_sq <- sum((failures - expected_fail)^2 / (expected_fail * (1 - p_bar)))
+  df <- k - 1L
+  ratio <- chi_sq / df
+  out$chi_sq <- chi_sq
+  out$df <- df
+  out$ratio <- ratio
+  out$p_value <- stats::pchisq(chi_sq, df, lower.tail = FALSE)
+  out$warning <- ratio > 1.5
+  notes <- if (out$warning) {
+    sprintf(paste("dispersion ratio %.2f > 1.5: the baseline varies more than the binomial",
+                  "model allows (for example, attempts at the same station and time are not",
+                  "independent). The limits are likely too narrow, so a point beyond them is a",
+                  "prompt to investigate, not a confirmed special cause"), ratio)
+  } else {
+    sprintf("dispersion ratio %.2f <= 1.5: no sign of extra-binomial variation in the baseline", ratio)
+  }
+  notes <- c(notes, "the ratio and p-value rely on the chi-square approximation and do not identify a cause")
+  if (any(expected_fail < 5 | n * (1 - p_bar) < 5)) {
+    notes <- c(notes, "some expected counts are below 5, so the p-value is only rough")
+  }
+  out$note <- paste(notes, collapse = "; ")
+  out
 }
 
 #' I-MR chart for individual values (e.g. the either-unusable share per rush window).

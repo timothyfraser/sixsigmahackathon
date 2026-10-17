@@ -83,13 +83,17 @@ plot_pareto <- function(p) {
 
 # One control chart panel. d needs x (position), y, center and (optional) ucl, lcl, ooc;
 # limits are drawn only when they are not NA (qc.R returns NA when they cannot be estimated).
-plot_control <- function(d, labels, ylab, title, y_limit_floor = NULL) {
-  d$ooc <- ifelse(is.na(d$ooc), "not assessed", ifelse(d$ooc, "out of control", "in control"))
+# ooc_label / ok_label name the two signal states in the legend (p charts reword them when the
+# dispersion check warns).
+plot_control <- function(d, labels, ylab, title, y_limit_floor = NULL,
+                         ooc_label = "out of control", ok_label = "in control") {
+  d$ooc <- ifelse(is.na(d$ooc), "not assessed", ifelse(d$ooc, ooc_label, ok_label))
+  colours <- c("#2166ac", "#d73027", "grey40")
+  names(colours) <- c(ok_label, ooc_label, "not assessed")
   g <- ggplot2::ggplot(d, ggplot2::aes(x, y)) +
     ggplot2::geom_line(colour = "grey40", na.rm = TRUE) +
     ggplot2::geom_point(ggplot2::aes(colour = ooc), size = 3, na.rm = TRUE) +
-    ggplot2::scale_colour_manual(values = c("in control" = "#2166ac", "out of control" = "#d73027",
-                                            "not assessed" = "grey40"), name = NULL) +
+    ggplot2::scale_colour_manual(values = colours, name = NULL) +
     ggplot2::scale_x_continuous(breaks = d$x, labels = labels) +
     ggplot2::labs(title = title, x = "rush window (date)", y = ylab) +
     ggplot2::theme_minimal() +
@@ -108,11 +112,11 @@ plot_control <- function(d, labels, ylab, title, y_limit_floor = NULL) {
 }
 
 # p chart (qc.R p_chart result) -> plot
-plot_p <- function(res, dates, ylab, title) {
+plot_p <- function(res, dates, ylab, title, ooc_label = "out of control", ok_label = "in control") {
   d <- res$data
   plot_control(data.frame(x = d$subgroup, y = 100 * d$p, center = 100 * d$center,
                           ucl = 100 * d$ucl, lcl = 100 * d$lcl, ooc = d$out_of_control),
-               dates, ylab, title)
+               dates, ylab, title, ooc_label = ooc_label, ok_label = ok_label)
 }
 
 # I chart (qc.R imr_chart result) -> plot
