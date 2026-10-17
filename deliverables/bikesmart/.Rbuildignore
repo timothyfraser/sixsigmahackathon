@@ -1,0 +1,29 @@
+# .Rbuildignore
+# -------------------------------------------------------------------------
+# This file lists files and folders that exist in this directory but should
+# NOT be bundled into the installable package tarball when you run
+# devtools::build(). Think of it like a .gitignore but for the R package
+# build step.
+#
+# Each line is a regular expression matched against the full file path.
+# The leading ^ anchors to the start of the relative path.
+# -------------------------------------------------------------------------
+
+# RStudio project files
+^.*\.Rproj$
+^\.Rproj\.user$
+
+# R environment and history files (local machine state, not package code)
+^\.Renviron$
+^\.Rhistory$
+
+# The build/dev workflow script itself (useful locally, not part of the package)
+^buildme\.R$
+
+# Any scratch or dev scripts you create while building
+^dev\.R$
+^z$
+
+# docs/ folder if you add pkgdown or other generated docs locally
+^docs$
+

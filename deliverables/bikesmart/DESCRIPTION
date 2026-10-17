@@ -1,0 +1,29 @@
+Package: bikesmart
+Version: 0.1.0
+Date: 2026-10-16
+Title: Bike Dock Availability and Recommendation Tool
+Authors@R: c(
+  person("Firstname1", "Lastname1", email = "fl1@cornell.edu", role = c("aut", "cre")),
+  person("Firstname2", "Lastname2", email = "fl2@cornell.edu", role = "aut"),
+  person("Firstname3", "Lastname3", email = "fl3@cornell.edu", role = "aut"),
+  person("Firstname4", "Lastname4", email = "fl4@cornell.edu", role = "aut"),
+  person("Firstname5", "Lastname5", email = "fl5@cornell.edu", role = "aut") )
+Author: Firstname1 Lastname1 [aut, cre],
+  Firstname2 Lastname2 [aut],
+  Firstname3 Lastname3 [aut],
+  Firstname4 Lastname4 [aut],
+  Firstname5 Lastname5 [aut]
+Maintainer: Firstname1 Lastname1 <fl1@cornell.edu>
+Description: Tools for analyzing simulated bike-share dock snapshots. Given
+    a time-series of bike locations, the package computes dock availability
+    probabilities, pairwise dock distances, and recommends optimal pickup and
+    drop-off docks for a rider's trip. Designed for the Cornell Six Sigma
+    Hackathon Urban Systems prompt (Big Red Crew, Oct 2026).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: R (>= 4.0.0)
+Imports:
+  dplyr (>= 1.1.4)
+
