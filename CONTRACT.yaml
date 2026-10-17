@@ -45,15 +45,16 @@ tasks:
   - id: H-02
     title: Two or three test datasets plus a codebook
     points: "10 - Tool Documentation: 2-3 working test datasets (5), codebook and README for the data (5)"
-    status: in_progress
+    status: done
     owner: "Codex + Lexi"
     started_at: "2026-10-16"
     owns: ["data/", "simulate_data.R"]
     definition_of_done: >
-      Rscript data/validate_simulation.R passes; ls data/*.csv.gz lists
+      Rscript data/validate_simulation.R and python3 data/validate_tampa_locations.py
+      pass; ls data/*.csv.gz lists
       exactly 3 movement datasets, and data/README.md describes every
       column, mile distances, source metadata, and synthetic assumptions.
-    result: "READY FOR REVIEW: three 3499200-row datasets recalibrated to 33.3% usage (observed 33.293%, 33.250%, 33.274%); validation passes, including 8640 observations per bike, rush-hour variation, and zero duplicate bike-timestamp pairs; teammate review pending."
+    result: "Reviewed: Jersey City, Milwaukee, Tampa zoned datasets; 27 real locations and 3499200 rows each; usage 33.382%, 33.322%, 33.395%; Rscript data/validate_simulation.R and python3 data/validate_tampa_locations.py pass; 8640 observations per bike, no duplicate bike-timestamp pairs; three compressed CSVs and complete codebook."
 
   - id: H-03
     title: Core QC statistic as one plain, tested function

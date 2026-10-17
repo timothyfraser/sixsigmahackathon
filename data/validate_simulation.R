@@ -12,7 +12,10 @@ cat("PASS: seeded reproducibility and zero-demand edge case\n")
 observation_counts <- list()
 usage_summaries <- list()
 hourly_summaries <- list()
-for (city in c("jersey_city", "milwaukee", "atlantis")) {
+zone_summaries <- list()
+flow_summaries <- list()
+station_summaries <- list()
+for (city in c("jersey_city", "milwaukee", "tampa")) {
   d <- readRDS(file.path("data", paste0(city, ".rds")))
   counts <- table(d$BIKEID)
   csv_ids <- read.csv(gzfile(file.path("data", paste0(city, ".csv.gz"))),
@@ -26,6 +29,11 @@ for (city in c("jersey_city", "milwaukee", "atlantis")) {
     city, length(counts), min(counts), max(counts)))
   rm(csv_ids, csv_counts)
   stations <- read.csv(file.path("data", "stations", paste0(city, ".csv")))
+  zoning <- read.csv(file.path("data", "zoning", paste0(city, ".csv")))
+  stopifnot(setequal(zoning$dockID, stations$dockID), !anyDuplicated(zoning$dockID))
+  zones <- zoning$zone[match(stations$dockID, zoning$dockID)]
+  stopifnot(identical(sort(as.integer(table(zones))), c(9L, 9L, 9L)),
+    setequal(zones, c("residential", "office", "retail")))
   grid <- read.csv(file.path("data", "distances", paste0(city, ".csv")))
   portable <- read.csv(gzfile(file.path("data", paste0(city, ".csv.gz"))),
                        nrows = 405, colClasses = "character")
@@ -65,18 +73,58 @@ for (city in c("jersey_city", "milwaukee", "atlantis")) {
   before <- states[, -ncol(states), drop = FALSE]
   after <- states[, -1, drop = FALSE]
   stopifnot(!any(before > 0 & after > 0 & before != after))
-  for (step in seq_len(ncol(states)))
-    stopifnot(max(tabulate(states[, step], nbins = 27)) <= 30)
+  inventory <- vapply(seq_len(ncol(states)),
+    function(step) tabulate(states[, step], nbins = 27), integer(27))
+  stopifnot(all(inventory <= 30))
+  zone_inventory <- vapply(c("residential", "office", "retail"),
+    function(zone) colSums(inventory[zones == zone, , drop = FALSE]),
+    numeric(ncol(inventory)))
+  zone_net <- rbind(c(0, 0, 0), zone_inventory[-1, ] -
+    zone_inventory[-nrow(zone_inventory), ])
+  weekday <- local_times$wday %in% 1:5
+  hour <- local_times$hour + local_times$min / 60
+  windows <- list(morning = weekday & hour >= 7 & hour < 10.5,
+    evening = weekday & hour >= 16 & hour < 19,
+    lunch_out = weekday & hour >= 11.5 & hour < 12.5,
+    lunch_back = weekday & hour >= 12.5 & hour < 14,
+    retail_night = hour >= 19 & hour < 22,
+    retail_weekend = !weekday & hour >= 8 & hour < 11)
+  flows <- do.call(rbind, lapply(names(windows), function(period) {
+    values <- colSums(zone_net[windows[[period]], , drop = FALSE])
+    data.frame(city = city, period = period, zone = names(values),
+      net_bikes = as.numeric(values))
+  }))
+  net <- function(period, zone) flows$net_bikes[flows$period == period & flows$zone == zone]
+  stopifnot(net("morning", "office") > 0, net("morning", "residential") < 0,
+    net("evening", "office") < 0, net("evening", "residential") > 0,
+    net("lunch_out", "office") < 0, net("lunch_back", "office") > 0,
+    net("lunch_out", "residential") > 0, net("lunch_back", "residential") < 0,
+    net("retail_night", "retail") > 0, net("retail_weekend", "retail") > 0)
+  # Weekend arrivals accumulate before midday; compare midday stock as well
+  # as net inflow, rather than requiring positive net inflow through departures.
+  midday <- hour >= 11 & hour < 16
+  stopifnot(mean(zone_inventory[midday & !weekday, "retail"]) >
+    mean(zone_inventory[midday & weekday, "retail"]))
+  flow_summaries[[city]] <- flows
+  zone_summaries[[city]] <- do.call(rbind, lapply(colnames(zone_inventory), function(zone) {
+    report <- aggregate(zone_inventory[, zone] / 9,
+      by = list(day_type = ifelse(weekday, "weekday", "weekend"), hour = local_times$hour), mean)
+    names(report)[3] <- "mean_bikes_per_station"
+    data.frame(city = city, zone = zone, report)
+  }))
+  station_summaries[[city]] <- data.frame(city = city, dockID = stations$dockID,
+    zone = zones, mean_bikes = rowMeans(inventory), min_bikes = apply(inventory, 1, min),
+    max_bikes = apply(inventory, 1, max), empty_percent = 100 * rowMeans(inventory == 0),
+    full_percent = 100 * rowMeans(inventory == 30))
+  cat(sprintf("PASS %s zoning: 9 stations per zone; morning office net %+d, residential %+d; evening office %+d, residential %+d; office lunch out/back and retail night/weekend inflows verified\n",
+    city, net("morning", "office"), net("morning", "residential"),
+    net("evening", "office"), net("evening", "residential")))
   stopifnot(identical(names(grid), c("dockID1", "dockID2", "distance")),
     nrow(grid) == 729, !anyNA(grid), all(is.finite(grid$distance)),
     all(grid$distance[grid$dockID1 == grid$dockID2] == 0),
     all(grid$distance[grid$dockID1 != grid$dockID2] > 0),
     !anyDuplicated(grid[c("dockID1", "dockID2")]),
     setequal(grid$dockID1, stations$dockID), setequal(grid$dockID2, stations$dockID))
-  if (city == "atlantis") {
-    stopifnot(grid$distance[grid$dockID1 == "Atlantis Dock 01" &
-                           grid$dockID2 == "Atlantis Dock 27"] == 2.5)
-  }
   departures <- sum(before > 0 & after == 0)
   returns <- sum(before == 0 & after > 0)
   cat(sprintf("PASS %s: 3499200 rows; 405 bikes; 8640 five-minute snapshots; capacity <=30; 729 mile distances; %.2f departures/bike/day; %.3f return probability\n",
@@ -92,4 +140,10 @@ write.csv(do.call(rbind, usage_summaries),
   "data/validation/usage_summary.csv", row.names = FALSE)
 write.csv(do.call(rbind, hourly_summaries),
   "data/validation/usage_by_hour.csv", row.names = FALSE)
+write.csv(do.call(rbind, zone_summaries),
+  "data/validation/zone_inventory_by_hour.csv", row.names = FALSE)
+write.csv(do.call(rbind, flow_summaries),
+  "data/validation/zone_net_flows.csv", row.names = FALSE)
+write.csv(do.call(rbind, station_summaries),
+  "data/validation/station_imbalance.csv", row.names = FALSE)
 cat("PASS: observations per bike consistent across all three cities (8640 each); 1215 per-bike counts saved to data/validation/observations_per_bike.csv\n")

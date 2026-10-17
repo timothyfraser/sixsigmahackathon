@@ -84,6 +84,65 @@ def shortest(graph, start):
     return distances
 
 
+def tampa_intersections():
+    """Place hypothetical docks at verified shared nodes of named Tampa streets."""
+    center = (27.9486, -82.4572)
+    road_cache = ROOT / "sources/tampa_roads.json"
+    road_cache.parent.mkdir(parents=True, exist_ok=True)
+    if not road_cache.exists():
+        query = '[out:json][timeout:150];way["highway"](27.9086,-82.4972,27.9886,-82.4172);(._;>;);out body;'
+        raw = fetch("https://overpass-api.de/api/interpreter",
+                    urllib.parse.urlencode({"data": query}).encode())
+        if "remark" in raw:
+            raise ValueError(raw["remark"])
+        road_cache.write_text(json.dumps(raw))
+    raw = json.loads(road_cache.read_text())
+    cache = ROOT / "sources/tampa_stations.json"
+    if cache.exists():
+        return json.loads(cache.read_text())
+    nodes = {e["id"]: e for e in raw["elements"] if e["type"] == "node"}
+    streets = {}
+    neighbors = {}
+    for way in raw["elements"]:
+        if way["type"] != "way":
+            continue
+        tags = way.get("tags", {})
+        if (tags.get("highway") not in {"residential", "living_street", "unclassified", "tertiary", "secondary", "primary"}
+                or not tags.get("name") or tags.get("bicycle") in {"no", "private", "use_sidepath"}
+                or tags.get("access") in {"no", "private"}):
+            continue
+        for node in way["nodes"]:
+            streets.setdefault(node, set()).add(tags["name"])
+        for a, b in zip(way["nodes"], way["nodes"][1:]):
+            neighbors.setdefault(a, set()).add(b)
+            neighbors.setdefault(b, set()).add(a)
+    candidates = []
+    for node, names in streets.items():
+        if len(names) < 2 or len(neighbors.get(node, set())) < 3:
+            continue
+        n = nodes[node]
+        candidates.append((miles(center, (n["lat"], n["lon"])), node, sorted(names)))
+    rows = []
+    used_names = set()
+    for distance, node, names in sorted(candidates):
+        name = " & ".join(names)
+        if name in used_names:
+            continue
+        used_names.add(name)
+        rows.append({"station_id": f"osm-node-{node}", "dockID": name,
+                     "lat": nodes[node]["lat"], "lon": nodes[node]["lon"]})
+        if len(rows) == 27:
+            break
+    if len(rows) != 27:
+        raise ValueError("Could not verify 27 unique Tampa intersections")
+    selected = {"source": "https://www.openstreetmap.org/", "retrieved_utc": datetime.now(timezone.utc).isoformat(),
+                "osm_base_timestamp": raw.get("osm3s", {}).get("timestamp_osm_base"),
+                "center": center, "location_type": "real intersections; hypothetical bike docks",
+                "stations": rows}
+    cache.write_text(json.dumps(selected, indent=2))
+    return selected
+
+
 def road_matrix(city, stations):
     cache = ROOT / "sources" / (city + "_roads.json")
     if cache.exists():
@@ -163,9 +222,10 @@ def main():
     args = parser.parse_args()
     cities = [
         ("jersey_city", "https://gbfs.lyft.com/gbfs/2.3/bkn/en/station_information.json", (40.7178, -74.0431)),
-        ("milwaukee", "https://gbfs.bcycle.com/1/bcycle_bublr/station_information.json", (43.0389, -87.9065))]
+        ("milwaukee", "https://gbfs.bcycle.com/1/bcycle_bublr/station_information.json", (43.0389, -87.9065)),
+        ("tampa", None, (27.9486, -82.4572))]
     for city, url, center in cities:
-        selected = station_selection(city, url, center)
+        selected = tampa_intersections() if city == "tampa" else station_selection(city, url, center)
         stations = selected["stations"]
         write_csv(ROOT / "stations" / (city + ".csv"), stations, ["station_id", "dockID", "lat", "lon"])
         print(city + ": " + "; ".join(s["dockID"] for s in stations), flush=True)
@@ -173,15 +233,6 @@ def main():
             matrix, gap = road_matrix(city, stations)
             write_csv(ROOT / "distances" / (city + ".csv"), matrix, ["dockID1", "dockID2", "distance"])
             print(f"{city}: 729 distances; largest station connector {gap:.4f} miles", flush=True)
-    names = [f"Atlantis Dock {i+1:02d}" for i in range(27)]
-    stations = [{"station_id": f"ATL-{i+1:02d}", "dockID": name,
-                 "lat": "", "lon": ""} for i, name in enumerate(names)]
-    write_csv(ROOT / "stations" / "atlantis.csv", stations, ["station_id", "dockID", "lat", "lon"])
-    # 9 columns x 3 rows; every horizontal/vertical block is 0.25 miles.
-    rows = [{"dockID1": a, "dockID2": b,
-             "distance": 0.25*(abs(i % 9-j % 9)+abs(i // 9-j // 9))}
-            for i, a in enumerate(names) for j, b in enumerate(names)]
-    write_csv(ROOT / "distances" / "atlantis.csv", rows, ["dockID1", "dockID2", "distance"])
 
 
 if __name__ == "__main__":
