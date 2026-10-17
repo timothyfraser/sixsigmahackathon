@@ -40,12 +40,12 @@ tasks:
       grep -c "FILL IN[.,]" SPEC.md prints 0 (it counts only the blanks,
       not the instructions at the top), and every teammate can say the
       method sentence in SPEC section 4 without reading it.
-    result: "blocked: grep check prints 0; waiting for every teammate to confirm they can say the method sentence"
+    result: "blocked (does not block development): grep check prints 0; YuCiciFu approved the SPEC on 2026-10-16 23:22; each other teammate still has to say the method sentence"
 
   - id: H-02
     title: Two or three test datasets plus a codebook
     points: "10 - Tool Documentation: 2-3 working test datasets (5), codebook and README for the data (5)"
-    status: blocked
+    status: done
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 22:01"
     owns: ["data/"]
@@ -53,12 +53,12 @@ tasks:
       ls data/*.csv lists 2 or 3 files (e.g. in control, planted shift, edge
       case), and data/README.md names every one of them and describes every
       column with units and how the data would be collected for real.
-    result: "blocked: data and codebook by Fangziyue Zhang (commit b07d1a3, generated with Codex); taken over to fix the timestamp offset to -04:00 only (content otherwise byte-identical); DoD check passes, waiting for human review"
+    result: "done: 3 CSVs listed, README names each and documents all 27 columns with units and real collection; data by Fangziyue Zhang (b07d1a3, with Codex), offset fixed to -04:00 only; approved by YuCiciFu 2026-10-16 23:22"
 
   - id: H-03
     title: Core QC statistic as one plain, tested function
     points: "25 - Tool Implementation: valid analyses relevant to quality control in R or Python"
-    status: blocked
+    status: done
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 18:18"
     owns: ["app/qc.R", "tests/", "docs/methods.md"]
@@ -69,7 +69,7 @@ tasks:
       pytest tests (Python) or Rscript -e "testthat::test_dir('tests')" (R)
       passes, including one test that reproduces the SPEC section 4
       known-answer check and one degenerate case (constant data or n = 1).
-    result: "blocked: p-chart dispersion check added (limits unchanged); 262 tests pass, stats-reviewer OVERALL PASS; waiting for a teammate to confirm they read the diff and for H-01 team review"
+    result: "done: testthat::test_dir('tests') 328 pass incl. KA-1..KA-5b/KA-11 and degenerate cases; stats-reviewer OVERALL PASS (twice); approved by YuCiciFu 2026-10-16 23:22 (no other teammate review recorded)"
 
   - id: H-04
     title: Working tool - one demo copied to app/ and wired to the H-03 function
@@ -159,7 +159,7 @@ tasks:
   - id: H-09
     title: Split SPEC.md into template answers plus docs/methods.md
     points: "supports H-01 (Tool Design 15) and H-07 (documentation 10): keeps SPEC.md in the event template form"
-    status: blocked
+    status: done
     owner: "YuCiciFu + Claude"
     started_at: "2026-10-16 17:37"
     owns: ["SPEC.md", "docs/methods.md", "docs/plan.md"]
@@ -190,4 +190,130 @@ tasks:
       (4) wc -l docs/plan.md prints a number below 60.
       (5) a teammate reads git diff and docs/methods.md and confirms no design
       content was lost.
-    result: "blocked: checks (1)-(4) pass; waiting for a teammate to confirm no design content was lost (check 5)"
+    result: "done: checks (1)-(4) re-run and pass (0; 57/57, 17/17, 9/10; all KA and D ids; 55 lines); (5) YuCiciFu approved the current SPEC and methods on 2026-10-16 23:22 (no other teammate review recorded)"
+
+  # H-10 to H-18: the docs/plan.md proposals (tiers 1-3), added with YuCiciFu's approval on
+  # 2026-10-16 23:22. They all touch the app, so they run one at a time, in this order.
+  # Statistics live in plain functions with their own test file; the page only shows results.
+
+  - id: H-10
+    title: Simulation engine and policy comparison (Improvement tab)
+    points: "supports 25 - Tool Implementation: valid improvement evaluation (tier 1)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/sim.R", "tests/test-sim.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    notes: >
+      docs/methods.md sections 4.3 and 5 (D-2, D-4): van, task and event model, reservations,
+      policies none and reactive, paired seeds; primary metric unusable minutes with the
+      Bonferroni 98.333% paired CI, secondary metrics unadjusted 95%.
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-sim.R')" passes, including KA-4b,
+      bike and dock conservation at every event, and identical output for the same seed;
+      Rscript -e "testthat::test_dir('tests')" passes; a Playwright check of the
+      Improvement tab on data/baseline.csv shows the paired CI table.
+    result: ""
+
+  - id: H-11
+    title: c chart, X-bar/R for response time, Cpu with an operator-entered USL
+    points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/qc.R", "tests/test-capability.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-capability.R')" passes, including KA-6,
+      KA-7, R-bar = 0, a missing USL and an out-of-control chart (each NA with a reason) and
+      the dispersion warning above 1.5; Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-12
+    title: Historical Kaplan-Meier, RMST and F(10/20/30) (History panel)
+    points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/survival.R", "tests/test-survival.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-survival.R')" passes, including KA-8, no
+      usable 07:00 starts (NA with a reason) and censoring at unknown gaps;
+      Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-13
+    title: Forecast step 5a, fixed Poisson rates (Now panel)
+    points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/forecast.R", "tests/test-forecast.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-forecast.R')" passes, including KA-8b
+      (within 4 simulation SE), KA-8c (no look-ahead) and stale inventory giving NA;
+      Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-14
+    title: Forecast step 5b, day bootstrap
+    points: "supports 25 - Tool Implementation: valid analyses (tier 2)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/forecast.R", "tests/test-forecast.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-forecast.R')" passes, including KA-8d, with
+      the simulation SE and the parameter range kept as separate fields;
+      Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-15
+    title: Predictive rebalancing policy and the 3-policy comparison
+    points: "supports 25 - Tool Implementation: valid improvement evaluation (tier 2)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/sim.R", "tests/test-sim.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-sim.R')" passes, including identical demand
+      streams across the 3 policies for each seed and KA-5 (primary at 98.333%, secondary
+      labelled unadjusted 95%); Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-16
+    title: Empirical availability and R(tau) for series, parallel and k-out-of-n
+    points: "supports 25 - Tool Implementation: valid analyses (tier 3)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/reliability.R", "tests/test-reliability.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-reliability.R')" passes, including KA-9 and
+      zero known minutes giving NA; the independence value is shown only as a contrast;
+      Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-17
+    title: Qualitative fault trees and the cause mapping (Diagnosis tab)
+    points: "supports 25 - Tool Implementation: valid analyses (tier 3)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/faulttree.R", "tests/test-faulttree.R", "app/app.R", "app/plots.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-faulttree.R')" passes, including KA-10, the
+      contradiction rule, and zero failures showing counts of 0 with shares NA;
+      Rscript -e "testthat::test_dir('tests')" passes.
+    result: ""
+
+  - id: H-18
+    title: Task status updates in the web page (session only, no database)
+    points: "supports 25 - Tool Implementation: an effective, working tool (tier 3)"
+    status: todo
+    owner: ""
+    started_at: ""
+    owns: ["app/tasks.R", "tests/test-tasks.R", "app/app.R", "app/prep.R"]
+    definition_of_done: >
+      Rscript -e "testthat::test_file('tests/test-tasks.R')" passes, covering the methods
+      section 7 transition and time rules with invalid moves rejected; a Playwright check
+      shows a valid move accepted and an invalid one rejected on the page.
+    result: ""
