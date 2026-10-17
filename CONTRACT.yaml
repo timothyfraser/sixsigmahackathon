@@ -251,7 +251,7 @@ tasks:
       Rscript -e "testthat::test_file('tests/test-forecast.R')" passes, including KA-8b
       (within 4 simulation SE), KA-8c (no look-ahead) and stale inventory giving NA;
       Rscript -e "testthat::test_dir('tests')" passes.
-    result: "done: test-forecast.R 37 and test_dir 693 pass (KA-8b within 4 SE at R = 20000, KA-8c no look-ahead, stale inventory NA with reason); stats-reviewer PASS (own analytic case and independent re-simulation agree); Playwright shows the Now panel on baseline 2026-10-05 07:30"
+    result: "done: test-forecast.R 73 and test_dir 1159 pass (KA-8b within 4 SE, KA-8c no look-ahead, stale inventory NA); event now includes the t0 state, so a station unusable at t0 has probability 1 (usable-at-t0 results unchanged); stats-reviewer PASS twice; Playwright shows the Now panel"
 
   - id: H-14
     title: Forecast step 5b, day bootstrap

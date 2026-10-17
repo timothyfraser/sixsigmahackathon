@@ -4,8 +4,8 @@
 # The rules are in docs/methods.md 4.1, 4.2 tier 2 item 5, 4.4 and decision D-2.
 #
 # Question: starting from the inventory a station has at the forecast origin t0, what is the
-# probability of AT LEAST ONE rent-unusable (or return-unusable) minute within the next 10, 20 and
-# 30 minutes? It is simulated forward (Monte Carlo) with Poisson rider arrivals. It is a model with
+# probability that the station is rent-unusable (or return-unusable) at t0 OR at least once within
+# the next 10, 20 and 30 minutes (already unusable at t0 -> 1)? It is simulated forward (Monte Carlo) with Poisson rider arrivals. It is a model with
 # demo assumptions, not a measurement, and it is a different question from the historical
 # Kaplan-Meier (that one describes past days).
 #
@@ -24,12 +24,12 @@
 #
 # Time convention (same as sim.R / methods 4.1)
 #   Minute k (k = 0, 1, ...) after t0 holds the events of [t0+k, t0+k+1). The state of the interval
-#   starting at t0+k is read after every event before it. The start state (k = 0) is the grid state
-#   at t0 and is not part of "the next h minutes". The next h minutes are the intervals that start
-#   at t0+1, ..., t0+h (the last one starts when the horizon ends, so events of all h minutes
-#   count). This is what makes KA-8b exact: a station with 2 bikes, rent rate 0.1/min and no
-#   returns is rent-unusable at some start t0+k, k <= h, if and only if N >= 2 rents arrived in
-#   h minutes, N ~ Poisson(0.1 h).
+#   starting at t0+k is read after every event before it. The EVENT forecast is: the station is
+#   unusable at t0 itself (the grid state at t0) OR in any interval starting at t0+1, ..., t0+h
+#   (events of all h minutes count). So a station already unusable at t0 has probability exactly 1
+#   (the same convention as sim.R's predictive risk table, which counts the current minute).
+#   KA-8b is unchanged: a station with 2 bikes (usable at t0), rent rate 0.1/min and no returns is
+#   rent-unusable within h minutes if and only if N >= 2 rents arrived, N ~ Poisson(0.1 h).
 #   Past 10:00: the grid ends at 10:00, so when t0 + h goes past it the rates of the last 15-min bin
 #   (09:45-10:00) are reused and the horizon is labelled "extends past 10:00" (demo assumption).
 
@@ -70,7 +70,8 @@ forecast_uncertainty <- function(boot) {
 #'         (the same as two independent Poisson streams in random order). Success needs a bike (rent)
 #'         or a free dock (return) and the flag on. After the events of minute k the interval that
 #'         starts at t0+k+1 is checked: rent-unusable = bikes 0 or not renting; return-unusable =
-#'         docks 0 or not returning. "Hit" = at least one such interval within the horizon.
+#'         docks 0 or not returning. "Hit" = unusable in the t0 state itself or in at least one such
+#'         interval within the horizon (so a station unusable at t0 has p = 1).
 #' Output: list(p_rent, p_return, se_rent, se_return) matrices [S, horizons];
 #'         p = hits / R, se = sqrt(p (1 - p) / R) (simulation error only).
 #' Side effect: set.seed(seed): the same seed gives the same output.
@@ -90,8 +91,9 @@ forecast_simulate <- function(world, lambda, arrivals = NULL, horizons = FORECAS
   docks <- spread(world$docks)
   renting <- spread(world$renting) == 1
   returning <- spread(world$returning) == 1
-  hit_rent <- matrix(FALSE, R, S)
-  hit_ret <- matrix(FALSE, R, S)
+  # the event includes the state at t0: already unusable now -> the event has happened (probability 1)
+  hit_rent <- bikes == 0 | !renting
+  hit_ret <- docks == 0 | !returning
   p_rent <- matrix(NA_real_, S, length(horizons))
   p_ret <- p_rent
   for (k in 0:(h_max - 1)) {
@@ -316,10 +318,8 @@ forecast_bootstrap <- function(counts, world, lambda_idx, arrivals, horizons = F
 #' Rules : the start inventory is the grid state at t0 (latest valid snapshot at or before t0 that
 #'         passes the age rule). Unknown / stale -> all probabilities NA with the reason.
 #'         No earlier weekday, or a station without any known minute earlier -> NA with the reason.
-#'         A closed station (flag off) or one already unusable at t0 is still simulated and its state
-#'         is stated in `flags` ("already rent-unusable at t0"); with a flag off the probability is 1
-#'         by construction (the flag is held), with 0 bikes it is the chance of being unusable in the
-#'         next minutes (a return can fix it first).
+#'         A closed station (flag off) or one already unusable at t0 has probability 1 on that side by
+#'         definition (the event includes the state at t0), and its state is stated in `flags`.
 #' Output: list(ok, reason, table (one row per station), horizons, t0, minute, R, seed, source_days,
 #'         rates ([station, type, bin] of the stations used), in_transit, past_10 (per horizon),
 #'         uncertainty (the three sources, text), n_attempts).
@@ -391,9 +391,9 @@ forecast_now <- function(sc, grids, date, dates, minute, R = 2000, seed = 1,
     if (!known[i]) return("")
     f <- character(0)
     if (!isTRUE(as.logical(st$is_renting[i]))) f <- c(f, "renting off at t0 (rent risk = 1 by construction)")
-    else if (st$bikes_available[i] == 0) f <- c(f, "already rent-unusable at t0 (0 bikes)")
+    else if (st$bikes_available[i] == 0) f <- c(f, "already rent-unusable at t0 (0 bikes; rent risk = 1 by definition)")
     if (!isTRUE(as.logical(st$is_returning[i]))) f <- c(f, "returning off at t0 (return risk = 1 by construction)")
-    else if (st$docks_available[i] == 0) f <- c(f, "already return-unusable at t0 (0 docks)")
+    else if (st$docks_available[i] == 0) f <- c(f, "already return-unusable at t0 (0 docks; return risk = 1 by definition)")
     if (use[i] && sum(demand$rates[i, , ], na.rm = TRUE) == 0) {
       f <- c(f, "no attempts observed on earlier weekdays; this does not show the risk is zero")
     }

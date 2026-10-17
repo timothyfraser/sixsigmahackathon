@@ -121,6 +121,14 @@ test_that("a closed or empty station states its state; closed means probability 
   h <- hand_scenario(bikes_a = 0)
   f <- forecast_now(h$sc, h$grids, "2026-10-07", h$dates, 30, R = 300, seed = 1)
   expect_match(f$table$flags[f$table$station_id == "A"], "already rent-unusable at t0")
+  # the event includes the state at t0: an empty station has rent risk exactly 1, SE 0, at every horizon
+  a <- f$table[f$table$station_id == "A", ]
+  expect_equal(c(a$p_rent_10, a$p_rent_20, a$p_rent_30), c(1, 1, 1))
+  expect_equal(c(a$se_rent_10, a$se_rent_30), c(0, 0))
+  empty <- list(bikes = 0, docks = 10, renting = TRUE, returning = TRUE)
+  lam <- array(0, c(30, 1, 2)); lam[, 1, 2] <- 5      # heavy returns could refill it within a minute
+  sim0 <- forecast_simulate(empty, lam, horizons = c(10, 30), R = 200, seed = 1)
+  expect_equal(as.numeric(sim0$p_rent), c(1, 1))
   closed <- list(bikes = 3, docks = 7, renting = FALSE, returning = TRUE)
   sim <- forecast_simulate(closed, array(0, c(30, 1, 2)), horizons = 10, R = 50, seed = 1)
   expect_equal(c(sim$p_rent, sim$se_rent), c(1, 0))
@@ -187,7 +195,14 @@ test_that("a van arriving adds bikes to the destination (capped by free docks) a
   expect_equal(none$p_rent[1, ], c(1, 1, 1))                       # empty and nobody comes
   van_now <- forecast_simulate(world, lambda, data.frame(step = 0, station = 1, qty = 5),
                                horizons = c(10, 20, 30), R = 20, seed = 1)
-  expect_equal(van_now$p_rent[1, ], c(0, 0, 0))                    # in place before the first checked minute
+  expect_equal(van_now$p_rent[1, ], c(1, 1, 1))                    # empty AT t0: the event has already happened
+  # a van removes FUTURE risk: 1 bike, rent rate 1.5/min, 1-minute horizon
+  one <- list(bikes = 1, docks = 9, renting = TRUE, returning = TRUE)
+  lam1 <- array(0, c(1, 1, 2)); lam1[1, 1, 1] <- 1.5
+  no_van <- forecast_simulate(one, lam1, NULL, horizons = 1, R = 4000, seed = 2)
+  with_van <- forecast_simulate(one, lam1, data.frame(step = 0, station = 1, qty = 5), horizons = 1, R = 4000, seed = 2)
+  expect_equal(no_van$p_rent[1, 1], 1 - exp(-1.5), tolerance = 4 * no_van$se_rent[1, 1])   # 0.777
+  expect_lt(with_van$p_rent[1, 1], 0.02)                           # 6 bikes: P(Pois(1.5) >= 6) = 0.0045
   van_late <- forecast_simulate(world, lambda, data.frame(step = 15, station = 1, qty = 5),
                                 horizons = c(10, 20, 30), R = 20, seed = 1)
   expect_equal(van_late$p_rent[1, ], c(1, 1, 1))                   # empty during 10 min, so the hit stays
