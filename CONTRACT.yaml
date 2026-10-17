@@ -308,12 +308,12 @@ tasks:
   - id: H-18
     title: Task status updates in the web page (session only, no database)
     points: "supports 25 - Tool Implementation: an effective, working tool (tier 3)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 08:31"
     owns: ["app/tasks.R", "tests/test-tasks.R", "app/app.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-tasks.R')" passes, covering the methods
       section 7 transition and time rules with invalid moves rejected; a Playwright check
       shows a valid move accepted and an invalid one rejected on the page.
-    result: ""
+    result: "done: test-tasks.R 193 and test_dir 1154 pass (all allowed transitions accepted, disallowed and field-rule violations rejected with reasons, one active task per van); Playwright: planned -> assigned -> in_progress -> completed accepted, assigned -> completed rejected with the reason, table unchanged; also removes the empty numeric inputs' NA browser warnings"

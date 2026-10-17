@@ -24,6 +24,7 @@ source("sim.R", local = TRUE)     # the policy simulation (H-10); the page only 
 source("forecast.R", local = TRUE)   # the Now risk forecast, step 5a (H-13) and the day bootstrap 5b (H-14)
 source("reliability.R", local = TRUE)   # empirical availability and reliability (H-16)
 source("faulttree.R", local = TRUE)     # qualitative fault trees and cause shares (H-17, Diagnosis tab)
+source("tasks.R", local = TRUE)         # simulated task status moves and their rules (H-18, Rebalancing tab)
 
 # Built-in scenarios (H-02 data): app/data/*.csv.gz in the deployed bundle, ../data/*.csv in a
 # clone. With none, fall back to the tiny test fixture, else ask for an upload.
@@ -48,6 +49,11 @@ help_text <- function(...) tags$p(class = "text-muted small", ...)
 # A card that keeps its natural height (the page scrolls instead of squeezing cards).
 panel_card <- function(...) card(..., fill = FALSE)
 alert_box <- function(text, type = "warning") tags$div(class = paste0("alert alert-", type), text)
+# A numeric box that starts EMPTY (the value is NA in R). numericInput(value = NA) writes value="NA"
+# into the HTML, which browsers warn about; dropping the attribute gives the same empty box.
+blank_numeric_input <- function(...) {
+  htmltools::tagQuery(numericInput(..., value = NA))$find("input")$removeAttrs("value")$allTags()
+}
 # The p chart's overdispersion check (computed in qc.R p_dispersion; shown here only).
 dispersion_box <- function(d) {
   if (is.na(d$ratio)) return(alert_box(paste("Dispersion check:", d$note), "secondary"))
@@ -190,8 +196,8 @@ ui <- page_navbar(
                    " index here only demonstrates the arithmetic; it is not a capability claim about any real fleet."),
          layout_columns(
            fill = FALSE, col_widths = c(3, 3, 6),
-           numericInput("usl", "Upper spec limit USL, minutes (your input)", value = NA, step = 0.5),
-           numericInput("lsl", "Lower spec limit LSL, minutes (your input, optional)", value = NA, step = 0.5),
+           blank_numeric_input("usl", "Upper spec limit USL, minutes (your input)", step = 0.5),
+           blank_numeric_input("lsl", "Lower spec limit LSL, minutes (your input, optional)", step = 0.5),
            uiOutput("cap_head")),
          tableOutput("cap_tbl"),
          uiOutput("normality_box"),
@@ -414,7 +420,30 @@ ui <- page_navbar(
       col_widths = c(6, 6),
       panel_card(card_header("Stations left out of moves (closed or no valid data)"), tableOutput("excluded_plan_tbl")),
       panel_card(card_header("Unmet deficits after the moves"), tableOutput("unmet_tbl"))
-    )
+    ),
+    panel_card(card_header("Simulated van tasks (status updates)"),
+      alert_box(TASK_NOT_SAVED_NOTE, "info"),
+      help_text("Question: can the recommended moves be turned into van tasks and moved through their statuses?",
+                " The button adds the moves above as planned tasks (a new click adds new task ids, never repeats one).",
+                " Allowed moves, forward only: planned -> assigned -> in_progress -> completed; planned, assigned or",
+                " in_progress -> cancelled; completed and cancelled are final. Rules (docs/methods.md section 7):",
+                " assigned needs a van id and a time; in_progress needs a time not before assigned; completed needs a",
+                " time not before arrived and the bikes actually moved (a whole number from 0 to the planned bikes);",
+                " a van holds one active (assigned or in_progress) task at a time. Times are New York clock times",
+                " (HH:MM) on the sidebar date; the default is the sidebar observation minute. Demo assumptions: the",
+                " task ids (SIM-001, ...), the forward-only order and the one-active-task-per-van rule. A cancelled",
+                " task that never had a van needs none."),
+      actionButton("tk_create", "Create simulated tasks from these moves", class = "btn-primary"),
+      tableOutput("tk_tbl"),
+      layout_columns(
+        fill = FALSE, col_widths = c(3, 3, 2, 2, 2),
+        selectInput("tk_select", "Task", choices = character(0)),
+        selectInput("tk_status", "Move to status", choices = TASK_STATUS_ORDER[-1], selected = "assigned"),
+        selectInput("tk_van", "Van id (for assigned)", choices = c("V1", "V2")),
+        textInput("tk_time", "Time (HH:MM, New York)", value = "07:05"),
+        blank_numeric_input("tk_qty", "Bikes actually moved (for completed)", min = 0, step = 1)),
+      actionButton("tk_apply", "Apply", class = "btn-primary"),
+      uiOutput("tk_msg"))
   ),
 
   nav_panel("Improvement",
@@ -1149,6 +1178,50 @@ server <- function(input, output, session) {
   output$unmet_tbl <- renderTable({
     u <- plan()$unmet
     if (nrow(u) == 0) data.frame(note = "None.") else as_whole_numbers(u, "remaining_deficit")
+  })
+
+  # ---- Simulated tasks (H-18): the rules are in tasks.R; session only, nothing is saved or fed back
+  tasks_rv <- reactiveVal(empty_tasks())
+  tk_message <- reactiveVal(NULL)               # list(ok, text) of the last click
+  observeEvent(sc(), { tasks_rv(empty_tasks()); tk_message(NULL) })   # a new file starts clean
+  observeEvent(sc(), updateSelectInput(session, "tk_van", choices = task_van_choices(sc()$tasks)))
+  observeEvent(list(input$date, input$minute), {
+    req(input$date, input$minute)
+    updateTextInput(session, "tk_time", value = task_time_default(input$date, input$minute))
+  })
+  observeEvent(tasks_rv(), {
+    ids <- tasks_rv()$task_id
+    keep <- if (isTRUE(isolate(input$tk_select) %in% ids)) isolate(input$tk_select) else utils::tail(ids, 1)
+    updateSelectInput(session, "tk_select", choices = ids, selected = keep)
+  })
+  observeEvent(input$tk_create, {
+    mv <- tryCatch(plan()$moves, error = function(e) NULL)
+    if (is.null(mv) || nrow(mv) == 0) {
+      tk_message(list(ok = FALSE, text = "No tasks created: no move is recommended at this minute."))
+      return()
+    }
+    made <- new_tasks_from_plan(mv, as.POSIXct(paste(input$date, "07:00:00"), tz = APP_TZ) + 60 * input$minute,
+                                existing = tasks_rv())
+    tasks_rv(rbind(tasks_rv(), made))
+    tk_message(list(ok = TRUE, text = paste0("Created ", nrow(made), " planned task(s): ",
+                                             paste(made$task_id, collapse = ", "), ".")))
+  })
+  observeEvent(input$tk_apply, {
+    to <- input$tk_status
+    at <- task_time_parse(input$date, input$tk_time)
+    if (is.na(at) && to %in% c("assigned", "in_progress", "completed")) {
+      tk_message(list(ok = FALSE, text = "Rejected: the time must look like 07:35 (HH:MM, 24 hours)."))
+      return()
+    }
+    r <- task_transition(tasks_rv(), input$tk_select, to, van_id = input$tk_van, at = at,
+                         actual_quantity = if (is.na(input$tk_qty)) NULL else input$tk_qty)
+    if (r$ok) tasks_rv(r$tasks)
+    tk_message(list(ok = r$ok, text = r$message))
+  })
+  output$tk_tbl <- renderTable(tasks_display(tasks_rv()))
+  output$tk_msg <- renderUI({
+    m <- tk_message()
+    if (!is.null(m)) alert_box(m$text, if (m$ok) "success" else "danger")
   })
 
   # ---- Improvement (the simulation is in sim.R; this only wires inputs and shows results)

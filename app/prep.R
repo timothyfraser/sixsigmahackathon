@@ -728,3 +728,30 @@ fault_station_display <- function(st, top = 10) {
   names(st)[names(st) == "top_cause"] <- "top cause"
   st
 }
+
+# ---- Simulated task table (H-18): formatting only; the rules are in tasks.R
+# The task table for the page: times as New York clock text (HH:MM), empty cells as "".
+tasks_display <- function(tasks, tz = APP_TZ) {
+  if (is.null(tasks) || nrow(tasks) == 0) return(data.frame(note = "No simulated tasks yet."))
+  clock <- function(x) ifelse(is.na(x), "", format(x, "%H:%M", tz = tz))
+  text <- function(x) ifelse(is.na(x), "", as.character(x))
+  data.frame(task_id = tasks$task_id, status = tasks$status, from = tasks$source_station_id,
+             to = tasks$destination_station_id, planned_bikes = tasks$planned_quantity,
+             actual_bikes = text(tasks$actual_quantity), van_id = text(tasks$van_id),
+             assigned = clock(tasks$assigned_at), arrived = clock(tasks$arrived_at),
+             completed = clock(tasks$completed_at), stringsAsFactors = FALSE)
+}
+
+# The time for a move: the chosen date + observation minute (minutes after 07:00), New York clock.
+task_time_default <- function(date, minute, tz = APP_TZ) {
+  format(as.POSIXct(paste(date, "07:00:00"), tz = tz) + 60 * minute, "%H:%M", tz = tz)
+}
+
+# Read "HH:MM" on a date as a POSIXct (New York); NA when the text is not a valid time.
+task_time_parse <- function(date, text, tz = APP_TZ) {
+  text <- trimws(as.character(text))
+  if (length(text) != 1 || is.na(text) || !grepl("^([01][0-9]|2[0-3]):[0-5][0-9]$", text)) {
+    return(as.POSIXct(NA, tz = tz))
+  }
+  as.POSIXct(paste0(date, " ", text, ":00"), tz = tz)
+}
