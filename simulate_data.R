@@ -21,7 +21,7 @@ demand_profile <- function(time, tz) {
 simulate_bikes <- function(stations, city, tz, seed = 5300L,
                            start_date = "2026-09-16", days = 30L,
                            bikes_per_dock = 15L, capacity = 30L,
-                           return_probability = 0.25, trips_per_bike_day = 3) {
+                           return_probability = 0.25, target_usage = 0.333) {
   stopifnot(is.data.frame(stations), "dockID" %in% names(stations),
     nrow(stations) >= 2, !anyDuplicated(stations$dockID),
     !anyNA(stations$dockID), all(nzchar(stations$dockID)),
@@ -29,7 +29,8 @@ simulate_bikes <- function(stations, city, tz, seed = 5300L,
     bikes_per_dock >= 1, bikes_per_dock == as.integer(bikes_per_dock),
     capacity >= bikes_per_dock, capacity == as.integer(capacity),
     return_probability > 0, return_probability <= 1,
-    trips_per_bike_day >= 0)
+    length(target_usage) == 1L, is.finite(target_usage),
+    target_usage >= 0, target_usage < 1)
   set.seed(seed)
   start <- as.POSIXct(paste(start_date, "00:00:00"), tz = tz)
   # Calendar-day boundary, preserving DST correctly for arbitrary future dates.
@@ -46,12 +47,29 @@ simulate_bikes <- function(stations, city, tz, seed = 5300L,
   appeal <- runif(n_stations, 0.75, 1.25)
   profile <- demand_profile(times, tz)
   profile <- profile / mean(profile)
-  # Allow for mean time away; target is approximate under capacity constraints.
-  cycle_steps <- 288 / max(trips_per_bike_day, .Machine$double.eps)
-  dock_steps <- cycle_steps - 1 / return_probability
-  if (trips_per_bike_day > 0 && dock_steps <= 1)
-    stop("Requested trip rate incompatible with transit persistence")
-  base_departure <- if (trips_per_bike_day == 0) 0 else 1 / dock_steps
+  # Calibrate expected whole-history usage, including the all-docked initial state.
+  # Propagate dock/away state probabilities through the complete demand profile.
+  # This changes departure frequency, not return persistence or recorded columns.
+  destination_weights <- appeal / sum(appeal)
+  expected_usage <- function(scale) {
+    dock_probability <- rep(1 / n_stations, n_stations)
+    away_probability <- 0
+    total_away <- 0
+    for (step in 2:length(times)) {
+      leaving_probability <- dock_probability * pmin(1, scale * profile[step] * activity)
+      returning_probability <- away_probability * return_probability
+      dock_probability <- dock_probability - leaving_probability +
+        returning_probability * destination_weights
+      away_probability <- away_probability + sum(leaving_probability) - returning_probability
+      total_away <- total_away + away_probability
+    }
+    total_away / length(times)
+  }
+  if (target_usage > expected_usage(100))
+    stop("Requested usage exceeds what the return probability permits")
+  base_departure <- if (target_usage == 0) 0 else
+    uniroot(function(scale) expected_usage(scale) - target_usage,
+            c(0, 100), tol = 1e-9)$root
   for (step in 2:length(times)) {
     # Snapshot semantics: previous docked bikes may leave; previous away bikes may return.
     docked <- which(current > 0L)
@@ -92,14 +110,18 @@ generate_all <- function() {
       stop("Prepare station inputs first: python3 data/prepare_networks.py")
     stations <- read.csv(station_path, colClasses = "character")
     movement <- simulate_bikes(stations, city, zones[i], seed = 5300L + i)
+    usage <- mean(movement$DOCID == "0")
     # The RDS preserves the POSIXct timezone and exact three-column data frame.
     saveRDS(movement, file.path("data", paste0(city, ".rds")))
     movement$time <- format(movement$time, "%Y-%m-%dT%H:%M:%S%z", tz = zones[i])
     connection <- gzfile(file.path("data", paste0(city, ".csv.gz")), "wt")
     tryCatch(write.csv(movement, connection, row.names = FALSE),
              finally = close(connection))
-    cat(sprintf("%s: %s rows; 405 bikes; 8640 snapshots; columns BIKEID, DOCID, time\n",
-      city, format(nrow(movement), big.mark = ",")))
+    # Refresh existing uncompressed exports so they cannot silently stay stale.
+    plain_path <- file.path("data", paste0(city, ".csv"))
+    if (file.exists(plain_path)) write.csv(movement, plain_path, row.names = FALSE)
+    cat(sprintf("%s: %s rows; 405 bikes; 8640 snapshots; %.3f%% undocked (target 33.3%%); columns BIKEID, DOCID, time\n",
+      city, format(nrow(movement), big.mark = ","), 100 * usage))
   }
 }
 

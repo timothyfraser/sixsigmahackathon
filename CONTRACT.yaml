@@ -53,7 +53,7 @@ tasks:
       Rscript data/validate_simulation.R passes; ls data/*.csv.gz lists
       exactly 3 movement datasets, and data/README.md describes every
       column, mile distances, source metadata, and synthetic assumptions.
-    result: "READY FOR REVIEW: three 3499200-row movement datasets and three 729-pair mile grids; Rscript data/validate_simulation.R passes for all cities, including 8640 observations per bike; teammate review pending."
+    result: "READY FOR REVIEW: three 3499200-row datasets recalibrated to 33.3% usage (observed 33.293%, 33.250%, 33.274%); validation passes, including 8640 observations per bike, rush-hour variation, and zero duplicate bike-timestamp pairs; teammate review pending."
 
   - id: H-03
     title: Core QC statistic as one plain, tested function
