@@ -105,9 +105,9 @@ tasks:
   - id: H-06
     title: Deploy to the course Posit Connect server
     points: "protects the 25 working-tool points - judges must be able to open it"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: in_progress
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-16 23:29"
     owns: [".github/workflows/", ".github/scripts/", "app/manifest.json", "app/.python-version"]
     notes: >
       Load the connect-publish skill. Copy ONE workflow for your stack from
