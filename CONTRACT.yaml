@@ -282,15 +282,15 @@ tasks:
   - id: H-16
     title: Empirical availability and R(tau) for series, parallel and k-out-of-n
     points: "supports 25 - Tool Implementation: valid analyses (tier 3)"
-    status: todo
-    owner: ""
-    started_at: ""
+    status: done
+    owner: "YuCiciFu + Claude"
+    started_at: "2026-10-17 07:18"
     owns: ["app/reliability.R", "tests/test-reliability.R", "app/app.R", "app/plots.R", "app/prep.R"]
     definition_of_done: >
       Rscript -e "testthat::test_file('tests/test-reliability.R')" passes, including KA-9 and
       zero known minutes giving NA; the independence value is shown only as a contrast;
       Rscript -e "testthat::test_dir('tests')" passes.
-    result: ""
+    result: "done: test-reliability.R 52 and test_dir 905 pass (KA-9 incl. independence contrasts 0.36 and 0.84; zero known minutes NA with reason; independence shown only as a contrast); stats-reviewer PASS (real-data values recomputed independently); Playwright shows the availability/R(tau) card"
 
   - id: H-17
     title: Qualitative fault trees and the cause mapping (Diagnosis tab)

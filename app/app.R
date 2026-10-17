@@ -22,6 +22,7 @@ source("prep.R", local = TRUE)
 source("plots.R", local = TRUE)
 source("sim.R", local = TRUE)     # the policy simulation (H-10); the page only shows its results
 source("forecast.R", local = TRUE)   # the Now risk forecast, step 5a (H-13) and the day bootstrap 5b (H-14)
+source("reliability.R", local = TRUE)   # empirical availability and reliability (H-16)
 
 # Built-in scenarios (H-02 data): app/data/*.csv.gz in the deployed bundle, ../data/*.csv in a
 # clone. With none, fall back to the tiny test fixture, else ask for an upload.
@@ -300,7 +301,57 @@ ui <- page_navbar(
         tags$li("A van's estimated arrival is rounded down to the start of its minute (up to 1 minute early);",
                 " demo assumption.")),
       tags$b("Source days (weekdays before t0's date)"), textOutput("fc_days"),
-      tags$b("Bin rates used (network mean over the stations forecast)"), tableOutput("fc_rates_tbl"))
+      tags$b("Bin rates used (network mean over the stations forecast)"), tableOutput("fc_rates_tbl")),
+    panel_card(card_header("Empirical availability and reliability R(tau): series, parallel and k-out-of-n"),
+      help_text("Descriptive about the chosen day(s), computed from the minute grid. A minute counts only when EVERY",
+                " station involved is known at the minutes involved; an unknown minute is never counted as usable and",
+                " is left out of numerator and denominator. Stations are not assumed independent: the share is counted",
+                " from the minutes in which they were observed together. The independence formula is shown only as a",
+                " contrast."),
+      layout_columns(
+        fill = FALSE, col_widths = c(3, 3, 3, 3),
+        selectInput("rel_tau", "Horizon tau, minutes (reliability)", choices = c(10, 20, 30), selected = 30),
+        radioButtons("rel_days", "Days used",
+                     choices = c("Sidebar date only" = "one", "All weekdays pooled" = "all")),
+        selectInput("rel_usable", "Parallel and k-out-of-n: a station is usable when",
+                    choices = c("neither rent nor return is unusable (fully usable)" = "either",
+                                "rent is usable" = "rent", "return is usable" = "return")),
+        help_text("Series: origin must be rent-usable, destination return-usable (fixed).")),
+      layout_columns(
+        fill = FALSE, col_widths = c(3, 3, 2, 4),
+        selectInput("rel_origin", "Series: origin station", choices = character(0)),
+        selectInput("rel_dest", "Series: destination station", choices = character(0)),
+        numericInput("rel_d", "Trip time d, minutes", 15, min = 0, step = 1),
+        selectizeInput("rel_par", "Parallel: at least one of these stations (pick 1 or more)",
+                       choices = character(0), multiple = TRUE)),
+      layout_columns(
+        fill = FALSE, col_widths = c(3, 2, 7),
+        selectInput("rel_region", "k-out-of-n: region (the n stations are all stations of the region)", choices = character(0)),
+        numericInput("rel_k", "k (at least k usable)", 1, min = 1, step = 1),
+        uiOutput("rel_head")),
+      tableOutput("rel_tbl"),
+      help_text("How to read this: availability = the share of eligible minutes in which the condition holds (the",
+                " counts are in brackets). R(tau) = the share of eligible start minutes m for which the condition holds",
+                " in EVERY minute from m to m + tau - 1; a start minute is eligible only when all those minutes can be",
+                " judged and the window ends by 10:00. Always read R together with its tau. A window that contains",
+                " an unknown minute is left out, even if it also contains a known failure, so with patchy data R can",
+                " be somewhat optimistic; the eligible start minutes are always shown."),
+      tags$b("Assumptions and definitions"),
+      tags$ul(
+        tags$li("Series (a trip): at start minute m the origin is rent-usable at m AND the destination is return-usable at",
+                " m + d. A start minute needs m + d before 10:00; R(tau) also needs m + tau - 1 + d before 10:00."),
+        tags$li("Parallel: at least one chosen station is usable. k-out-of-n: at least k of the region's n stations are",
+                " usable. With all stations known at the same minutes the count is exact; one unknown station removes the",
+                " minute for the whole structure (conservative)."),
+        tags$li("Independence formula (contrast): series = A(origin) x A(destination); parallel = 1 - product of (1 - A_i);",
+                " k-out-of-n = the chance that at least k of n independent stations are usable, each with its own",
+                " availability over the same eligible minutes. Stations are not assumed independent; a gap between this",
+                " value and the empirical one shows how far the stations move together."),
+        tags$li("Pooled weekdays count every eligible minute and start minute of all days; a window never spans two days.",
+                " Minutes within a day are strongly dependent, so the shares have no confidence interval here."),
+        tags$li("Defaults: origin and destination = the first two stations, d = 15 minutes; parallel = the first two",
+                " stations; k-out-of-n region = the first region, k = half of its stations rounded up (all demo choices)."))
+    )
   ),
 
   nav_panel("Rebalancing",
@@ -930,6 +981,62 @@ server <- function(input, output, session) {
     paste0(length(f$source_days), " weekday(s): ", paste(f$source_days, collapse = ", "))
   })
   output$fc_rates_tbl <- renderTable(forecast_rate_display(fc_res()), na = "n/a")
+
+  # ---- Forecast & Reliability: availability and R(tau) (statistics in reliability.R, wording in prep.R)
+  observeEvent(sc(), {                      # new file: reset the station choices to the defaults
+    stn <- sc()$stations
+    ids <- stn$station_id
+    names(ids) <- paste(ids, "-", stn$station_name)
+    updateSelectInput(session, "rel_origin", choices = ids, selected = ids[1])
+    updateSelectInput(session, "rel_dest", choices = ids, selected = ids[min(2, length(ids))])
+    updateSelectizeInput(session, "rel_par", choices = ids, selected = ids[seq_len(min(2, length(ids)))])
+    regions <- unique(stn$region)
+    updateSelectInput(session, "rel_region", choices = regions, selected = regions[1])
+  })
+  observeEvent(list(input$rel_region, sc()), {   # default k = half of the region's stations, rounded up
+    n <- length(region_station_ids(sc()$stations, input$rel_region))
+    if (n > 0) updateNumericInput(session, "rel_k", value = default_k(n), max = n)
+  })
+  rel_grids <- reactive({
+    validate(need(is.null(status_msg()), status_msg()))
+    req(input$date, input$date %in% names(grids()))
+    if (identical(input$rel_days, "all")) grids() else grids()[input$date]
+  })
+  rel_res <- reactive({
+    g <- rel_grids()
+    tau <- as.integer(input$rel_tau)
+    req(tau)
+    region_ids <- region_station_ids(sc()$stations, input$rel_region)
+    validate(need(!is.null(input$rel_origin) && nzchar(input$rel_origin) && nzchar(input$rel_dest %||% ""),
+                  "Choose an origin and a destination station."),
+             need(length(input$rel_par) >= 1, "Choose at least one station for the parallel structure."),
+             need(length(region_ids) >= 1, "Choose a region."),
+             need(isTRUE(input$rel_d >= 0), "Trip time d must be 0 or more."),
+             need(isTRUE(input$rel_k >= 1 && input$rel_k <= length(region_ids)),
+                  paste0("k must be a whole number from 1 to ", length(region_ids), " (the stations of this region).")))
+    usable <- input$rel_usable
+    res <- list(
+      series = reliability_from_grids(g, "series", origin = input$rel_origin, destination = input$rel_dest,
+                                      d = input$rel_d, tau = tau),
+      parallel = reliability_from_grids(g, "parallel", stations = input$rel_par, usable = usable, tau = tau),
+      kofn = reliability_from_grids(g, "kofn", stations = region_ids, k = input$rel_k, usable = usable, tau = tau))
+    use_text <- c(either = "fully usable", rent = "rent-usable", `return` = "return-usable")[[usable]]
+    names(res) <- c(paste0("Series (trip): ", input$rel_origin, " -> ", input$rel_dest, ", d = ", input$rel_d, " min"),
+                    paste0("Parallel: at least one of ", paste(input$rel_par, collapse = ", ")),
+                    paste0(input$rel_k, "-out-of-", length(region_ids), " in region ", input$rel_region))
+    rules <- list(
+      paste0(input$rel_origin, " rent-usable at m AND ", input$rel_dest, " return-usable at m + ", input$rel_d),
+      paste0("at least 1 of ", length(input$rel_par), " stations ", use_text),
+      paste0("at least ", input$rel_k, " of ", length(region_ids), " stations ", use_text))
+    names(rules) <- names(res)
+    list(res = res, rules = rules, days = names(g), tau = tau)
+  })
+  output$rel_head <- renderUI({
+    r <- rel_res()
+    help_text("Days: ", paste(r$days, collapse = ", "), ". tau = ", r$tau, " min. stale_limit = ", stale_limit(),
+              " min. Simulated data.")
+  })
+  output$rel_tbl <- renderTable(reliability_display(rel_res()$res, rel_res()$rules), na = "n/a")
 
   # ---- Rebalancing
   plan <- reactive({

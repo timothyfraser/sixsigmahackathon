@@ -630,3 +630,38 @@ forecast_plot_data <- function(f, top = 10) {
         data.frame(station = tb$station_id, type = "return-unusable", p = tb[[paste0("p_return_", h)]], se = tb[[paste0("se_return_", h)]],
                    lo = col(paste0("boot_lo_return_", h)), hi = col(paste0("boot_hi_return_", h))))
 }
+
+# ---------------------------------------------------------------- 12. Availability and reliability display (H-16)
+# Wording, rounding and choosing stations only; every number comes from app/reliability.R.
+
+# Station ids of one region (stations table column `region`), in the order of the table.
+region_station_ids <- function(stations, region) stations$station_id[stations$region %in% region]
+
+# Default k for k-out-of-n: half of the stations, rounded up (a demo choice).
+default_k <- function(n) max(1L, as.integer(ceiling(n / 2)))
+
+# "0.400 (2/5)" or "n/a"
+reliability_share_text <- function(value, hold, n) {
+  ifelse(is.na(value), "n/a", paste0(formatC(value, format = "f", digits = 3), " (", hold, "/", n, ")"))
+}
+
+# One row per structure. `results` is a named list of reliability_summary() outputs (names = the
+# structure descriptions shown to the user); `rules` the condition in words, same names.
+reliability_display <- function(results, rules) {
+  one <- function(name) {
+    r <- results[[name]]
+    data.frame(
+      structure = name,
+      condition = rules[[name]],
+      `eligible minutes` = as.integer(r$avail_n),
+      availability = reliability_share_text(r$availability, r$avail_hold, r$avail_n),
+      `independence formula (contrast only)` = ifelse(is.na(r$independence), "n/a", formatC(r$independence, format = "f", digits = 3)),
+      tau = paste(r$tau, "min"),
+      `reliability R(tau)` = reliability_share_text(r$reliability, r$rel_hold, r$rel_n),
+      `eligible start minutes` = as.integer(r$rel_n),
+      `reason if n/a` = unique(c(r$avail_reason, r$rel_reason)[nzchar(c(r$avail_reason, r$rel_reason))]) |>
+        paste(collapse = "; "),
+      check.names = FALSE, stringsAsFactors = FALSE)
+  }
+  do.call(rbind, lapply(names(results), one))
+}
