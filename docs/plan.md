@@ -2,7 +2,7 @@
 
 Source of truth: `SPEC.md` (template answers) and `docs/methods.md` (rules, formulas, KA-n known answers; same section numbers). This plan only orders the work.
 Stack: R Shiny in `app/`; statistics in `app/qc.R`, simulation in `app/sim.R`; tests in `tests/test-*.R` (testthat).
-Tasks H-10 to H-18 are **PROPOSED** and are not in `CONTRACT.yaml` until the team says yes.
+Tasks H-10 to H-18 were added to `CONTRACT.yaml` on 2026-10-16 (YuCiciFu); `CONTRACT.yaml` holds their current status.
 Because they all edit `app/qc.R` and `app/app.R`, they run **one at a time**.
 
 ## Tier 1 (core): a runnable tool first
@@ -32,7 +32,7 @@ Because they all edit `app/qc.R` and `app/app.R`, they run **one at a time**.
 | H-17 | Qualitative fault trees and the cause mapping (Diagnosis tab) | KA-10 and the contradiction rule; zero failures shows counts of 0 and shares as NA | 1 h |
 | H-18 | Task status updates in the web page (session only, no database) | the section 7 transition and time rules; invalid moves are rejected; checked with Playwright | 1 h |
 
-**Order:** H-09 (SPEC/methods split, in progress) and H-01 review, then H-02 and H-03 in parallel (disjoint files), H-04, H-06 (prepare), H-10, H-05 and H-07 drafts, H-11 to H-18 in turn, H-07 final, H-08.
+**Order:** H-09 (SPEC/methods split) and H-01 review, then H-02 and H-03 in parallel (disjoint files), H-04, H-06 (prepare), H-10, H-05 and H-07 drafts, H-11 to H-18 in turn, H-07 final, H-08.
 **Teammate-owned, independent of the agent:**
 - H-02 (`data/generate_data.R`, the 3 CSVs, `data/README.md`), from the `docs/methods.md` section 7 schema.
 - H-05 (`demo/README.md`).

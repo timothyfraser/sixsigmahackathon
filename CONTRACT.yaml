@@ -190,7 +190,7 @@ tasks:
       (4) wc -l docs/plan.md prints a number below 60.
       (5) a teammate reads git diff and docs/methods.md and confirms no design
       content was lost.
-    result: "done: checks (1)-(4) re-run and pass (0; 57/57, 17/17, 9/10; all KA and D ids; 55 lines); (5) YuCiciFu approved the current SPEC and methods on 2026-10-16 23:22 (no other teammate review recorded)"
+    result: "done: checks (1)-(4) re-run 2026-10-17 and pass (0; 57/57, 17/17, 9/10; all KA and D ids; 55 lines) after updating plan.md's outdated H-10..H-18 status line; (5) YuCiciFu approved the current SPEC and methods on 2026-10-16 23:22 (no other teammate review recorded)"
 
   # H-10 to H-18: the docs/plan.md proposals (tiers 1-3), added with YuCiciFu's approval on
   # 2026-10-16 23:22. They all touch the app, so they run one at a time, in this order.
