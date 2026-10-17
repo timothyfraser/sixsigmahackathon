@@ -382,6 +382,15 @@ test_that("Scenario integration (data/edge_case.csv): KA-1b rules on S002 07:02-
   expect_match(i$note, "fewer than 2 baseline points", fixed = TRUE)
 })
 
+test_that("station_popup shows unknown counts as 'unknown' and escapes names", {
+  p <- station_popup(c("Demo Station 2", "A <b>&</b> B"), c("S002", "S9"),
+                     c("unknown / stale data", "usable"), c(NA, 4), c(NA_real_, 16))
+  expect_equal(p[1], "<b>Demo Station 2</b> (S002)<br>state: unknown / stale data<br>bikes: unknown, docks: unknown")
+  expect_false(grepl("NA", p[1], fixed = TRUE))
+  expect_match(p[2], "bikes: 4, docks: 16", fixed = TRUE)
+  expect_match(p[2], "A &lt;b&gt;&amp;&lt;/b&gt; B", fixed = TRUE)
+})
+
 test_that("format_p and as_whole_numbers", {
   expect_equal(format_p(0.716406), "0.716")
   expect_equal(format_p(6.2e-23), "< 0.0001")

@@ -41,6 +41,7 @@ dispersion_box <- function(d) {
 
 # ------------------------------------------------------------------ UI
 ui <- page_navbar(
+  id = "tabs",
   title = "Rush Hour Autopilot",
   fillable = FALSE,
   sidebar = sidebar(
@@ -76,7 +77,8 @@ ui <- page_navbar(
     layout_columns(
       fill = FALSE,
       col_widths = c(7, 5),
-      panel_card(card_header("Station map at the chosen minute"), leafletOutput("map", height = 450)),
+      panel_card(card_header("Station map at the chosen minute"), uiOutput("map_note"),
+                 leafletOutput("map", height = 450)),
       panel_card(card_header("Station ranking (whole 07:00-10:00 window of the chosen date)"),
            help_text("Rank 1 = worst: either-unusable minutes + early-warning minutes; ties by station_id."),
            tableOutput("ranking"))
@@ -303,20 +305,56 @@ server <- function(input, output, session) {
     )
   })
 
+  # The map widget is built ONCE (tiles + legend) and never rebuilt; markers and the view are
+  # updated through leafletProxy. Rebuilding the whole widget on every minute/date/file change
+  # while the Overview tab was hidden left a stale resize handler on a removed map
+  # ("Cannot read properties of undefined (reading '_leaflet_pos')").
   output$map <- renderLeaflet({
+    leaflet() |>
+      addTiles() |>
+      setView(lng = -76.5, lat = 42.44, zoom = 13) |>
+      addLegend("bottomright", colors = unname(STATE_COLOURS[STATE_LEVELS]), labels = STATE_LEVELS,
+                title = "Station state", opacity = 1)
+  })
+  map_ready <- reactiveVal(FALSE)          # TRUE once the browser has drawn the map
+  observeEvent(input$map_zoom, map_ready(TRUE), once = TRUE)
+
+  # Fit the view to the stations of each new file, once, and only while the Overview tab is
+  # shown: a hidden map has zero size, so fitting it then would zoom out to the whole world.
+  # Not on every minute or tab change, so a user's own zoom stays.
+  fit_pending <- reactiveVal(FALSE)
+  observeEvent(sc(), fit_pending(TRUE))
+  observeEvent(list(fit_pending(), map_ready(), input$tabs), {
+    req(fit_pending(), map_ready(), identical(input$tabs, "Overview"))
+    stn <- sc()$stations
+    req(nrow(stn) > 0)
+    pad <- 0.005
+    leafletProxy("map") |>
+      fitBounds(min(stn$longitude) - pad, min(stn$latitude) - pad,
+                max(stn$longitude) + pad, max(stn$latitude) + pad)
+    fit_pending(FALSE)
+  })
+
+  # Station markers for the chosen date and minute. Old markers are cleared first, so a file
+  # without valid status rows never keeps the previous file's stations on the map.
+  observe({
+    req(map_ready())
+    proxy <- leafletProxy("map") |> clearMarkers()
+    req(isTRUE(scn()$ok), is.null(status_msg()))
     st <- state()
     stn <- sc()$stations
     m <- stn[match(st$station_id, stn$station_id), ]
     m$state <- factor(st$state, levels = STATE_LEVELS)
     pal <- colorFactor(unname(STATE_COLOURS[STATE_LEVELS]), domain = factor(STATE_LEVELS, levels = STATE_LEVELS))
-    popup <- paste0("<b>", m$station_name, "</b> (", m$station_id, ")<br>state: ", m$state,
-                    "<br>bikes: ", st$bikes_available, ", docks: ", st$docks_available)
-    leaflet(m) |>
-      addTiles() |>
-      addCircleMarkers(lng = ~longitude, lat = ~latitude, radius = 9, color = "black", weight = 1,
-                       fillColor = ~pal(state), fillOpacity = 0.9, popup = popup) |>
-      addLegend("bottomright", colors = unname(STATE_COLOURS[STATE_LEVELS]), labels = STATE_LEVELS,
-                title = "Station state", opacity = 1)
+    popup <- station_popup(m$station_name, m$station_id, as.character(m$state),
+                           st$bikes_available, st$docks_available)
+    proxy |>
+      addCircleMarkers(data = m, lng = ~longitude, lat = ~latitude, radius = 9, color = "black", weight = 1,
+                       fillColor = ~pal(state), fillOpacity = 0.9, popup = popup)
+  })
+  output$map_note <- renderUI({
+    req(isTRUE(scn()$ok))
+    if (!is.null(status_msg())) alert_box(status_msg(), "danger")
   })
 
   output$ranking <- renderTable({

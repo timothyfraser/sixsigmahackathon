@@ -10,7 +10,7 @@
 #   2. attempts               attempts_by_day
 #   3. grids                  fixed_station_set, build_day_grids, window_table,
 #                             set_warning_threshold
-#   4. one day                state_at, explain_exclusion, rank_stations, station_table,
+#   4. one day                state_at, explain_exclusion, station_popup, rank_stations, station_table,
 #                             kpi_summary
 #   5. charts' inputs         hour_station_matrix, pareto_order
 #   6. baseline               baseline_count, baseline_flags
@@ -158,6 +158,14 @@ explain_exclusion <- function(excluded, status, at_time, stale_limit, issues = N
   }
   excluded$detail <- detail
   excluded
+}
+
+# Map popup HTML for each station. Names and IDs come from the uploaded file, so they are
+# HTML-escaped. A count that is NA (unknown/stale minute) is shown as "unknown", never "NA".
+station_popup <- function(name, id, state, bikes, docks) {
+  count_text <- function(x) ifelse(is.na(x), "unknown", as.character(x))
+  paste0("<b>", htmltools::htmlEscape(name), "</b> (", htmltools::htmlEscape(id), ")<br>state: ", state,
+         "<br>bikes: ", count_text(bikes), ", docks: ", count_text(docks))
 }
 
 # Ranking: worst first by (either-unusable minutes + early-warning minutes); ties by station_id.
